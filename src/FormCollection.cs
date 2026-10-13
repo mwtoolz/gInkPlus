@@ -20,7 +20,11 @@ namespace gInk
 		public Bitmap image_exit, image_clear, image_undo, image_snap, image_penwidth;
 		public Bitmap image_dock, image_dockback;
 		public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
-		public Bitmap image_pointer, image_pointer_act;
+
+        // Added by mwtoolz
+        public Bitmap image_line, image_line_act;
+
+        public Bitmap image_pointer, image_pointer_act;
 		public Bitmap[] image_pen;
 		public Bitmap[] image_pen_act;
 		public Bitmap image_eraser_act, image_eraser;
@@ -812,7 +816,39 @@ namespace gInk
 				Root.UponSubPanelUpdate = true;
 		}
 
-		public void btSnap_Click(object sender, EventArgs e)
+        //Added by mwtoolz
+        private void btLine_Click(object sender, EventArgs e)
+        {
+            if (ToolbarMoved)
+            {
+                ToolbarMoved = false;
+                return;
+            }
+
+            // Disable other modes
+            Root.PointerMode = false;
+            Root.PanMode = false;
+            Root.EraserMode = false;
+
+            // Enable Line mode
+            Root.LineEnabled = true;
+
+            // Hide PenWidth panel if open
+            Root.gpPenWidthVisible = false;
+
+            // Update toolbar button images
+            // ResetToolButtonImages();
+            btLine.Image = image_line_act;
+
+            // Reset pointer cursor if needed
+            // this.Cursor = Cursors.Cross;
+        }
+
+
+
+
+
+        public void btSnap_Click(object sender, EventArgs e)
 		{
 			if (ToolbarMoved)
 			{
