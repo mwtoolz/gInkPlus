@@ -204,6 +204,8 @@
     <None Include="buttonback.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="tool_line.png" />
+    <Content Include="tool_line_act.png" />
     <None Include="paneloption.png" />
     <None Include="visible_not.png" />
     <None Include="visible.png" />

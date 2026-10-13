@@ -338,6 +338,13 @@
 		private System.Windows.Forms.PictureBox pboxPenWidthIndicator;
 		public System.Windows.Forms.Button btPan;
 		public System.Windows.Forms.Button btInkVisible;
-	}
+
+
+        // Added by mwtoolz
+        public System.Windows.Forms.Button btLine;
+
+
+
+    }
 }
 
