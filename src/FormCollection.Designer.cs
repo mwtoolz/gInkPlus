@@ -335,7 +335,7 @@
             this.btLine.Size = new System.Drawing.Size(69, 69);                
             this.btLine.TabIndex = 0;
             this.btLine.UseVisualStyleBackColor = true;
-            // this.btLine.Click += new System.EventHandler(this.btLine_Click);
+            this.btLine.Click += new System.EventHandler(this.btLine_Click);
 
 
         }
