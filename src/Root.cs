@@ -55,7 +55,11 @@ namespace gInk
 		public bool EraserEnabled = true;
 		public bool PointerEnabled = true;
 		public bool PenWidthEnabled = false;
-		public bool SnapEnabled = true;
+
+        // Added by mwtoolz
+        public bool LineEnabled = false;
+
+        public bool SnapEnabled = true;
 		public bool UndoEnabled = true;
 		public bool ClearEnabled = true;
 		public bool PanEnabled = true;
