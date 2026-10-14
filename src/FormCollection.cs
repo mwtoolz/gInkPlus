@@ -156,9 +156,13 @@ namespace gInk
             btLine.Click += new EventHandler(this.btLine_Click);   // we will create this method next
 
             // Temporary text so you can see the button (we will replace with icon later)
-            btLine.Text = "／";          // simple slash symbol for line
-            btLine.Font = new Font("Segoe UI", 14, FontStyle.Bold);
-            btLine.ForeColor = Color.White;
+            //btLine.Text = "／";          // simple slash symbol for line
+            //btLine.Font = new Font("Segoe UI", 14, FontStyle.Bold);
+            //btLine.ForeColor = Color.White;
+
+            // btLine.BackColor = Color.Red;   // just for testing
+            btLine.Image = image_line;
+            btLine.ImageAlign = ContentAlignment.MiddleCenter;
 
             gpButtons.Controls.Add(btLine);
 
@@ -677,8 +681,11 @@ namespace gInk
 		public void SelectPen(int pen)
 		{
 
-            // Added by mwtoolz
-            // -4=line
+			// Added by mwtoolz
+			// -4=line
+			Root.LineMode = false;
+			btLine.Image = image_line;
+
 
             if (pen == -4)   // ===== LINE TOOL =====
             {
@@ -688,9 +695,8 @@ namespace gInk
                 btEraser.Image = image_eraser;
                 btPointer.Image = image_pointer;
                 btPan.Image = image_pan;
-
-                // You can later set a special image for the line button here
-                btLine.Image = image_line_act;   // (when you add the button)
+      
+                btLine.Image = image_line_act;   
 
                 EnterEraserMode(false);
                 Root.UnPointer();
