@@ -1,13 +1,14 @@
-﻿using System;
+﻿//using System.Windows.Input;
+using Microsoft.Ink;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Threading;
-//using System.Windows.Input;
-using Microsoft.Ink;
+using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace gInk
 {
@@ -498,7 +499,28 @@ namespace gInk
 
 		private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
-			if (Root.gpPenWidthVisible)
+
+            //Added by mwtoolz
+            // ===== LINE TOOL =====
+            if (Root.LineMode)
+            {
+                isDrawingLine = true;
+                lineStartPixel = new Point(e.X, e.Y);
+                lineStartInk = lineStartPixel;
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref lineStartInk);
+
+                // Clear the temporary canvas for preview
+                Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+                Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
+                Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+
+                e.Cancel = true;   // prevent normal freehand stroke from starting
+                return;
+            }
+            // ===== END LINE TOOL =====
+
+
+            if (Root.gpPenWidthVisible)
 			{
 				Root.gpPenWidthVisible = false;
 				Root.UponSubPanelUpdate = true;
@@ -524,9 +546,49 @@ namespace gInk
 		}
 
 		public Point LasteXY;
-		private void IC_MouseMove(object sender, CancelMouseEventArgs e)
+
+        //Added by mwtoolz
+        private Point lineStartPixel;      // start point in screen/pixel coordinates
+        private Point lineStartInk;        // start point in ink space
+        private bool isDrawingLine = false;
+
+        private void IC_MouseMove(object sender, CancelMouseEventArgs e)
 		{
-			if (LasteXY.X == 0 && LasteXY.Y == 0)
+
+
+            //Added by mwtoolz
+            // ===== LINE TOOL PREVIEW =====
+            if (Root.LineMode && isDrawingLine)
+            {
+                // Clear previous preview
+                Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+                Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
+                Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+
+                // Draw the temporary line
+                using (Graphics g = Root.FormDisplay.gOneStrokeCanvus)
+                {
+                    // Use current pen color and width
+                    Color lineColor = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Color : Color.Red;
+                    float width = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Width / 20f : 3f;
+
+                    using (Pen previewPen = new Pen(lineColor, width))
+                    {
+                        previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                        previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                        g.DrawLine(previewPen, lineStartPixel.X, lineStartPixel.Y, e.X, e.Y);
+                    }
+                }
+
+                Root.FormDisplay.UpdateFormDisplay(true);
+                e.Cancel = true;
+                return;
+            }
+            // ===== END LINE TOOL PREVIEW =====
+
+
+
+            if (LasteXY.X == 0 && LasteXY.Y == 0)
 			{
 				LasteXY.X = e.X;
 				LasteXY.Y = e.Y;
@@ -556,7 +618,55 @@ namespace gInk
 
 		private void IC_MouseUp(object sender, CancelMouseEventArgs e)
 		{
-			Root.FingerInAction = false;
+
+            //Added by mwtoolz
+            // ===== LINE TOOL - CREATE FINAL STROKE =====
+            if (Root.LineMode && isDrawingLine)
+            {
+                isDrawingLine = false;
+
+                Point endInk = new Point(e.X, e.Y);
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
+
+                // Create a stroke with only two points (straight line)
+                StylusPoint startPt = new StylusPoint(lineStartInk.X, lineStartInk.Y);
+                StylusPoint endPt = new StylusPoint(endInk.X, endInk.Y);
+
+                StylusPointCollection points = new StylusPointCollection();
+                points.Add(startPt);
+                points.Add(endPt);
+
+                Stroke lineStroke = new Stroke(points);
+
+                // Apply current pen attributes
+                if (Root.CurrentPen >= 0)
+                {
+                    lineStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
+                }
+                else
+                {
+                    lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
+                }
+
+                // Add the stroke to the ink
+                IC.Ink.Strokes.Add(lineStroke);
+
+                // Save to undo history
+                SaveUndoStrokes();
+
+                // Refresh the display
+                Root.FormDisplay.ClearCanvus();
+                Root.FormDisplay.DrawStrokes();
+                Root.FormDisplay.DrawButtons(true);
+                Root.FormDisplay.UpdateFormDisplay(true);
+
+                e.Cancel = true;
+                return;
+            }
+            // ===== END LINE TOOL =====
+
+
+            Root.FingerInAction = false;
 			if (Root.Snapping == 2)
 			{
 				int left = Math.Min(Root.SnappingX, e.X);
