@@ -8,7 +8,6 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Input;
 
 namespace gInk
 {
@@ -154,24 +153,14 @@ namespace gInk
             btLine.FlatStyle = FlatStyle.Flat;
             btLine.ForeColor = Color.Transparent;
             btLine.UseVisualStyleBackColor = false;
-            btLine.Click += new EventHandler(this.btLine_Click);   // we will create this method next
-
-            // Temporary text so you can see the button (we will replace with icon later)
-            //btLine.Text = "／";          // simple slash symbol for line
-            //btLine.Font = new Font("Segoe UI", 14, FontStyle.Bold);
-            //btLine.ForeColor = Color.White;
-
-            // btLine.BackColor = Color.Red;   // just for testing
+            btLine.Click += new EventHandler(this.btLine_Click);
             btLine.Image = image_line;
             btLine.ImageAlign = ContentAlignment.MiddleCenter;
-
             gpButtons.Controls.Add(btLine);
-
             btLine.Visible = true;
             btLine.Left = cumulatedleft;
             cumulatedleft += (int)(btLine.Width * 1.1);
             // ===== END LINE BUTTON =====
-
 
 
             if (Root.PanEnabled)
@@ -628,15 +617,15 @@ namespace gInk
                 Point endInk = new Point(e.X, e.Y);
                 IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
 
-                // Create a stroke with only two points (straight line)
-                StylusPoint startPt = new StylusPoint(lineStartInk.X, lineStartInk.Y);
-                StylusPoint endPt = new StylusPoint(endInk.X, endInk.Y);
+                // Create a straight line stroke using Microsoft.Ink API
+                Point[] points = new Point[]
+                {
+        
+					new Point(lineStartInk.X, lineStartInk.Y),        
+					new Point(endInk.X, endInk.Y)
+                };
 
-                StylusPointCollection points = new StylusPointCollection();
-                points.Add(startPt);
-                points.Add(endPt);
-
-                Stroke lineStroke = new Stroke(points);
+                Stroke lineStroke = IC.Ink.CreateStroke(points);
 
                 // Apply current pen attributes
                 if (Root.CurrentPen >= 0)
@@ -647,9 +636,6 @@ namespace gInk
                 {
                     lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
                 }
-
-                // Add the stroke to the ink
-                IC.Ink.Strokes.Add(lineStroke);
 
                 // Save to undo history
                 SaveUndoStrokes();
@@ -804,23 +790,23 @@ namespace gInk
 
                 btEraser.Image = image_eraser;
                 btPointer.Image = image_pointer;
-                btPan.Image = image_pan;
-      
+                btPan.Image = image_pan;      
                 btLine.Image = image_line_act;   
 
                 EnterEraserMode(false);
                 Root.UnPointer();
+                Root.PanMode = false;
                 Root.LineMode = true;
 
                 // Allow full drawing area
                 try
                 {
-                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
+                    IC.SetWindowInputRectangle(new Rectangle(0, 0, 1, 1));
                 }
                 catch
                 {
                     Thread.Sleep(1);
-                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
+                    IC.SetWindowInputRectangle(new Rectangle(0, 0, 1, 1));
                 }
             }
 
