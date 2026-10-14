@@ -635,10 +635,41 @@ namespace gInk
 
 		public void SelectPen(int pen)
 		{
-			// Added by mwtoolz
-			// -4=line
-			// -3=pan, -2=pointer, -1=erasor, 0+=pens
-			if (pen == -3)
+
+            // Added by mwtoolz
+            // -4=line
+
+            if (pen == -4)   // ===== LINE TOOL =====
+            {
+                for (int b = 0; b < Root.MaxPenCount; b++)
+                    btPen[b].Image = image_pen[b];
+
+                btEraser.Image = image_eraser;
+                btPointer.Image = image_pointer;
+                btPan.Image = image_pan;
+
+                // You can later set a special image for the line button here
+                btLine.Image = image_line_act;   // (when you add the button)
+
+                EnterEraserMode(false);
+                Root.UnPointer();
+                Root.LineMode = true;
+
+                // Allow full drawing area
+                try
+                {
+                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
+                }
+                catch
+                {
+                    Thread.Sleep(1);
+                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
+                }
+            }
+
+            // -3=pan, -2=pointer, -1=eraser, 0+=pens
+
+            else if (pen == -3)
 			{
 				for (int b = 0; b < Root.MaxPenCount; b++)
 					btPen[b].Image = image_pen[b];
@@ -740,7 +771,9 @@ namespace gInk
 					IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
 				}
 			}
+
 			Root.CurrentPen = pen;
+
 			if (Root.gpPenWidthVisible)
 			{
 				Root.gpPenWidthVisible = false;
