@@ -62,10 +62,6 @@
 			this.gpButtons.Controls.Add(this.btStop);
 			this.gpButtons.Controls.Add(this.btClear);
 			this.gpButtons.Controls.Add(this.btUndo);
-
-            // added by mwtoolz
-            this.gpButtons.Controls.Add(this.btLine);
-
             this.gpButtons.Location = new System.Drawing.Point(36, 72);
 			this.gpButtons.Name = "gpButtons";
 			this.gpButtons.Size = new System.Drawing.Size(1242, 80);
@@ -323,21 +319,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.pboxPenWidthIndicator)).EndInit();
 			this.ResumeLayout(false);
 
-            // 
-            // btLine-- Added by mwtoolz
-            // 
-            this.btLine = new System.Windows.Forms.Button();
-            this.btLine.FlatAppearance.BorderSize = 0;
-            this.btLine.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btLine.Image = global::gInk.Properties.Resources.tool_line;   
-            this.btLine.Location = new System.Drawing.Point(0, 0);             
-            this.btLine.Name = "btLine";
-            this.btLine.Size = new System.Drawing.Size(69, 69);                
-            this.btLine.TabIndex = 0;
-            this.btLine.UseVisualStyleBackColor = true;
-            this.btLine.Click += new System.EventHandler(this.btLine_Click);
-
-
         }
 
         #endregion
@@ -357,11 +338,6 @@
 		private System.Windows.Forms.PictureBox pboxPenWidthIndicator;
 		public System.Windows.Forms.Button btPan;
 		public System.Windows.Forms.Button btInkVisible;
-
-
-        // Added by mwtoolz
-        public System.Windows.Forms.Button btLine;
-
 
 
     }

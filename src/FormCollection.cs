@@ -22,6 +22,7 @@ namespace gInk
 		public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
 
         // Added by mwtoolz
+        public Button btLine;
         public Bitmap image_line, image_line_act;
 
         public Bitmap image_pointer, image_pointer_act;
@@ -140,7 +141,35 @@ namespace gInk
 			{
 				btEraser.Visible = false;
 			}
-			if (Root.PanEnabled)
+
+            //Added by mwtoolz
+            // ===== LINE BUTTON =====
+            btLine = new Button();
+            btLine.Width = (int)(gpButtons.Height * 0.88);
+            btLine.Height = (int)(gpButtons.Height * 0.88);
+            btLine.Top = (int)(gpButtons.Height * 0.07);
+            btLine.FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
+            btLine.FlatAppearance.BorderSize = 3;
+            btLine.FlatStyle = FlatStyle.Flat;
+            btLine.ForeColor = Color.Transparent;
+            btLine.UseVisualStyleBackColor = false;
+            btLine.Click += new EventHandler(this.btLine_Click);   // we will create this method next
+
+            // Temporary text so you can see the button (we will replace with icon later)
+            btLine.Text = "／";          // simple slash symbol for line
+            btLine.Font = new Font("Segoe UI", 14, FontStyle.Bold);
+            btLine.ForeColor = Color.White;
+
+            gpButtons.Controls.Add(btLine);
+
+            btLine.Visible = true;
+            btLine.Left = cumulatedleft;
+            cumulatedleft += (int)(btLine.Width * 1.1);
+            // ===== END LINE BUTTON =====
+
+
+
+            if (Root.PanEnabled)
 			{
 				btPan.Visible = true;
 				btPan.Left = cumulatedleft;
@@ -300,6 +329,7 @@ namespace gInk
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInk.Properties.Resources.undo, 0, 0, btUndo.Width, btUndo.Height);
 			btUndo.Image = image_undo;
+
 			image_eraser_act = new Bitmap(btEraser.Width, btEraser.Height);
 			g = Graphics.FromImage(image_eraser_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -310,7 +340,18 @@ namespace gInk
 			g.DrawImage(global::gInk.Properties.Resources.eraser, 0, 0, btEraser.Width, btEraser.Height);
 			btEraser.Image = image_eraser;
 
-			image_pan_act = new Bitmap(btPan.Width, btPan.Height);
+            //Added by mwtoolz
+            image_line = new Bitmap(btLine.Width, btLine.Height);
+			g = Graphics.FromImage(image_line);            
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(global::gInk.Properties.Resources.tool_line, 0, 0, btLine.Width, btLine.Height);            
+            image_line_act = new Bitmap(btLine.Width, btLine.Height);
+			g = Graphics.FromImage(image_line_act);
+			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(global::gInk.Properties.Resources.tool_line_act, 0, 0, btLine.Width, btLine.Height);
+           
+
+            image_pan_act = new Bitmap(btPan.Width, btPan.Height);
 			g = Graphics.FromImage(image_pan_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInk.Properties.Resources.pan_act, 0, 0, btPan.Width, btPan.Height);
@@ -674,6 +715,9 @@ namespace gInk
 				for (int b = 0; b < Root.MaxPenCount; b++)
 					btPen[b].Image = image_pen[b];
 				btEraser.Image = image_eraser;
+
+				//Added by mwtoolz
+				btLine.Image = image_line;
 				btPointer.Image = image_pointer;
 				btPan.Image = image_pan_act;
 				EnterEraserMode(false);
@@ -854,33 +898,8 @@ namespace gInk
         //Added by mwtoolz
         private void btLine_Click(object sender, EventArgs e)
         {
-            if (ToolbarMoved)
-            {
-                ToolbarMoved = false;
-                return;
-            }
-
-            // Disable other modes
-            Root.PointerMode = false;
-            Root.PanMode = false;
-            Root.EraserMode = false;
-
-            // Enable Line mode
-            Root.LineMode = true;
-
-            // Hide PenWidth panel if open
-            Root.gpPenWidthVisible = false;
-
-            // Update toolbar button images
-            // ResetToolButtonImages();
-            btLine.Image = image_line_act;
-
-            // Reset pointer cursor if needed
-            // this.Cursor = Cursors.Cross;
+            SelectPen(-4);   // -4 is the value we defined for Line mode
         }
-
-
-
 
 
         public void btSnap_Click(object sender, EventArgs e)
