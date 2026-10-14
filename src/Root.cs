@@ -56,9 +56,6 @@ namespace gInk
 		public bool PointerEnabled = true;
 		public bool PenWidthEnabled = false;
 
-        // Added by mwtoolz
-        public bool LineEnabled = false;
-
         public bool SnapEnabled = true;
 		public bool UndoEnabled = true;
 		public bool ClearEnabled = true;
@@ -93,7 +90,7 @@ namespace gInk
 		public bool EraserMode = false;
 		public bool Docked = false;
 		public bool PointerMode = false;
-		public bool FingerInAction = false;  // true when mouse down, either drawing or snapping or whatever
+        public bool FingerInAction = false;  // true when mouse down, either drawing or snapping or whatever
 		public int Snapping = 0;  // <=0: not snapping, 1: waiting finger, 2:dragging
 		public int SnappingX = -1, SnappingY = -1;
 		public Rectangle SnappingRect;
@@ -105,7 +102,9 @@ namespace gInk
 		public bool MouseMovedUnderSnapshotDragging = false; // used to pause re-drawing when mouse is not moving during dragging to take a screenshot
 
 		public bool PanMode = false;
-		public bool InkVisible = true;
+        // Added by mwtoolz
+        public bool LineMode = false;
+        public bool InkVisible = true;
 
 		public Ink[] UndoStrokes;
 		//public Ink UponUndoStrokes;

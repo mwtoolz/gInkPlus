@@ -635,6 +635,8 @@ namespace gInk
 
 		public void SelectPen(int pen)
 		{
+			// Added by mwtoolz
+			// -4=line
 			// -3=pan, -2=pointer, -1=erasor, 0+=pens
 			if (pen == -3)
 			{
@@ -831,7 +833,7 @@ namespace gInk
             Root.EraserMode = false;
 
             // Enable Line mode
-            Root.LineEnabled = true;
+            Root.LineMode = true;
 
             // Hide PenWidth panel if open
             Root.gpPenWidthVisible = false;
