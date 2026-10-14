@@ -798,15 +798,15 @@ namespace gInk
                 Root.PanMode = false;
                 Root.LineMode = true;
 
-                // Allow full drawing area
+                // Keep FULL input area so we still receive mouse events
                 try
                 {
-                    IC.SetWindowInputRectangle(new Rectangle(0, 0, 1, 1));
+                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
                 }
                 catch
                 {
                     Thread.Sleep(1);
-                    IC.SetWindowInputRectangle(new Rectangle(0, 0, 1, 1));
+                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
                 }
             }
 
