@@ -300,7 +300,7 @@ namespace gInk
 			IC.MouseUp += IC_MouseUp;
 			IC.CursorDown += IC_CursorDown;
 			IC.Stroke += IC_Stroke;
-			IC.DefaultDrawingAttributes.Width = 80;
+            IC.DefaultDrawingAttributes.Width = 80;
 			IC.DefaultDrawingAttributes.Transparency = 30;
 			IC.DefaultDrawingAttributes.AntiAliased = true;
 
@@ -497,8 +497,9 @@ namespace gInk
                 lineStartPixel = new Point(e.X, e.Y);
                 lineStartInk = lineStartPixel;
 
-                //IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref lineStartInk);
-                IC.Renderer.PixelToInkSpace(Root.FormDisplay.InkGraphics, ref lineStartInk);
+                // IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref lineStartInk);
+                // IC.Renderer.PixelToInkSpace(Root.FormDisplay.InkGraphics, ref lineStartInk);
+
 
 
                 // Clear the temporary canvas for preview
@@ -557,20 +558,20 @@ namespace gInk
                 Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
                 Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 
-                // Draw the temporary line
-                using (Graphics g = Root.FormDisplay.gOneStrokeCanvus)
-                {
-                    // Use current pen color and width
-                    Color lineColor = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Color : Color.Red;
-                    float width = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Width / 20f : 3f;
+				// Draw the temporary line
+				Graphics g = Root.FormDisplay.gOneStrokeCanvus;
 
-                    using (Pen previewPen = new Pen(lineColor, width))
-                    {
-                        previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                        previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                        g.DrawLine(previewPen, lineStartPixel.X, lineStartPixel.Y, e.X, e.Y);
-                    }
+                // Use current pen color and width
+                Color lineColor = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Color : Color.Red;
+                float width = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Width / 20f : 3f;
+
+                using (Pen previewPen = new Pen(lineColor, width))
+                {
+                    previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                    previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                    g.DrawLine(previewPen, lineStartPixel.X, lineStartPixel.Y, e.X, e.Y);
                 }
+
 
                 Root.FormDisplay.UpdateFormDisplay(true);
                 e.Cancel = true;
@@ -618,8 +619,8 @@ namespace gInk
                 isDrawingLine = false;
 
                 Point endInk = new Point(e.X, e.Y);
-                //IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
-                IC.Renderer.PixelToInkSpace(Root.FormDisplay.InkGraphics, ref endInk);
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
+                // IC.Renderer.PixelToInkSpace(Root.FormDisplay.InkGraphics, ref endInk);
 
                 // Create a straight line stroke using Microsoft.Ink API
                 Point[] points = new Point[]
@@ -783,10 +784,9 @@ namespace gInk
 
 			// Added by mwtoolz
 			// -4=line
+			isDrawingLine = false;
 			Root.LineMode = false;
 			btLine.Image = image_line;
-
-
             if (pen == -4)   // ===== LINE TOOL =====
             {
                 for (int b = 0; b < Root.MaxPenCount; b++)
@@ -795,24 +795,27 @@ namespace gInk
                 btEraser.Image = image_eraser;
                 btPointer.Image = image_pointer;
                 btPan.Image = image_pan;      
-                btLine.Image = image_line_act;   
+                btLine.Image = image_line_act;
+
+                Root.LineMode = true;  
 
                 EnterEraserMode(false);
                 Root.UnPointer();
                 Root.PanMode = false;
-                Root.LineMode = true;
 
-                // Keep FULL input area so we still receive mouse events
-                try
-                {
-                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-                }
-                catch
-                {
-                    Thread.Sleep(1);
-                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-                }
-            }
+				// Keep FULL input area so we still receive mouse events
+				try
+				{
+					IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
+				}
+				catch
+				{
+					Thread.Sleep(1);
+					IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
+				}
+			}
+
+			// ==== END OF LINE TOOL ====
 
             // -3=pan, -2=pointer, -1=eraser, 0+=pens
 
@@ -826,7 +829,9 @@ namespace gInk
 				btLine.Image = image_line;
 				btPointer.Image = image_pointer;
 				btPan.Image = image_pan_act;
-				EnterEraserMode(false);
+                Root.LineMode = false;
+
+                EnterEraserMode(false);
 				Root.UnPointer();
 				Root.PanMode = true;
 
@@ -850,7 +855,10 @@ namespace gInk
 				EnterEraserMode(false);
 				Root.Pointer();
 				Root.PanMode = false;
-			}
+
+                //Added by mwtoolz
+                Root.LineMode = false;
+            }
 			else if (pen == -1)
 			{
 				if (this.Cursor != System.Windows.Forms.Cursors.Default)
@@ -865,7 +873,10 @@ namespace gInk
 				Root.UnPointer();
 				Root.PanMode = false;
 
-				if (Root.CanvasCursor == 0)
+                //Added by mwtoolz
+                Root.LineMode = false;
+
+                if (Root.CanvasCursor == 0)
 				{
 					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
 					IC.Cursor = cursorred;
@@ -903,7 +914,10 @@ namespace gInk
 				Root.UnPointer();
 				Root.PanMode = false;
 
-				if (Root.CanvasCursor == 0)
+                //Added by mwtoolz
+                Root.LineMode = false;
+
+                if (Root.CanvasCursor == 0)
 				{
 					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
 					IC.Cursor = cursorred;
