@@ -496,7 +496,10 @@ namespace gInk
                 isDrawingLine = true;
                 lineStartPixel = new Point(e.X, e.Y);
                 lineStartInk = lineStartPixel;
-                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref lineStartInk);
+
+                //IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref lineStartInk);
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.InkGraphics, ref lineStartInk);
+
 
                 // Clear the temporary canvas for preview
                 Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
@@ -615,7 +618,8 @@ namespace gInk
                 isDrawingLine = false;
 
                 Point endInk = new Point(e.X, e.Y);
-                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
+                //IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.InkGraphics, ref endInk);
 
                 // Create a straight line stroke using Microsoft.Ink API
                 Point[] points = new Point[]
@@ -628,7 +632,7 @@ namespace gInk
                 Stroke lineStroke = IC.Ink.CreateStroke(points);
 
                 // Apply current pen attributes
-                if (Root.CurrentPen >= 0)
+                if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
                 {
                     lineStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
                 }

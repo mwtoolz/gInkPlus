@@ -225,7 +225,14 @@ namespace gInk
 			}
 		}
 
-		public void DrawStrokes()
+        //Added by mwtoolz
+        public Graphics InkGraphics
+        {
+            get { return gCanvus; }
+        }
+
+
+        public void DrawStrokes()
 		{
 			if (Root.InkVisible)
 				Root.FormCollection.IC.Renderer.Draw(gCanvus, Root.FormCollection.IC.Ink.Strokes);
