@@ -454,7 +454,17 @@ namespace gInk
 
 		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
-			SaveUndoStrokes();
+
+
+            // Added by mwtoolz: Prevent native freehand strokes from being created during LineMode
+            if (Root.LineMode)
+            {
+                e.Cancel = true;
+                return;
+            }
+
+
+            SaveUndoStrokes();
 		}
 
 		private void SaveUndoStrokes()
@@ -494,13 +504,11 @@ namespace gInk
             if (Root.LineMode)
             {
                 isDrawingLine = true;
-                lineStartPixel = new Point(e.X, e.Y);
+
+                lineStartPixel = new Point(e.X, e.Y);        
                 lineStartInk = lineStartPixel;
-
-                // IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref lineStartInk);
-                // IC.Renderer.PixelToInkSpace(Root.FormDisplay.InkGraphics, ref lineStartInk);
-
-
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref lineStartInk);
+              
 
                 // Clear the temporary canvas for preview
                 Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
@@ -544,6 +552,7 @@ namespace gInk
         private Point lineStartPixel;      // start point in screen/pixel coordinates
         private Point lineStartInk;        // start point in ink space
         private bool isDrawingLine = false;
+        private Point lastMousePixel;
 
         private void IC_MouseMove(object sender, CancelMouseEventArgs e)
 		{
@@ -558,12 +567,22 @@ namespace gInk
                 Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
                 Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 
-				// Draw the temporary line
-				Graphics g = Root.FormDisplay.gOneStrokeCanvus;
+                // Track the live pixel position
+                lastMousePixel = new Point(e.X, e.Y);
+
+                // Draw the temporary line
+                Graphics g = Root.FormDisplay.gOneStrokeCanvus;
 
                 // Use current pen color and width
-                Color lineColor = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Color : Color.Red;
-                float width = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Width / 20f : 3f;
+                // Color lineColor = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Color : Color.Red;
+                // float width = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Width / 20f : 3f;
+
+                // Use the active drawing attributes of the last selected pen
+                Color lineColor = IC.DefaultDrawingAttributes.Color;
+                float width = Math.Max(IC.DefaultDrawingAttributes.Width / 20f, 1f);
+
+                // Ensure width is at least 1 pixel so it's always visible
+                width = Math.Max(width, 1f);
 
                 using (Pen previewPen = new Pen(lineColor, width))
                 {
@@ -618,7 +637,9 @@ namespace gInk
             {
                 isDrawingLine = false;
 
-                Point endInk = new Point(e.X, e.Y);
+                // Use lastMousePixel instead of e.X / e.Y
+                Point endInk = new Point(lastMousePixel.X, lastMousePixel.Y);
+
                 IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
                 // IC.Renderer.PixelToInkSpace(Root.FormDisplay.InkGraphics, ref endInk);
 
@@ -797,7 +818,7 @@ namespace gInk
                 btPan.Image = image_pan;      
                 btLine.Image = image_line_act;
 
-                Root.LineMode = true;  
+                Root.LineMode = true;
 
                 EnterEraserMode(false);
                 Root.UnPointer();

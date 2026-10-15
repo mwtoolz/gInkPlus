@@ -225,11 +225,6 @@ namespace gInk
 			}
 		}
 
-        //Added by mwtoolz
-        public Graphics InkGraphics
-        {
-            get { return gCanvus; }
-        }
 
 
         public void DrawStrokes()
