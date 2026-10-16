@@ -225,7 +225,24 @@ namespace gInk
 			}
 		}
 
+        // Added by mwtoolz
+        public void DrawLinePreview(Point start, Point end, Color color, float width)
+        {
+            using (Pen previewPen = new Pen(color, width))
+            {
+                previewPen.StartCap =
+                    System.Drawing.Drawing2D.LineCap.Round;
+                previewPen.EndCap =
+                    System.Drawing.Drawing2D.LineCap.Round;
 
+                gCanvus.DrawLine(
+                    previewPen,
+                    start.X, start.Y,
+                    end.X, end.Y);
+            }
+        }
+
+		// == End DrawLinePreview
 
         public void DrawStrokes()
 		{

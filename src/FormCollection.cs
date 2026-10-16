@@ -564,39 +564,57 @@ namespace gInk
             // ===== LINE TOOL PREVIEW =====
             if (Root.LineMode && isDrawingLine)
             {
-				// Clear previous preview
-				Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
-				Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
-				Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
-		
+                // Clear previous preview
+                //Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+                //Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
+                //Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 
-				// Track the live pixel position
-				lastMousePixel = new Point(e.X, e.Y);
+                // Redraw the main display canvas
+                Root.FormDisplay.ClearCanvus();
+                Root.FormDisplay.DrawStrokes();
+                Root.FormDisplay.DrawButtons(true);
+
+
+                // Track the live pixel position
+                lastMousePixel = new Point(e.X, e.Y);
 
                 // Draw the temporary line
-                Graphics g = Root.FormDisplay.gOneStrokeCanvus;
-                
+                // Graphics g = Root.FormDisplay.gOneStrokeCanvus;
+                // Draw the preview directly onto the displayed canvas
+                Color lineColor = IC.DefaultDrawingAttributes.Color;
+
+                float width = Math.Max(
+                    IC.DefaultDrawingAttributes.Width / 20f, 1f);
+
+                Root.FormDisplay.DrawLinePreview(
+                    lineStartPixel,
+                    new Point(e.X, e.Y),
+                    lineColor,
+                    width);
+
+                Root.FormDisplay.UpdateFormDisplay(true);
+
 
                 // Use current pen color and width
                 // Color lineColor = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Color : Color.Red;
                 // float width = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Width / 20f : 3f;
 
                 // Use the active drawing attributes of the last selected pen
-                Color lineColor = IC.DefaultDrawingAttributes.Color;
-                float width = Math.Max(IC.DefaultDrawingAttributes.Width / 20f, 1f);
+                // Color lineColor = IC.DefaultDrawingAttributes.Color;
+                // float width = Math.Max(IC.DefaultDrawingAttributes.Width / 20f, 1f);
 
                 // Ensure width is at least 1 pixel so it's always visible
-                width = Math.Max(width, 1f);
+                // width = Math.Max(width, 1f);
 
-                using (Pen previewPen = new Pen(lineColor, width))
-                {
-                    previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                    previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                    g.DrawLine(previewPen, lineStartPixel.X, lineStartPixel.Y, e.X, e.Y);
-                }
+                //using (Pen previewPen = new Pen(lineColor, width))
+                //{
+                //    previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                //    previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                //    g.DrawLine(previewPen, lineStartPixel.X, lineStartPixel.Y, e.X, e.Y);
+                //}
 
 
-                Root.FormDisplay.UpdateFormDisplay(true);
+                //Root.FormDisplay.UpdateFormDisplay(true);
                 e.Cancel = true;
                 return;
             }
