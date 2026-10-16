@@ -505,7 +505,8 @@ namespace gInk
 				}
 			}
 
-			else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible)
+			// Modified by mwtoolz
+			else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible && !Root.LineMode)
 			{
 				//ClearCanvus();
 				//DrawStrokes();

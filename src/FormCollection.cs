@@ -456,12 +456,12 @@ namespace gInk
 		{
 
 
-            // Added by mwtoolz: Prevent native freehand strokes from being created during LineMode
-            if (Root.LineMode)
-            {
-                e.Cancel = true;
-                return;
-            }
+            // Added by mwtoolz: Stroke line will disappear once mouse up in LineMode
+            //if (Root.LineMode)
+            //{
+            //    e.Cancel = true;
+            //    return;
+            //}
 
 
             SaveUndoStrokes();
@@ -499,7 +499,7 @@ namespace gInk
 		private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
 
-            //Added by mwtoolz
+            // Added by mwtoolz 
             // ===== LINE TOOL =====
             if (Root.LineMode)
             {
@@ -514,6 +514,7 @@ namespace gInk
                 Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
                 Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
                 Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+           
 
                 e.Cancel = true;   // prevent normal freehand stroke from starting
                 return;
@@ -553,6 +554,7 @@ namespace gInk
         private Point lineStartInk;        // start point in ink space
         private bool isDrawingLine = false;
         private Point lastMousePixel;
+  
 
         private void IC_MouseMove(object sender, CancelMouseEventArgs e)
 		{
