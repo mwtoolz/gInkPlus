@@ -505,8 +505,10 @@ namespace gInk
 				}
 			}
 
-			// Modified by mwtoolz
-			else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible && !Root.LineMode)
+            // Modified by mwtoolz to remove stroke preview in lineMode- require to find out what function causes pen preview
+			// To investigate gOneStrokeCanvus and onestrokeDc.
+			// Outcome of investigation: oneSrokeDc uses same underlying device context as native ink preview.
+            else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible && !Root.LineMode)
 			{
 				//ClearCanvus();
 				//DrawStrokes();

@@ -564,16 +564,18 @@ namespace gInk
             // ===== LINE TOOL PREVIEW =====
             if (Root.LineMode && isDrawingLine)
             {
-                // Clear previous preview
-                Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
-                Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
-                Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+				// Clear previous preview
+				Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+				Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
+				Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+		
 
-                // Track the live pixel position
-                lastMousePixel = new Point(e.X, e.Y);
+				// Track the live pixel position
+				lastMousePixel = new Point(e.X, e.Y);
 
                 // Draw the temporary line
                 Graphics g = Root.FormDisplay.gOneStrokeCanvus;
+                
 
                 // Use current pen color and width
                 // Color lineColor = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Color : Color.Red;
