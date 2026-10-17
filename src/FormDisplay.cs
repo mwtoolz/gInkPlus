@@ -20,8 +20,14 @@ namespace gInk
 		IntPtr blankcanvusDc;
 		Graphics gCanvus;
 		public Graphics gOneStrokeCanvus;
-		//Bitmap ScreenBitmap;
-		IntPtr hScreenBitmap;
+
+        // Added by me
+        // Line tool preview
+        private Bitmap linePreviewBitmap;
+        private Graphics gLinePreview;
+
+        //Bitmap ScreenBitmap;
+        IntPtr hScreenBitmap;
 		IntPtr memscreenDc;
 
 		Bitmap gpButtonsImage;
@@ -100,7 +106,16 @@ namespace gInk
 
 
 			ToTopMostThrough();
-		}
+
+            // Added by mwtoolz
+            // Initialize the preview surface
+            linePreviewBitmap = new Bitmap(this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            gLinePreview = Graphics.FromImage(linePreviewBitmap);
+            gLinePreview.Clear(Color.Transparent);
+            gLinePreview.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+
+        }
 
 		public void ToTopMostThrough()
 		{
@@ -226,23 +241,44 @@ namespace gInk
 		}
 
         // Added by mwtoolz
-        public void DrawLinePreview(Point start, Point end, Color color, float width)
+        public void DrawLinePreview(
+          Point start,
+          Point end,
+          Color color,
+          float width)
         {
-            using (Pen previewPen = new Pen(color, width))
+            gLinePreview.Clear(Color.Transparent);
+
+            using (Pen pen = new Pen(color, width))
             {
-                previewPen.StartCap =
+                pen.StartCap =
                     System.Drawing.Drawing2D.LineCap.Round;
-                previewPen.EndCap =
+                pen.EndCap =
                     System.Drawing.Drawing2D.LineCap.Round;
 
-                gCanvus.DrawLine(
-                    previewPen,
-                    start.X, start.Y,
-                    end.X, end.Y);
+                gLinePreview.DrawLine(pen, start, end);
             }
         }
 
-		// == End DrawLinePreview
+        public void CompositeLinePreview()
+        {
+			// to use separate canvas TODO
+            var oldMode = gCanvus.CompositingMode;
+
+            try
+            {
+                gCanvus.CompositingMode =
+                    System.Drawing.Drawing2D.CompositingMode.SourceOver;
+
+                gCanvus.DrawImage(linePreviewBitmap, 0, 0);
+            }
+            finally
+            {
+                gCanvus.CompositingMode = oldMode;
+            }
+        }
+
+        // == End DrawLinePreview
 
         public void DrawStrokes()
 		{
