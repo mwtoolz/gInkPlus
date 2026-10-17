@@ -455,13 +455,12 @@ namespace gInk
 		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
 
-
-            // Added by mwtoolz: Stroke line will disappear once mouse up in LineMode
-            //if (Root.LineMode)
-            //{
-            //    e.Cancel = true;
-            //    return;
-            //}
+            // Line mode: discard the unwanted native freehand stroke.
+            if (Root.LineMode && isDrawingLine)
+            {
+                IC.Ink.DeleteStroke(e.Stroke);
+                return;
+            }
 
 
             SaveUndoStrokes();
@@ -499,24 +498,27 @@ namespace gInk
 		private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
 
+
+
             // Added by mwtoolz 
             // ===== LINE TOOL =====
             if (Root.LineMode)
-            {
+            {          
+
                 isDrawingLine = true;
 
                 lineStartPixel = new Point(e.X, e.Y);        
                 lineStartInk = lineStartPixel;
                 IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref lineStartInk);
-              
 
-                // Clear the temporary canvas for preview
-                Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
-                Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
-                Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
-           
 
-                e.Cancel = true;   // prevent normal freehand stroke from starting
+				// Clear the temporary canvas for preview
+				Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+				Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
+				Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+
+
+				e.Cancel = true;   // prevent normal freehand stroke from starting
                 return;
             }
             // ===== END LINE TOOL =====
@@ -564,58 +566,60 @@ namespace gInk
             // ===== LINE TOOL PREVIEW =====
             if (Root.LineMode && isDrawingLine)
             {
-                // Clear previous preview
-                //Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
-                //Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
-                //Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+				// Clear previous preview
+				Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+				Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
+				Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 
-                // Redraw the main display canvas
-                Root.FormDisplay.ClearCanvus();
-                Root.FormDisplay.DrawStrokes();
-                Root.FormDisplay.DrawButtons(true);
+				// Redraw the main display canvas
+				//Root.FormDisplay.ClearCanvus();
+				//Root.FormDisplay.DrawStrokes();
+				//Root.FormDisplay.DrawButtons(true);
 
 
-                // Track the live pixel position
-                lastMousePixel = new Point(e.X, e.Y);
+				// Track the live pixel position
+				lastMousePixel = new Point(e.X, e.Y);
 
+				// Using different method to draw preview (Form_Paint with e.Graphics.DrawLine())
+				// as the previous method uses same ink and gets unwated pencil stroke preview too.
+				
+
+
+
+
+
+				/*
                 // Draw the temporary line
-                // Graphics g = Root.FormDisplay.gOneStrokeCanvus;
-                // Draw the preview directly onto the displayed canvas
-                Color lineColor = IC.DefaultDrawingAttributes.Color;
-
-                float width = Math.Max(
-                    IC.DefaultDrawingAttributes.Width / 20f, 1f);
-
-                Root.FormDisplay.DrawLinePreview(
-                    lineStartPixel,
-                    new Point(e.X, e.Y),
-                    lineColor,
-                    width);
-
-                Root.FormDisplay.UpdateFormDisplay(true);
+                Graphics g = Root.FormDisplay.gOneStrokeCanvus;	
 
 
-                // Use current pen color and width
-                // Color lineColor = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Color : Color.Red;
-                // float width = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Width / 20f : 3f;
+				// Use current pen color and width
+				// Color lineColor = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Color : Color.Red;
+				// float width = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Width / 20f : 3f;
 
-                // Use the active drawing attributes of the last selected pen
-                // Color lineColor = IC.DefaultDrawingAttributes.Color;
-                // float width = Math.Max(IC.DefaultDrawingAttributes.Width / 20f, 1f);
+				// Use the active drawing attributes of the last selected pen
 
-                // Ensure width is at least 1 pixel so it's always visible
-                // width = Math.Max(width, 1f);
+				 Color lineColor = IC.DefaultDrawingAttributes.Color;
+				float width = Math.Max(IC.DefaultDrawingAttributes.Width / 20f, 1f);
 
-                //using (Pen previewPen = new Pen(lineColor, width))
-                //{
-                //    previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                //    previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                //    g.DrawLine(previewPen, lineStartPixel.X, lineStartPixel.Y, e.X, e.Y);
-                //}
+				// Ensure width is at least 1 pixel so it's always visible
+
+				 width = Math.Max(width, 1f);
+
+				using (Pen previewPen = new Pen(lineColor, width))
+				{
+					previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+					previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+					g.DrawLine(previewPen, lineStartPixel.X, lineStartPixel.Y, e.X, e.Y);
+				}
+
+				*/
 
 
-                //Root.FormDisplay.UpdateFormDisplay(true);
-                e.Cancel = true;
+				Root.FormDisplay.UpdateFormDisplay(true);
+
+
+				e.Cancel = true;
                 return;
             }
             // ===== END LINE TOOL PREVIEW =====
@@ -660,7 +664,8 @@ namespace gInk
                 isDrawingLine = false;
 
                 // Use lastMousePixel instead of e.X / e.Y
-                Point endInk = new Point(lastMousePixel.X, lastMousePixel.Y);
+                // Point endInk = new Point(lastMousePixel.X, lastMousePixel.Y);
+                Point endInk = new Point(e.X, e.Y);
 
                 IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
                 // IC.Renderer.PixelToInkSpace(Root.FormDisplay.InkGraphics, ref endInk);
