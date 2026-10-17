@@ -151,6 +151,11 @@ namespace gInk
             btLine.FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
             btLine.FlatAppearance.BorderSize = 3;
             btLine.FlatStyle = FlatStyle.Flat;
+
+            // Prevent grey background on hover and click
+            btLine.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btLine.FlatAppearance.MouseDownBackColor = Color.Transparent;
+
             btLine.ForeColor = Color.Transparent;
             btLine.UseVisualStyleBackColor = false;
             btLine.Click += new EventHandler(this.btLine_Click);
@@ -997,7 +1002,7 @@ namespace gInk
         {
             SelectPen(-4);   // -4 is the value we defined for Line mode
         }
-        // ===
+		// ===
 
 
         public void btSnap_Click(object sender, EventArgs e)

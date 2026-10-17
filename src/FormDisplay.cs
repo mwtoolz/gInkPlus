@@ -568,8 +568,21 @@ namespace gInk
                     {
                         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-                        Color lineColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
-                        float width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 20f, 1f);
+                        Color lineColor;
+                        float width;
+
+                        // Use the exact same pen attribute check as IC_MouseUp
+                        if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                        {
+                            Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];
+                            lineColor = attr.Color;
+                            width = Math.Max(attr.Width / 30f, 1f);
+                        }
+                        else
+                        {
+                            lineColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
+                            width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 30f, 1f);
+                        }
 
                         using (Pen previewPen = new Pen(lineColor, width))
                         {
