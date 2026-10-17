@@ -20,6 +20,18 @@ namespace gInk
 		IntPtr blankcanvusDc;
 		Graphics gCanvus;
 		public Graphics gOneStrokeCanvus;
+
+        // Added by mwtoolz by Gemini
+        // Add these public/internal tracking variables in FormDisplay.cs
+        // Use properties instead of public fields to avoid marshal-by-ref warnings
+        public bool IsDrawingLine { get; set; } = false;
+        public Point LineStartPoint { get; set; }
+        public Point CurrentMousePoint { get; set; }
+        private Rectangle oldLineBox;
+		private bool oldBoxValid = false;
+		// ===
+
+
 		//Bitmap ScreenBitmap;
 		IntPtr hScreenBitmap;
 		IntPtr memscreenDc;
@@ -224,25 +236,6 @@ namespace gInk
 				g.DrawImage(gpPenWidthImage, left, top);
 			}
 		}
-
-        // Added by mwtoolz
-        public void DrawLinePreview(Point start, Point end, Color color, float width)
-        {
-            using (Pen previewPen = new Pen(color, width))
-            {
-                previewPen.StartCap =
-                    System.Drawing.Drawing2D.LineCap.Round;
-                previewPen.EndCap =
-                    System.Drawing.Drawing2D.LineCap.Round;
-
-                gCanvus.DrawLine(
-                    previewPen,
-                    start.X, start.Y,
-                    end.X, end.Y);
-            }
-        }
-
-		// == End DrawLinePreview
 
         public void DrawStrokes()
 		{
@@ -523,8 +516,8 @@ namespace gInk
 			}
 
             // Modified by mwtoolz to remove stroke preview in lineMode- require to find out what function causes pen preview
-            else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible && !Root.LineMode)
-            // else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible)
+            //else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible && !Root.LineMode)
+            else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible)
             {
 				//ClearCanvus();
 				//DrawStrokes();
@@ -548,17 +541,50 @@ namespace gInk
 					UpdateFormDisplay(true);
 				}
 
-				// Added by mwtoolz
-				/*
-				else if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && Root.LineMode)
-				{
-                 
-                   MessageBox.Show("Code has been executed!");
+			// Added by mwtoolz by Gemini
+			else if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && Root.LineMode && IsDrawingLine)
+			{
+                    // MessageBox.Show("Code has been executed!");
+                    // 1. Erase the old line position using BitBlt
+                    if (oldBoxValid)
+                    {
+                        BitBlt(canvusDc, oldLineBox.X, oldLineBox.Y, oldLineBox.Width, oldLineBox.Height,
+                               onestrokeDc, oldLineBox.X, oldLineBox.Y, (uint)CopyPixelOperation.SourceCopy);
+                    }
 
+                    // 2. Calculate new bounding box with padding
+                    int padding = 15;
+                    int minX = Math.Min(LineStartPoint.X, CurrentMousePoint.X) - padding;
+                    int minY = Math.Min(LineStartPoint.Y, CurrentMousePoint.Y) - padding;
+                    int maxX = Math.Max(LineStartPoint.X, CurrentMousePoint.X) + padding;
+                    int maxY = Math.Max(LineStartPoint.Y, CurrentMousePoint.Y) + padding;
+
+                    oldLineBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+                    oldBoxValid = true;
+
+                    // 3. Draw the new line preview using GDI+
+                    using (Graphics g = Graphics.FromHdc(canvusDc))
+                    {
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                        Color lineColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
+                        float width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 20f, 1f);
+
+                        using (Pen previewPen = new Pen(lineColor, width))
+                        {
+                            previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                            previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                            g.DrawLine(previewPen, LineStartPoint.X, LineStartPoint.Y, CurrentMousePoint.X, CurrentMousePoint.Y);
+                        }
+                    }
                 }
-				*/
 
+                UpdateFormDisplay(true);
             }
+
+
+
+			// =====
 
 			else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == true)
 			{
@@ -611,6 +637,15 @@ namespace gInk
 				}
 			}
 		}
+
+		// Added by mwtoolz, Gemini
+		// Call this from IC_MouseUp when line drawing ends to reset the tracking state
+		public void ResetLineDrawingState()
+		{
+			IsDrawingLine = false;
+			oldBoxValid = false;
+		}
+		// ===
 
 		private void FormDisplay_FormClosed(object sender, FormClosedEventArgs e)
 		{
