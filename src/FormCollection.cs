@@ -455,7 +455,6 @@ namespace gInk
 		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
 
-			
             // Line mode: discard the unwanted native freehand stroke.
             if (Root.LineMode && Root.FormDisplay.IsDrawingLine)
             {
@@ -463,7 +462,6 @@ namespace gInk
                 return;
             }
 			
-
             SaveUndoStrokes();
 		}
 
@@ -496,31 +494,16 @@ namespace gInk
 			Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 		}
 
-        //Added by mwtoolz
-        // new from Gemini
-        // private bool isDrawingLine = false;
-        // private Point lineStartPoint;
-        // private Point currentMousePoint;
-        private Rectangle oldLineBox;
-        private bool oldBoxValid = false;
-
-
-        /*
-        private Point lineStartPixel;      // start point in screen/pixel coordinates
-        private Point lineStartInk;        // start point in ink space
-        private bool isDrawingLine = false;
-        */
-
         private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
 
-            // Added by mwtoolz 
+            // Added by mwtoolz  by Gemini	
             if (Root.LineMode)
             {
                 Root.FormDisplay.IsDrawingLine = true;
                 Root.FormDisplay.LineStartPoint = new Point(e.X, e.Y);
                 Root.FormDisplay.CurrentMousePoint = Root.FormDisplay.LineStartPoint;
-                oldBoxValid = false;
+                Root.FormDisplay.oldBoxValid = false;
 
                 // CRITICAL: Prepare the background buffer (onestrokeDc / gOneStrokeCanvus) 
                 // so BitBlt has a clean snapshot to restore from during the ticker loop.
@@ -532,32 +515,7 @@ namespace gInk
                 e.Cancel = true;
                 return;
             }
-
-
-            /*
-            // ===== LINE TOOL =====
-            if (Root.LineMode)
-            {          
-
-                isDrawingLine = true;
-
-                lineStartPixel = new Point(e.X, e.Y);        
-                lineStartInk = lineStartPixel;
-                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref lineStartInk);
-
-
-				// Clear the temporary canvas for preview
-				Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
-				Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
-				Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
-
-
-				e.Cancel = true;   // prevent normal freehand stroke from starting
-                return;
-            }
-            // ===== END LINE TOOL =====
-			*/
-
+			// ===
 
             if (Root.gpPenWidthVisible)
 			{
@@ -600,66 +558,9 @@ namespace gInk
 				e.Cancel = true;
 				return;
 			}
+			// ===
 
-
-                /*
-                // ===== LINE TOOL PREVIEW =====
-                if (Root.LineMode && isDrawingLine)
-                {
-                    // Clear previous preview
-                    Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
-                    Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
-                    Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
-
-                    // Redraw the main display canvas
-                    //Root.FormDisplay.ClearCanvus();
-                    //Root.FormDisplay.DrawStrokes();
-                    //Root.FormDisplay.DrawButtons(true);
-
-
-                    // Track the live pixel position
-                    // lastMousePixel = new Point(e.X, e.Y);
-
-                    // Using different method to draw preview (Form_Paint with e.Graphics.DrawLine())
-                    // as the previous method uses same ink and gets unwated pencil stroke preview too.
-
-
-                    // Draw the temporary line
-                    Graphics g = Root.FormDisplay.gOneStrokeCanvus;	
-
-
-                    // Use current pen color and width
-                    // Color lineColor = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Color : Color.Red;
-                    // float width = (Root.CurrentPen >= 0) ? Root.PenAttr[Root.CurrentPen].Width / 20f : 3f;
-
-                    // Use the active drawing attributes of the last selected pen
-
-                    Color lineColor = IC.DefaultDrawingAttributes.Color;
-                    float width = Math.Max(IC.DefaultDrawingAttributes.Width / 20f, 1f);
-
-                    // Ensure width is at least 1 pixel so it's always visible
-
-                     width = Math.Max(width, 1f);
-
-                    using (Pen previewPen = new Pen(lineColor, width))
-                    {
-                        previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                        previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                        g.DrawLine(previewPen, lineStartPixel.X, lineStartPixel.Y, e.X, e.Y);
-                    }
-
-
-                    Root.FormDisplay.UpdateFormDisplay(true);
-
-
-                    e.Cancel = true;
-                    return;
-                }
-                // ===== END LINE TOOL PREVIEW =====
-                */
-
-
-                if (LasteXY.X == 0 && LasteXY.Y == 0)
+            if (LasteXY.X == 0 && LasteXY.Y == 0)
 			{
 				LasteXY.X = e.X;
 				LasteXY.Y = e.Y;
@@ -690,7 +591,7 @@ namespace gInk
 		private void IC_MouseUp(object sender, CancelMouseEventArgs e)
 		{
 
-            //Added by mwtoolz
+            // Added by mwtoolz
             // new code by Gemini
 			// ===== LINE TOOL - CREATE FINAL STROKE =====
             if (Root.LineMode && Root.FormDisplay.IsDrawingLine)
@@ -731,57 +632,6 @@ namespace gInk
                 return;
             }
             // ===== END LINE TOOL =====
-
-
-
-            /*
-            // ===== LINE TOOL - CREATE FINAL STROKE =====
-            if (Root.LineMode && isDrawingLine)
-            {
-                isDrawingLine = false;
-
-                // Use lastMousePixel instead of e.X / e.Y
-                // Point endInk = new Point(lastMousePixel.X, lastMousePixel.Y);
-                Point endInk = new Point(e.X, e.Y);
-
-                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
-                // IC.Renderer.PixelToInkSpace(Root.FormDisplay.InkGraphics, ref endInk);
-
-                // Create a straight line stroke using Microsoft.Ink API
-                Point[] points = new Point[]
-                {
-        
-					new Point(lineStartInk.X, lineStartInk.Y),        
-					new Point(endInk.X, endInk.Y)
-                };
-
-                Stroke lineStroke = IC.Ink.CreateStroke(points);
-
-                // Apply current pen attributes
-                if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
-                {
-                    lineStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
-                }
-                else
-                {
-                    lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
-                }
-
-                // Save to undo history
-                SaveUndoStrokes();
-
-                // Refresh the display
-                Root.FormDisplay.ClearCanvus();
-                Root.FormDisplay.DrawStrokes();
-                Root.FormDisplay.DrawButtons(true);
-                Root.FormDisplay.UpdateFormDisplay(true);
-
-                e.Cancel = true;
-                return;
-            }
-            // ===== END LINE TOOL =====
-			*/
-
 
             Root.FingerInAction = false;
 			if (Root.Snapping == 2)
@@ -909,7 +759,7 @@ namespace gInk
 		{
 
             // Added by mwtoolz
-            // -4=line
+            // -4 = line
             Root.FormDisplay.IsDrawingLine = false;
 			Root.LineMode = false;
 			btLine.Image = image_line;
@@ -951,11 +801,12 @@ namespace gInk
 					btPen[b].Image = image_pen[b];
 				btEraser.Image = image_eraser;
 
-				//Added by mwtoolz
+				// Added by mwtoolz
 				btLine.Image = image_line;
 				btPointer.Image = image_pointer;
 				btPan.Image = image_pan_act;
                 Root.LineMode = false;
+				// ===
 
                 EnterEraserMode(false);
 				Root.UnPointer();
@@ -1146,6 +997,7 @@ namespace gInk
         {
             SelectPen(-4);   // -4 is the value we defined for Line mode
         }
+        // ===
 
 
         public void btSnap_Click(object sender, EventArgs e)

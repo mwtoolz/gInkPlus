@@ -28,7 +28,7 @@ namespace gInk
         public Point LineStartPoint { get; set; }
         public Point CurrentMousePoint { get; set; }
         private Rectangle oldLineBox;
-		private bool oldBoxValid = false;
+		public bool oldBoxValid = false;
 		// ===
 
 
@@ -514,9 +514,7 @@ namespace gInk
 					Root.MouseMovedUnderSnapshotDragging = false;
 				}
 			}
-
-            // Modified by mwtoolz to remove stroke preview in lineMode- require to find out what function causes pen preview
-            //else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible && !Root.LineMode)
+   
             else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible)
             {
 				//ClearCanvus();
@@ -526,8 +524,11 @@ namespace gInk
 
 				// Added !Root.LineMode by mwtoolz 
 				if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.LineMode)
-				{
-					Stroke stroke = Root.FormCollection.IC.Ink.Strokes[Root.FormCollection.IC.Ink.Strokes.Count - 1];
+
+                //if (Root.FormCollection.IC.Ink.Strokes.Count > 0)
+
+                {
+                    Stroke stroke = Root.FormCollection.IC.Ink.Strokes[Root.FormCollection.IC.Ink.Strokes.Count - 1];
 					if (!stroke.Deleted)
 					{
 						Rectangle box = stroke.GetBoundingBox();
@@ -581,9 +582,6 @@ namespace gInk
 
                 UpdateFormDisplay(true);
             }
-
-
-
 			// =====
 
 			else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == true)
