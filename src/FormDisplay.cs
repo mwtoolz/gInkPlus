@@ -523,15 +523,16 @@ namespace gInk
 			}
 
             // Modified by mwtoolz to remove stroke preview in lineMode- require to find out what function causes pen preview
-			// To investigate gOneStrokeCanvus and onestrokeDc.
-			// Outcome of investigation: oneSrokeDc uses same underlying device context as native ink preview.
             else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible && !Root.LineMode)
-			{
+            // else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible)
+            {
 				//ClearCanvus();
 				//DrawStrokes();
 				//DrawButtons(false);
 				//UpdateFormDisplay();	
-				if (Root.FormCollection.IC.Ink.Strokes.Count > 0)
+
+				// Added !Root.LineMode by mwtoolz 
+				if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.LineMode)
 				{
 					Stroke stroke = Root.FormCollection.IC.Ink.Strokes[Root.FormCollection.IC.Ink.Strokes.Count - 1];
 					if (!stroke.Deleted)
@@ -546,7 +547,18 @@ namespace gInk
 					}
 					UpdateFormDisplay(true);
 				}
-			}
+
+				// Added by mwtoolz
+				/*
+				else if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && Root.LineMode)
+				{
+                 
+                   MessageBox.Show("Code has been executed!");
+
+                }
+				*/
+
+            }
 
 			else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == true)
 			{

@@ -455,13 +455,14 @@ namespace gInk
 		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
 
+			
             // Line mode: discard the unwanted native freehand stroke.
             if (Root.LineMode && isDrawingLine)
             {
                 IC.Ink.DeleteStroke(e.Stroke);
                 return;
             }
-
+			
 
             SaveUndoStrokes();
 		}
@@ -555,7 +556,7 @@ namespace gInk
         private Point lineStartPixel;      // start point in screen/pixel coordinates
         private Point lineStartInk;        // start point in ink space
         private bool isDrawingLine = false;
-        private Point lastMousePixel;
+        // private Point lastMousePixel;
   
 
         private void IC_MouseMove(object sender, CancelMouseEventArgs e)
@@ -578,19 +579,14 @@ namespace gInk
 
 
 				// Track the live pixel position
-				lastMousePixel = new Point(e.X, e.Y);
+				// lastMousePixel = new Point(e.X, e.Y);
 
 				// Using different method to draw preview (Form_Paint with e.Graphics.DrawLine())
 				// as the previous method uses same ink and gets unwated pencil stroke preview too.
-				
 
 
-
-
-
-				/*
-                // Draw the temporary line
-                Graphics g = Root.FormDisplay.gOneStrokeCanvus;	
+				// Draw the temporary line
+				Graphics g = Root.FormDisplay.gOneStrokeCanvus;	
 
 
 				// Use current pen color and width
@@ -599,7 +595,7 @@ namespace gInk
 
 				// Use the active drawing attributes of the last selected pen
 
-				 Color lineColor = IC.DefaultDrawingAttributes.Color;
+				Color lineColor = IC.DefaultDrawingAttributes.Color;
 				float width = Math.Max(IC.DefaultDrawingAttributes.Width / 20f, 1f);
 
 				// Ensure width is at least 1 pixel so it's always visible
@@ -612,10 +608,8 @@ namespace gInk
 					previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
 					g.DrawLine(previewPen, lineStartPixel.X, lineStartPixel.Y, e.X, e.Y);
 				}
-
-				*/
-
-
+		
+				
 				Root.FormDisplay.UpdateFormDisplay(true);
 
 
