@@ -25,6 +25,12 @@ namespace gInk
         // Line tool preview
         private Bitmap linePreviewBitmap;
         private Graphics gLinePreview;
+        private IntPtr lineOutputDc;
+        private IntPtr lineOutputHBitmap;
+        private IntPtr lineOutputOldBitmap;
+        private Graphics gLineOutput;
+        private bool showLinePreview;
+        // ===
 
         //Bitmap ScreenBitmap;
         IntPtr hScreenBitmap;
@@ -93,7 +99,66 @@ namespace gInk
 				screenbits = new byte[50000000];
 				lastscreenbits = new byte[50000000];
 			}
-			ReleaseDC(IntPtr.Zero, screenDc);
+
+            // Added by mwtoolz
+            // Initialize the preview surface
+            linePreviewBitmap = new Bitmap(this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            gLinePreview = Graphics.FromImage(linePreviewBitmap);
+            gLinePreview.Clear(Color.Transparent);
+            gLinePreview.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            // new canvas
+            lineOutputDc = CreateCompatibleDC(screenDc);
+
+            if (lineOutputDc == IntPtr.Zero)
+            {
+                throw new System.ComponentModel.Win32Exception(
+                    System.Runtime.InteropServices.Marshal.GetLastWin32Error(),
+                    "CreateCompatibleDC failed for lineOutputDc.");
+            }
+
+            using (Bitmap outputBitmap = new Bitmap(
+                this.Width,
+                this.Height,
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb))
+            {
+                lineOutputHBitmap =
+                    outputBitmap.GetHbitmap(Color.FromArgb(0));
+            }
+
+            if (lineOutputHBitmap == IntPtr.Zero)
+            {
+                DeleteDC(lineOutputDc);
+                lineOutputDc = IntPtr.Zero;
+
+                throw new InvalidOperationException(
+                    "Failed to create lineOutputHBitmap.");
+            }
+
+            lineOutputOldBitmap =
+                SelectObject(lineOutputDc, lineOutputHBitmap);
+
+            if (lineOutputOldBitmap == IntPtr.Zero ||
+                lineOutputOldBitmap == new IntPtr(-1))
+            {
+                DeleteObject(lineOutputHBitmap);
+                DeleteDC(lineOutputDc);
+
+                lineOutputHBitmap = IntPtr.Zero;
+                lineOutputDc = IntPtr.Zero;
+
+                throw new System.ComponentModel.Win32Exception(
+                    System.Runtime.InteropServices.Marshal.GetLastWin32Error(),
+                    "SelectObject failed for lineOutputDc.");
+            }
+
+            gLineOutput = Graphics.FromHdc(lineOutputDc);
+
+            // ===
+
+
+
+            ReleaseDC(IntPtr.Zero, screenDc);
 			InitCanvus.Dispose();
 
 			//this.DoubleBuffered = true;
@@ -106,14 +171,6 @@ namespace gInk
 
 
 			ToTopMostThrough();
-
-            // Added by mwtoolz
-            // Initialize the preview surface
-            linePreviewBitmap = new Bitmap(this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            gLinePreview = Graphics.FromImage(linePreviewBitmap);
-            gLinePreview.Clear(Color.Transparent);
-            gLinePreview.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-
 
         }
 
@@ -262,20 +319,32 @@ namespace gInk
 
         public void CompositeLinePreview()
         {
-			// to use separate canvas TODO
-            var oldMode = gCanvus.CompositingMode;
-
-            try
+            // Read the existing canvas into a temporary image.
+            using (Image mainImage = Image.FromHbitmap(Canvus))
             {
-                gCanvus.CompositingMode =
-                    System.Drawing.Drawing2D.CompositingMode.SourceOver;
+                // Start with the existing canvas.
+                gLineOutput.CompositingMode =
+                    System.Drawing.Drawing2D.CompositingMode.SourceCopy;
 
-                gCanvus.DrawImage(linePreviewBitmap, 0, 0);
+                gLineOutput.DrawImage(
+                    mainImage,
+                    new Rectangle(0, 0, this.Width, this.Height));
             }
-            finally
-            {
-                gCanvus.CompositingMode = oldMode;
-            }
+
+            // Overlay the temporary preview.
+            gLineOutput.CompositingMode =
+                System.Drawing.Drawing2D.CompositingMode.SourceOver;
+
+            gLineOutput.DrawImage(linePreviewBitmap, 0, 0);
+
+            // Tell UpdateFormDisplay to display the output DC.
+            showLinePreview = true;
+        }
+
+        public void ClearLinePreview()
+        {
+            gLinePreview.Clear(Color.Transparent);
+            showLinePreview = false;
         }
 
         // == End DrawLinePreview
@@ -487,8 +556,10 @@ namespace gInk
 			blend.SourceConstantAlpha = 255;  // additional alpha multiplier to the whole image. value 255 means multiply with 1.
 			blend.AlphaFormat = AC_SRC_ALPHA;
 
+
 			if (draw)
-				UpdateLayeredWindow(this.Handle, screenDc, ref topPos, ref size, canvusDc, ref pointSource, 0, ref blend, ULW_ALPHA);
+                // modified by mwtoolz. replace canvusDc with showLinePreview ? lineOutputDc : canvusDc
+                UpdateLayeredWindow(this.Handle, screenDc, ref topPos, ref size, showLinePreview ? lineOutputDc : canvusDc, ref pointSource, 0, ref blend, ULW_ALPHA);
 			else
 				UpdateLayeredWindow(this.Handle, screenDc, ref topPos, ref size, blankcanvusDc, ref pointSource, 0, ref blend, ULW_ALPHA);
 

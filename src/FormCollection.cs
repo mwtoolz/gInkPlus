@@ -572,9 +572,9 @@ namespace gInk
 				Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 
 				// Redraw the main display canvas
-				//Root.FormDisplay.ClearCanvus();
-				//Root.FormDisplay.DrawStrokes();
-				//Root.FormDisplay.DrawButtons(true);
+				Root.FormDisplay.ClearCanvus();
+				Root.FormDisplay.DrawStrokes();
+				Root.FormDisplay.DrawButtons(true);
 
 
 				// Track the live pixel position
@@ -593,9 +593,6 @@ namespace gInk
                     lastMousePixel,
                     lineColor,
                     width);
-
-                Root.FormDisplay.CompositeLinePreview();
-
 
                 /*
                 // Draw the temporary line
@@ -624,7 +621,7 @@ namespace gInk
 
 				*/
 
-
+                Root.FormDisplay.CompositeLinePreview();
                 Root.FormDisplay.UpdateFormDisplay(true);
 
 
@@ -668,6 +665,8 @@ namespace gInk
 
             //Added by mwtoolz
             // ===== LINE TOOL - CREATE FINAL STROKE =====
+            Root.FormDisplay.ClearLinePreview();
+
             if (Root.LineMode && isDrawingLine)
             {
                 isDrawingLine = false;
