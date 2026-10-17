@@ -572,29 +572,23 @@ namespace gInk
 				Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 
 				// Redraw the main display canvas
-				Root.FormDisplay.ClearCanvus();
-				Root.FormDisplay.DrawStrokes();
-				Root.FormDisplay.DrawButtons(true);
+				//Root.FormDisplay.ClearCanvus();
+				//Root.FormDisplay.DrawStrokes();
+				//Root.FormDisplay.DrawButtons(true);
 
 
 				// Track the live pixel position
 				lastMousePixel = new Point(e.X, e.Y);
 
+				// Using different method to draw preview (Form_Paint with e.Graphics.DrawLine())
+				// as the previous method uses same ink and gets unwated pencil stroke preview too.
+				
 
-                // New canvas for preview
-                // Using different method to draw preview (Form_Paint with e.Graphics.DrawLine())
-                // as the previous method uses same ink and gets unwated pencil stroke preview too.
-                Color lineColor = IC.DefaultDrawingAttributes.Color;
-                float width = Math.Max(
-                    IC.DefaultDrawingAttributes.Width / 20f, 1f);
 
-                Root.FormDisplay.DrawLinePreview(
-                    lineStartPixel,
-                    lastMousePixel,
-                    lineColor,
-                    width);
 
-                /*
+
+
+				/*
                 // Draw the temporary line
                 Graphics g = Root.FormDisplay.gOneStrokeCanvus;	
 
@@ -621,8 +615,8 @@ namespace gInk
 
 				*/
 
-                Root.FormDisplay.CompositeLinePreview();
-                Root.FormDisplay.UpdateFormDisplay(true);
+
+				Root.FormDisplay.UpdateFormDisplay(true);
 
 
 				e.Cancel = true;
@@ -665,8 +659,6 @@ namespace gInk
 
             //Added by mwtoolz
             // ===== LINE TOOL - CREATE FINAL STROKE =====
-            Root.FormDisplay.ClearLinePreview();
-
             if (Root.LineMode && isDrawingLine)
             {
                 isDrawingLine = false;
