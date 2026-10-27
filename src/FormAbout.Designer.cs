@@ -39,16 +39,14 @@
 			this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
 			this.textBox1.Multiline = true;
 			this.textBox1.Name = "textBox1";
-			this.textBox1.ReadOnly = true;
-			// this.textBox1.Size = new System.Drawing.Size(329, 129);
+			this.textBox1.ReadOnly = true;			
             this.textBox1.Size = new System.Drawing.Size(402, 190);
             this.textBox1.TabIndex = 0;
 			// 
 			// FormAbout
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            // this.ClientSize = new System.Drawing.Size(331, 162);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;            
             this.ClientSize = new System.Drawing.Size(430, 220);
 			this.Controls.Add(this.textBox1);
 			this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
