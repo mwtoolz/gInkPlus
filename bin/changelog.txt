@@ -1,6 +1,10 @@
-v.1.3.0 (Oct. 18, 2026)
-- Added Line Tool
+v.1.4.0 (Ovt. 18, 2026)
+=================
+- Upgraded gInk to .NET Framework 4.8 from .NET Framework 3.5
 
+v.1.3.0 (Oct. 17, 2026)
+=================
+- Added Line Tool
 
 v1.1.0 (Aug. 26, 2020)
 =================
