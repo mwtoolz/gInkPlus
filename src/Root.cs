@@ -73,10 +73,13 @@ namespace gInkPlus
 		// advanced options
 		public string CloseOnSnap = "blankonly";
 		public bool AlwaysHideToolbar = false;
-		public float ToolbarHeight = 0.06f;
 
-		// hotkey options
-		public Hotkey Hotkey_Global = new Hotkey();
+		// To change toolbar size
+        // public float ToolbarHeight = 0.06f;
+        public float ToolbarHeight = 0.05f;
+
+        // hotkey options
+        public Hotkey Hotkey_Global = new Hotkey();
 		public Hotkey[] Hotkey_Pens = new Hotkey[10];
 		public Hotkey Hotkey_Eraser = new Hotkey();
 		public Hotkey Hotkey_InkVisible = new Hotkey();

@@ -59,9 +59,8 @@ namespace gInkPlus
 			InitializeComponent();
 
 			PrimaryLeft = Screen.PrimaryScreen.Bounds.Left - SystemInformation.VirtualScreen.Left;
-			PrimaryTop = Screen.PrimaryScreen.Bounds.Top - SystemInformation.VirtualScreen.Top;
-
-			gpButtons.Height = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
+			PrimaryTop = Screen.PrimaryScreen.Bounds.Top - SystemInformation.VirtualScreen.Top;     
+            gpButtons.Height = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
 			btClear.Height = (int)(gpButtons.Height * 0.88);
 			btClear.Width = btClear.Height;
 			btClear.Top = (int)(gpButtons.Height * 0.07);
