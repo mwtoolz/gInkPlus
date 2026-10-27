@@ -7,8 +7,8 @@
     <ProjectGuid>{82AD51F9-56A9-4698-A993-CC9E62F56812}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>gInk</RootNamespace>
-    <AssemblyName>gInk</AssemblyName>
+    <RootNamespace>gInkPlus</RootNamespace>
+    <AssemblyName>gInkPlus</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -60,7 +60,7 @@
   <PropertyGroup />
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>gInk.exe.manifest</ApplicationManifest>
+    <ApplicationManifest>gInkPlus.exe.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Ink, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=x86">
