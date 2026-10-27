@@ -1,4 +1,4 @@
-﻿namespace gInk
+﻿namespace gInkPlus
 {
 	partial class FormDisplay
 	{
@@ -37,11 +37,11 @@
 			this.timer1.Enabled = true;
 			this.timer1.Interval = 15;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-			// 
-			// FormDisplay
-			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(168F, 168F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            // 
+            // FormDisplay
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(168F, 168F);    
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(1410, 921);
 			this.ForeColor = System.Drawing.Color.Transparent;

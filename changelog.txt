@@ -1,3 +1,15 @@
+
+
+v1.0.0 (Oct 27, 2026)
+=================
+- Renamed gInk to gInkPlus
+
+
+v.1.4.1 (Oct. 27, 2026)
+=================
+- Added Line Tool  hotkey and options
+
+
 v.1.4.0 (Ovt. 18, 2026)
 =================
 - Upgraded gInk to .NET Framework 4.8 from .NET Framework 3.5

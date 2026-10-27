@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace gInk
+namespace gInkPlus
 {
 	public partial class FormOptions : Form
 	{
@@ -171,7 +171,7 @@ namespace gInk
 
 		private void FormOptions_LocalReload()
 		{
-			this.Text = Root.Local.MenuEntryOptions + " - gInk";
+			this.Text = Root.Local.MenuEntryOptions + " - gInkPlus";
 			tabControl1.TabPages[0].Text = Root.Local.OptionsTabGeneral;
 			tabControl1.TabPages[1].Text = Root.Local.OptionsTabPens;
 			tabControl1.TabPages[2].Text = Root.Local.OptionsTabHotkeys;

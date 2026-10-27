@@ -3,6 +3,8 @@
 
 gInk is an on-screen annotation software under Windows, used to help improving my presentations and demonstrations, and to help working on temperary thoughts which need to be noted beside something on the screen. The features are greatly inspired by another screen annotation software Epic Pen, but even more easy to use. gInk is made with the idea kept in mind that the interface should be as simple as possible and should not distract attention of both the presenter and the audience when used for presentations. Unlike in many other softwares in the same category, you select from pens to draw things instead of changing individual settings of color, transparency and tip width everytime. Each pen is a combination of these attributes and is configurable to your need.
 
+gInkPlus comes with extra features built on top of gInk. A line tool was recently added while making minimal changes to the UI.
+
 #### Screen Shots
 
 ![screenshot](https://raw.githubusercontent.com/geovens/gInk/master/screenshot1.jpg)  
@@ -10,7 +12,11 @@ gInk is an on-screen annotation software under Windows, used to help improving m
 
 #### Download
 
+gInk
 https://github.com/geovens/gInk/releases/
+
+gInkPlus
+https://github.com/mwtoolz/gInkPlus/releases/
 
 #### How to use
 
@@ -42,4 +48,9 @@ gInk supports multiple languages now. Here is how you can contribute translation
 ----
 gInk  
 https://github.com/geovens/gInk  
-Weizhi Nai @ 2020  
+Weizhi Nai @ 2020 
+
+gInkPlus
+https://github.com/mwtoolz/gInkPlus
+mwtoolz @ 2026
+

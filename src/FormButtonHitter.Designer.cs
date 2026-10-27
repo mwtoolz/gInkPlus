@@ -1,4 +1,4 @@
-﻿namespace gInk
+﻿namespace gInkPlus
 {
 	partial class FormButtonHitter
 	{
@@ -36,11 +36,11 @@
 			// 
 			this.timer1.Enabled = true;
 			this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-			// 
-			// FormButtonHitter
-			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(168F, 168F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            // 
+            // FormButtonHitter
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(168F, 168F);        
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.BackColor = System.Drawing.Color.WhiteSmoke;
 			this.ClientSize = new System.Drawing.Size(60, 80);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

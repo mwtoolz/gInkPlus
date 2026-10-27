@@ -1,4 +1,4 @@
-﻿namespace gInk
+﻿namespace gInkPlus
 {
 	partial class FormOptions
 	{
@@ -29,15 +29,15 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			gInk.Hotkey hotkey1 = new gInk.Hotkey();
-			gInk.Hotkey hotkey2 = new gInk.Hotkey();
-			gInk.Hotkey hotkey3 = new gInk.Hotkey();
-			gInk.Hotkey hotkey4 = new gInk.Hotkey();
-			gInk.Hotkey hotkey5 = new gInk.Hotkey();
-			gInk.Hotkey hotkey6 = new gInk.Hotkey();
-			gInk.Hotkey hotkey7 = new gInk.Hotkey();
-			gInk.Hotkey hotkey8 = new gInk.Hotkey();
-			gInk.Hotkey hotkey9 = new gInk.Hotkey();
+			gInkPlus.Hotkey hotkey1 = new gInkPlus.Hotkey();
+			gInkPlus.Hotkey hotkey2 = new gInkPlus.Hotkey();
+			gInkPlus.Hotkey hotkey3 = new gInkPlus.Hotkey();
+			gInkPlus.Hotkey hotkey4 = new gInkPlus.Hotkey();
+			gInkPlus.Hotkey hotkey5 = new gInkPlus.Hotkey();
+			gInkPlus.Hotkey hotkey6 = new gInkPlus.Hotkey();
+			gInkPlus.Hotkey hotkey7 = new gInkPlus.Hotkey();
+			gInkPlus.Hotkey hotkey8 = new gInkPlus.Hotkey();
+			gInkPlus.Hotkey hotkey9 = new gInkPlus.Hotkey();
 			this.cbEraserEnabled = new System.Windows.Forms.CheckBox();
 			this.cbPointerEnabled = new System.Windows.Forms.CheckBox();
 			this.cbSnapEnabled = new System.Windows.Forms.CheckBox();
@@ -74,15 +74,15 @@
 			this.lbHkUndo = new System.Windows.Forms.Label();
 			this.lbHkEraser = new System.Windows.Forms.Label();
 			this.lbGlobalHotkey = new System.Windows.Forms.Label();
-			this.hiInkVisible = new gInk.HotkeyInputBox();
-			this.hiSnapshot = new gInk.HotkeyInputBox();
-			this.hiClear = new gInk.HotkeyInputBox();
-			this.hiPan = new gInk.HotkeyInputBox();
-			this.hiPointer = new gInk.HotkeyInputBox();
-			this.hiRedo = new gInk.HotkeyInputBox();
-			this.hiUndo = new gInk.HotkeyInputBox();
-			this.hiEraser = new gInk.HotkeyInputBox();
-			this.hiGlobal = new gInk.HotkeyInputBox();
+			this.hiInkVisible = new gInkPlus.HotkeyInputBox();
+			this.hiSnapshot = new gInkPlus.HotkeyInputBox();
+			this.hiClear = new gInkPlus.HotkeyInputBox();
+			this.hiPan = new gInkPlus.HotkeyInputBox();
+			this.hiPointer = new gInkPlus.HotkeyInputBox();
+			this.hiRedo = new gInkPlus.HotkeyInputBox();
+			this.hiUndo = new gInkPlus.HotkeyInputBox();
+			this.hiEraser = new gInkPlus.HotkeyInputBox();
+			this.hiGlobal = new gInkPlus.HotkeyInputBox();
 			this.tabControl1.SuspendLayout();
 			this.tabPage1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -291,7 +291,7 @@
 			// 
 			// pictureBox1
 			// 
-			this.pictureBox1.BackgroundImage = global::gInk.Properties.Resources.paneloption;
+			this.pictureBox1.BackgroundImage = global::gInkPlus.Properties.Resources.paneloption;
 			this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.pictureBox1.Location = new System.Drawing.Point(12, 23);
 			this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -635,7 +635,7 @@
 			this.MaximizeBox = false;
 			this.Name = "FormOptions";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "Options - gInk";
+			this.Text = "Options - gInkPlus";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormOptions_FormClosing);
 			this.Load += new System.EventHandler(this.FormOptions_Load);
 			this.tabControl1.ResumeLayout(false);

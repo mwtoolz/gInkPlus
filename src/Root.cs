@@ -9,7 +9,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using Microsoft.Ink;
 
-namespace gInk
+namespace gInkPlus
 {
 	public class TestMessageFilter : IMessageFilter
 	{
@@ -143,7 +143,7 @@ namespace gInk
 
 			Size size = SystemInformation.SmallIconSize;
 			trayIcon = new NotifyIcon();
-			trayIcon.Text = "gInk";
+			trayIcon.Text = "gInkPlus";
 			trayIcon.ContextMenu = trayMenu;
 			trayIcon.Visible = true;
 			trayIcon.MouseClick += TrayIcon_Click;
@@ -439,7 +439,7 @@ namespace gInk
 
 			AutoScroll = false;
 			WhiteTrayIcon = false;
-			SnapshotBasePath = "%USERPROFILE%/Pictures/gInk/";
+			SnapshotBasePath = "%USERPROFILE%/Pictures/gInkPlus/";
 		}
 
 		public void SetTrayIconColor()
@@ -449,14 +449,14 @@ namespace gInk
 				if (File.Exists("icon_white.ico"))
 					trayIcon.Icon = new Icon("icon_white.ico");
 				else
-					trayIcon.Icon = global::gInk.Properties.Resources.icon_white;
+					trayIcon.Icon = global::gInkPlus.Properties.Resources.icon_white;
 			}
 			else
 			{
 				if (File.Exists("icon_red.ico"))
 					trayIcon.Icon = new Icon("icon_red.ico");
 				else
-					trayIcon.Icon = global::gInk.Properties.Resources.icon_red;
+					trayIcon.Icon = global::gInkPlus.Properties.Resources.icon_red;
 			}
 
 

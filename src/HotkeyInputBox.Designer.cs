@@ -1,4 +1,4 @@
-﻿namespace gInk
+﻿namespace gInkPlus
 {
 	partial class HotkeyInputBox
 	{

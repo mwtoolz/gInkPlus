@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace gInk
+namespace gInkPlus	
 {
 	public partial class FormCollection : Form
 	{
@@ -309,85 +309,85 @@ namespace gInk
 			IC.DefaultDrawingAttributes.Transparency = 30;
 			IC.DefaultDrawingAttributes.AntiAliased = true;
 
-			cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
+			cursorred = new System.Windows.Forms.Cursor(gInkPlus.Properties.Resources.cursorred.Handle);
 			//IC.Cursor = cursorred;
 			IC.Enabled = true;
 
 			image_exit = new Bitmap(btStop.Width, btStop.Height);
 			Graphics g = Graphics.FromImage(image_exit);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.exit, 0, 0, btStop.Width, btStop.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.exit, 0, 0, btStop.Width, btStop.Height);
 			btStop.Image = image_exit;
 			image_clear = new Bitmap(btClear.Width, btClear.Height);
 			g = Graphics.FromImage(image_clear);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.garbage, 0, 0, btClear.Width, btClear.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.garbage, 0, 0, btClear.Width, btClear.Height);
 			btClear.Image = image_clear;
 			image_undo = new Bitmap(btUndo.Width, btUndo.Height);
 			g = Graphics.FromImage(image_undo);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.undo, 0, 0, btUndo.Width, btUndo.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.undo, 0, 0, btUndo.Width, btUndo.Height);
 			btUndo.Image = image_undo;
 
 			image_eraser_act = new Bitmap(btEraser.Width, btEraser.Height);
 			g = Graphics.FromImage(image_eraser_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.eraser_act, 0, 0, btEraser.Width, btEraser.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.eraser_act, 0, 0, btEraser.Width, btEraser.Height);
 			image_eraser = new Bitmap(btEraser.Width, btEraser.Height);
 			g = Graphics.FromImage(image_eraser);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.eraser, 0, 0, btEraser.Width, btEraser.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.eraser, 0, 0, btEraser.Width, btEraser.Height);
 			btEraser.Image = image_eraser;
 
             //Added by mwtoolz
             image_line = new Bitmap(btLine.Width, btLine.Height);
 			g = Graphics.FromImage(image_line);            
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(global::gInk.Properties.Resources.tool_line, 0, 0, btLine.Width, btLine.Height);            
+            g.DrawImage(global::gInkPlus.Properties.Resources.tool_line, 0, 0, btLine.Width, btLine.Height);            
             image_line_act = new Bitmap(btLine.Width, btLine.Height);
 			g = Graphics.FromImage(image_line_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(global::gInk.Properties.Resources.tool_line_act, 0, 0, btLine.Width, btLine.Height);
+            g.DrawImage(global::gInkPlus.Properties.Resources.tool_line_act, 0, 0, btLine.Width, btLine.Height);
            
 
             image_pan_act = new Bitmap(btPan.Width, btPan.Height);
 			g = Graphics.FromImage(image_pan_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pan_act, 0, 0, btPan.Width, btPan.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.pan_act, 0, 0, btPan.Width, btPan.Height);
 			image_pan = new Bitmap(btPan.Width, btPan.Height);
 			g = Graphics.FromImage(image_pan);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pan, 0, 0, btPan.Width, btPan.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.pan, 0, 0, btPan.Width, btPan.Height);
 			btPan.Image = image_pan;
 
 			image_visible_not = new Bitmap(btInkVisible.Width, btInkVisible.Height);
 			g = Graphics.FromImage(image_visible_not);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.visible_not, 0, 0, btInkVisible.Width, btInkVisible.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.visible_not, 0, 0, btInkVisible.Width, btInkVisible.Height);
 			image_visible = new Bitmap(btInkVisible.Width, btInkVisible.Height);
 			g = Graphics.FromImage(image_visible);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.visible, 0, 0, btInkVisible.Width, btInkVisible.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.visible, 0, 0, btInkVisible.Width, btInkVisible.Height);
 			btInkVisible.Image = image_visible;
 
 			image_snap = new Bitmap(btSnap.Width, btSnap.Height);
 			g = Graphics.FromImage(image_snap);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.snap, 0, 0, btSnap.Width, btSnap.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.snap, 0, 0, btSnap.Width, btSnap.Height);
 			btSnap.Image = image_snap;
 			image_penwidth = new Bitmap(btPenWidth.Width, btPenWidth.Height);
 			g = Graphics.FromImage(image_penwidth);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.penwidth, 0, 0, btPenWidth.Width, btPenWidth.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.penwidth, 0, 0, btPenWidth.Width, btPenWidth.Height);
 			btPenWidth.Image = image_penwidth;
 			image_dock = new Bitmap(btDock.Width, btDock.Height);
 			g = Graphics.FromImage(image_dock);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.dock, 0, 0, btDock.Width, btDock.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.dock, 0, 0, btDock.Width, btDock.Height);
 			image_dockback = new Bitmap(btDock.Width, btDock.Height);
 			g = Graphics.FromImage(image_dockback);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.dockback, 0, 0, btDock.Width, btDock.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.dockback, 0, 0, btDock.Width, btDock.Height);
 			if (Root.Docked)
 				btDock.Image = image_dockback;
 			else
@@ -396,28 +396,28 @@ namespace gInk
 			image_pencil = new Bitmap(btPen[2].Width, btPen[2].Height);
 			g = Graphics.FromImage(image_pencil);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pencil, 0, 0, btPen[2].Width, btPen[2].Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.pencil, 0, 0, btPen[2].Width, btPen[2].Height);
 			image_highlighter = new Bitmap(btPen[2].Width, btPen[2].Height);
 			g = Graphics.FromImage(image_highlighter);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.highlighter, 0, 0, btPen[2].Width, btPen[2].Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.highlighter, 0, 0, btPen[2].Width, btPen[2].Height);
 			image_pencil_act = new Bitmap(btPen[2].Width, btPen[2].Height);
 			g = Graphics.FromImage(image_pencil_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pencil_act, 0, 0, btPen[2].Width, btPen[2].Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.pencil_act, 0, 0, btPen[2].Width, btPen[2].Height);
 			image_highlighter_act = new Bitmap(btPen[2].Width, btPen[2].Height);
 			g = Graphics.FromImage(image_highlighter_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.highlighter_act, 0, 0, btPen[2].Width, btPen[2].Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.highlighter_act, 0, 0, btPen[2].Width, btPen[2].Height);
 
 			image_pointer = new Bitmap(btPointer.Width, btPointer.Height);
 			g = Graphics.FromImage(image_pointer);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pointer, 0, 0, btPointer.Width, btPointer.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.pointer, 0, 0, btPointer.Width, btPointer.Height);
 			image_pointer_act = new Bitmap(btPointer.Width, btPointer.Height);
 			g = Graphics.FromImage(image_pointer_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-			g.DrawImage(global::gInk.Properties.Resources.pointer_act, 0, 0, btPointer.Width, btPointer.Height);
+			g.DrawImage(global::gInkPlus.Properties.Resources.pointer_act, 0, 0, btPointer.Width, btPointer.Height);
 
 			image_pen = new Bitmap[Root.MaxPenCount];
 			image_pen_act = new Bitmap[Root.MaxPenCount];
@@ -516,7 +516,7 @@ namespace gInk
                 Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
                 Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 
-                // CRITICAL: Prevent gInk from starting a normal freehand pencil stroke
+                // CRITICAL: Prevent gInkPlus from starting a normal freehand pencil stroke
                 e.Cancel = true;
                 return;
             }
@@ -860,7 +860,7 @@ namespace gInk
 
                 if (Root.CanvasCursor == 0)
 				{
-					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
+					cursorred = new System.Windows.Forms.Cursor(gInkPlus.Properties.Resources.cursorred.Handle);
 					IC.Cursor = cursorred;
 				}
 				else if (Root.CanvasCursor == 1)
@@ -901,7 +901,7 @@ namespace gInk
 
                 if (Root.CanvasCursor == 0)
 				{
-					cursorred = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorred.Handle);
+					cursorred = new System.Windows.Forms.Cursor(gInkPlus.Properties.Resources.cursorred.Handle);
 					IC.Cursor = cursorred;
 				}
 				else if (Root.CanvasCursor == 1)
@@ -1016,7 +1016,7 @@ namespace gInk
 			if (Root.Snapping > 0)
 				return;
 
-			cursorsnap = new System.Windows.Forms.Cursor(gInk.Properties.Resources.cursorsnap.Handle);
+			cursorsnap = new System.Windows.Forms.Cursor(gInkPlus.Properties.Resources.cursorsnap.Handle);
 			this.Cursor = cursorsnap;
 
 			Root.gpPenWidthVisible = false;
@@ -1148,7 +1148,7 @@ namespace gInk
 
 		private void SetPenTipCursor()
 		{
-			Bitmap bitmaptip = (Bitmap)(gInk.Properties.Resources._null).Clone();
+			Bitmap bitmaptip = (Bitmap)(gInkPlus.Properties.Resources._null).Clone();
 			Graphics g = Graphics.FromImage(bitmaptip);
 			DrawingAttributes dda = IC.DefaultDrawingAttributes;
 			Brush cbrush;
