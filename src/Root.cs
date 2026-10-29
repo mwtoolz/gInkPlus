@@ -105,8 +105,11 @@ namespace gInkPlus
 		public bool MouseMovedUnderSnapshotDragging = false; // used to pause re-drawing when mouse is not moving during dragging to take a screenshot
 
 		public bool PanMode = false;
+
         // Added by mwtoolz
         public bool LineMode = false;
+		public bool RectMode = false;
+
         public bool InkVisible = true;
 
 		public Ink[] UndoStrokes;

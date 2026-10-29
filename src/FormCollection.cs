@@ -24,6 +24,8 @@ namespace gInkPlus
         // Added by mwtoolz
         public Button btLine;
         public Bitmap image_line, image_line_act;
+		public Button btRect;
+		public Bitmap image_rect, image_rect_act;
 
         public Bitmap image_pointer, image_pointer_act;
 		public Bitmap[] image_pen;
@@ -165,6 +167,31 @@ namespace gInkPlus
             btLine.Left = cumulatedleft;
             cumulatedleft += (int)(btLine.Width * 1.1);
             // ===== END LINE BUTTON =====
+
+            //Added by mwtoolz
+            // ===== RECT BUTTON =====
+            btRect = new Button();
+            btRect.Width = (int)(gpButtons.Height * 0.88);
+            btRect.Height = (int)(gpButtons.Height * 0.88);
+            btRect.Top = (int)(gpButtons.Height * 0.07);
+            btRect.FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
+            btRect.FlatAppearance.BorderSize = 3;
+            btRect.FlatStyle = FlatStyle.Flat;
+
+            // Prevent grey background on hover and click
+            btRect.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btRect.FlatAppearance.MouseDownBackColor = Color.Transparent;
+
+            btRect.ForeColor = Color.Transparent;
+            btRect.UseVisualStyleBackColor = false;
+            btRect.Click += new EventHandler(this.btRect_Click);
+            btRect.Image = image_rect;
+            btRect.ImageAlign = ContentAlignment.MiddleCenter;
+            gpButtons.Controls.Add(btRect);
+            btRect.Visible = true;
+            btRect.Left = cumulatedleft;
+            cumulatedleft += (int)(btRect.Width * 1.1);
+            // ===== END RECTANGLE BUTTON =====
 
 
             if (Root.PanEnabled)
@@ -339,6 +366,7 @@ namespace gInkPlus
 			btEraser.Image = image_eraser;
 
             //Added by mwtoolz
+			// == Line Tool ==
             image_line = new Bitmap(btLine.Width, btLine.Height);
 			g = Graphics.FromImage(image_line);            
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -347,7 +375,17 @@ namespace gInkPlus
 			g = Graphics.FromImage(image_line_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_line_act, 0, 0, btLine.Width, btLine.Height);
-           
+            // == Rect Tool ==         
+            image_rect = new Bitmap(btRect.Width, btRect.Height);
+            g = Graphics.FromImage(image_rect);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect, 0, 0, btRect.Width, btRect.Height);
+            image_rect_act = new Bitmap(btRect.Width, btRect.Height);
+            g = Graphics.FromImage(image_rect_act);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_act, 0, 0, btRect.Width, btRect.Height);
+            // ==
+
 
             image_pan_act = new Bitmap(btPan.Width, btPan.Height);
 			g = Graphics.FromImage(image_pan_act);
@@ -763,11 +801,17 @@ namespace gInkPlus
 		{
 
             // Added by mwtoolz
-            // -4 = line
+            // -4=line, -5=rectangle
+
+			// Reset
             Root.FormDisplay.IsDrawingLine = false;
 			Root.LineMode = false;
 			btLine.Image = image_line;
-            if (pen == -4)   // ===== LINE TOOL =====
+            Root.RectMode = false;
+            btRect.Image = image_rect;
+
+            // ===== LINE TOOL =====
+            if (pen == -4)   
             {
                 for (int b = 0; b < Root.MaxPenCount; b++)
                     btPen[b].Image = image_pen[b];
@@ -795,9 +839,49 @@ namespace gInkPlus
 				}
 			}
 
-			// ==== END OF LINE TOOL ====
+            // ==== END OF LINE TOOL ====
+            // ===== RECTANGLE TOOL =====
+            else if (pen == -5)
+            {
+                for (int b = 0; b < Root.MaxPenCount; b++)
+                    btPen[b].Image = image_pen[b];
 
-            // -3=pan, -2=pointer, -1=eraser, 0+=pens
+                btEraser.Image = image_eraser;
+                btPointer.Image = image_pointer;
+                btPan.Image = image_pan;
+
+                // Reset Line button and highlight Rectangle button
+                btLine.Image = image_line;
+                btRect.Image = image_rect_act;
+
+                // Disable Line mode
+                Root.LineMode = false;
+                Root.FormDisplay.IsDrawingLine = false;
+
+                // Enable Rectangle mode
+                Root.RectMode = true;
+
+                EnterEraserMode(false);
+                Root.UnPointer();
+                Root.PanMode = false;
+
+                // Keep FULL input area so we still receive mouse events
+                try
+                {
+                    IC.SetWindowInputRectangle(
+                        new Rectangle(0, 0, this.Width, this.Height));
+                }
+                catch
+                {
+                    Thread.Sleep(1);
+                    IC.SetWindowInputRectangle(
+                        new Rectangle(0, 0, this.Width, this.Height));
+                }
+            }
+            // ===== END OF RECTANGLE TOOL =====
+
+
+            // -3=pan, -2=pointer, -1=eraser, 0+=pens	
 
             else if (pen == -3)
 			{
@@ -806,10 +890,14 @@ namespace gInkPlus
 				btEraser.Image = image_eraser;
 
 				// Added by mwtoolz
+				// Line
 				btLine.Image = image_line;
 				btPointer.Image = image_pointer;
 				btPan.Image = image_pan_act;
                 Root.LineMode = false;
+				// Rectangle
+				btRect.Image = image_rect;
+				Root.RectMode = false;
 				// ===
 
                 EnterEraserMode(false);
@@ -838,7 +926,8 @@ namespace gInkPlus
 				Root.PanMode = false;
 
                 //Added by mwtoolz
-                Root.LineMode = false;
+                Root.LineMode = false;               
+                Root.RectMode = false;
             }
 			else if (pen == -1)
 			{
@@ -856,6 +945,7 @@ namespace gInkPlus
 
                 //Added by mwtoolz
                 Root.LineMode = false;
+                Root.RectMode = false;
 
                 if (Root.CanvasCursor == 0)
 				{
@@ -897,6 +987,7 @@ namespace gInkPlus
 
                 //Added by mwtoolz
                 Root.LineMode = false;
+                Root.RectMode = false;
 
                 if (Root.CanvasCursor == 0)
 				{
@@ -997,11 +1088,18 @@ namespace gInkPlus
 		}
 
         //Added by mwtoolz
+		//== Line Tool ==
         private void btLine_Click(object sender, EventArgs e)
         {
             SelectPen(-4);   // -4 is the value we defined for Line mode
+        }        
+        //== Rectangle tool ==
+        private void btRect_Click(object sender, EventArgs e)
+        {
+            SelectPen(-5);   // -5 is the value we defined for Line mode
         }
-		// ===
+        //==
+
 
 
         public void btSnap_Click(object sender, EventArgs e)
