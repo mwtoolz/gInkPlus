@@ -555,14 +555,14 @@ namespace gInkPlus
 				else if (Root.LineMode && IsDrawingLine)
 				{
 
-					// 1. Erase the old line position using BitBlt
+					// a. Erase the old line position using BitBlt
 					if (oldBoxValid)
 					{
 						BitBlt(canvusDc, oldLineBox.X, oldLineBox.Y, oldLineBox.Width, oldLineBox.Height,
 							   onestrokeDc, oldLineBox.X, oldLineBox.Y, (uint)CopyPixelOperation.SourceCopy);
 					}
 
-					// 2. Calculate new bounding box with padding
+					// b. Calculate new bounding box with padding
 					int padding = 15;
 					int minX = Math.Min(LineStartPoint.X, CurrentMousePoint.X) - padding;
 					int minY = Math.Min(LineStartPoint.Y, CurrentMousePoint.Y) - padding;
@@ -572,7 +572,7 @@ namespace gInkPlus
 					oldLineBox = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 					oldBoxValid = true;
 
-					// 3. Draw the new line preview using GDI+
+					// c. Draw the new line preview using GDI+
 					using (Graphics g = Graphics.FromHdc(canvusDc))
 					{
 						g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -611,14 +611,14 @@ namespace gInkPlus
                 else if (Root.RectMode && IsDrawingRectangle)
                 {               
 
-                    // 1. Erase the old rectangle position using BitBlt
+                    // a. Erase the old rectangle position using BitBlt
                     if (oldRectBoxValid)
                     {
                         BitBlt(canvusDc, oldRectBox.X, oldRectBox.Y, oldRectBox.Width, oldRectBox.Height,
                                onestrokeDc, oldRectBox.X, oldRectBox.Y, (uint)CopyPixelOperation.SourceCopy);
                     }
 
-                    // 2. Calculate new bounding box with padding (handles any drag direction)
+                    // b. Calculate new bounding box with padding (handles any drag direction)
                     int padding = 15;
                     int rectX = Math.Min(RectStartPoint.X, CurrentMousePoint.X);
                     int rectY = Math.Min(RectStartPoint.Y, CurrentMousePoint.Y);
@@ -633,7 +633,7 @@ namespace gInkPlus
                     oldRectBox = new Rectangle(minX, minY, widthWithPadding, heightWithPadding);
                     oldRectBoxValid = true;
 
-                    // 3. Draw the new rectangle preview using GDI+
+                    // c. Draw the new rectangle preview using GDI+
                     using (Graphics g = Graphics.FromHdc(canvusDc))
                     {
                         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
