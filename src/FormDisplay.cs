@@ -32,10 +32,10 @@ namespace gInkPlus
 		public bool oldBoxValid = false;
         // === For Rect tool        
         public bool IsDrawingRectangle { get; set; } = false;
-        public Point RectStartPoint { get; set; } = new Point(0, 0);
-        private Rectangle oldRectBox = new Rectangle();
+        public Point RectStartPoint { get; set; }
+		private Rectangle oldRectBox;
         public bool oldRectBoxValid = false;
-		// ===
+        // ===
 
         //Bitmap ScreenBitmap;
         IntPtr hScreenBitmap;
@@ -435,10 +435,10 @@ namespace gInkPlus
 
 		public void UpdateFormDisplay(bool draw)
 		{
-			IntPtr screenDc = GetDC(IntPtr.Zero);
+			IntPtr screenDc = GetDC(IntPtr.Zero);			
 
-			//Display-rectangle
-			Size size = new Size(this.Width, this.Height);
+            //Display-rectangle
+            Size size = new Size(this.Width, this.Height);
 			Point pointSource = new Point(0, 0);
 			Point topPos = new Point(this.Left, this.Top);
 
@@ -461,7 +461,13 @@ namespace gInkPlus
 		int stackmove = 0;
 		int Tick = 0;
 		DateTime TickStartTime;
-		private void timer1_Tick(object sender, EventArgs e)
+        
+		// Added by mwtoolz for DEBUG
+		private bool hasShownDebugMessage = false;
+
+
+
+        private void timer1_Tick(object sender, EventArgs e)
 		{
 			Tick++;
 
@@ -522,13 +528,14 @@ namespace gInkPlus
    
             else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == false && Root.InkVisible)
             {
-				//ClearCanvus();
-				//DrawStrokes();
-				//DrawButtons(false);
-				//UpdateFormDisplay();	
+                //ClearCanvus();
+                //DrawStrokes();
+                //DrawButtons(false);
+                //UpdateFormDisplay();	
 
-				// Added !Root.LineMode by mwtoolz 
-				if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.LineMode)
+                // Added by mwtoolz !Root.LineMode and !Root.RectMode to remove unwanted pen strokes
+                if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.LineMode && !Root.RectMode)
+                // if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.LineMode)
 
                 //if (Root.FormCollection.IC.Ink.Strokes.Count > 0)
 
@@ -550,7 +557,7 @@ namespace gInkPlus
 			// Added by mwtoolz for Line Tool by Gemini
 			else if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && Root.LineMode && IsDrawingLine)
 			{
-                    // MessageBox.Show("Code has been executed!");
+                 
                     // 1. Erase the old line position using BitBlt
                     if (oldBoxValid)
                     {
@@ -602,9 +609,19 @@ namespace gInkPlus
             }
             // ===End of Line Tool code==
 
-            // Added for Rectangle Mode by mwtoolz
-            else if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && Root.RectMode && IsDrawingRectangle)
+            // Added for Rectangle Mode by mwtoolz		
+
+            // else if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && Root.RectMode && IsDrawingRectangle)
+            else if (Root.RectMode && IsDrawingRectangle)
             {
+
+                // debug
+                //if (!hasShownDebugMessage)
+                //{
+                //    MessageBox.Show("The RECT preview block is executing!");
+                //    hasShownDebugMessage = true; // Ensures it only pops up once
+                //}
+
                 // 1. Erase the old rectangle position using BitBlt
                 if (oldRectBoxValid)
                 {
@@ -655,6 +672,8 @@ namespace gInkPlus
                         g.DrawRectangle(previewPen, rectX, rectY, rectWidth, rectHeight);
                     }
                 }
+
+                UpdateFormDisplay(true);
             }
 			// ===End of Rect Tool code
 
@@ -726,7 +745,7 @@ namespace gInkPlus
         public void ResetRectDrawingState()
         {
             IsDrawingRectangle = false;
-            oldRectBoxValid = false;
+            oldRectBoxValid = false;         
         }
 
         // ===

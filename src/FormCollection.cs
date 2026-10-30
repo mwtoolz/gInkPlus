@@ -887,11 +887,52 @@ namespace gInkPlus
             Root.FormDisplay.IsDrawingLine = false;
 			Root.LineMode = false;
 			btLine.Image = image_line;
+            Root.FormDisplay.IsDrawingRectangle = false;
             Root.RectMode = false;
             btRect.Image = image_rect;
 
+            if (pen == -5)
+            {
+                for (int b = 0; b < Root.MaxPenCount; b++)
+                    btPen[b].Image = image_pen[b];
+
+                btEraser.Image = image_eraser;
+                btPointer.Image = image_pointer;
+                btPan.Image = image_pan;
+
+                // Reset Line button and highlight Rectangle button
+                btLine.Image = image_line;
+                btRect.Image = image_rect_act;
+
+                // Disable Line mode
+                Root.LineMode = false;
+                Root.FormDisplay.IsDrawingLine = false;
+
+                // Enable Rectangle mode
+                Root.RectMode = true;
+                Root.FormDisplay.IsDrawingRectangle = true;
+
+                EnterEraserMode(false);
+                Root.UnPointer();
+                Root.PanMode = false;
+
+                // Keep FULL input area so we still receive mouse events
+                try
+                {
+                    IC.SetWindowInputRectangle(
+                        new Rectangle(0, 0, this.Width, this.Height));
+                }
+                catch
+                {
+                    Thread.Sleep(1);
+                    IC.SetWindowInputRectangle(
+                        new Rectangle(0, 0, this.Width, this.Height));
+                }
+            }
+            // ===== END OF RECTANGLE TOOL =====
+
             // ===== LINE TOOL =====
-            if (pen == -4)   
+            else if (pen == -4)   
             {
                 for (int b = 0; b < Root.MaxPenCount; b++)
                     btPen[b].Image = image_pen[b];
@@ -921,44 +962,7 @@ namespace gInkPlus
 
             // ==== END OF LINE TOOL ====
             // ===== RECTANGLE TOOL =====
-            else if (pen == -5)
-            {
-                for (int b = 0; b < Root.MaxPenCount; b++)
-                    btPen[b].Image = image_pen[b];
-
-                btEraser.Image = image_eraser;
-                btPointer.Image = image_pointer;
-                btPan.Image = image_pan;
-
-                // Reset Line button and highlight Rectangle button
-                btLine.Image = image_line;
-                btRect.Image = image_rect_act;
-
-                // Disable Line mode
-                Root.LineMode = false;
-                Root.FormDisplay.IsDrawingLine = false;
-
-                // Enable Rectangle mode
-                Root.RectMode = true;
-
-                EnterEraserMode(false);
-                Root.UnPointer();
-                Root.PanMode = false;
-
-                // Keep FULL input area so we still receive mouse events
-                try
-                {
-                    IC.SetWindowInputRectangle(
-                        new Rectangle(0, 0, this.Width, this.Height));
-                }
-                catch
-                {
-                    Thread.Sleep(1);
-                    IC.SetWindowInputRectangle(
-                        new Rectangle(0, 0, this.Width, this.Height));
-                }
-            }
-            // ===== END OF RECTANGLE TOOL =====
+            
 
 
             // -3=pan, -2=pointer, -1=eraser, 0+=pens	
