@@ -24,16 +24,21 @@ namespace gInkPlus
         // Added by mwtoolz by Gemini
         // Add these public/internal tracking variables in FormDisplay.cs
         // Use properties instead of public fields to avoid marshal-by-ref warnings
+		// ==For Line tool
         public bool IsDrawingLine { get; set; } = false;
         public Point LineStartPoint { get; set; }
         public Point CurrentMousePoint { get; set; }
         private Rectangle oldLineBox;
 		public bool oldBoxValid = false;
+        // === For Rect tool        
+        public bool IsDrawingRectangle { get; set; } = false;
+        public Point RectStartPoint { get; set; } = new Point(0, 0);
+        private Rectangle oldRectBox = new Rectangle();
+        public bool oldRectBoxValid = false;
 		// ===
 
-
-		//Bitmap ScreenBitmap;
-		IntPtr hScreenBitmap;
+        //Bitmap ScreenBitmap;
+        IntPtr hScreenBitmap;
 		IntPtr memscreenDc;
 
 		Bitmap gpButtonsImage;
@@ -542,7 +547,7 @@ namespace gInkPlus
 					UpdateFormDisplay(true);
 				}
 
-			// Added by mwtoolz by Gemini
+			// Added by mwtoolz for Line Tool by Gemini
 			else if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && Root.LineMode && IsDrawingLine)
 			{
                     // MessageBox.Show("Code has been executed!");
@@ -595,9 +600,68 @@ namespace gInkPlus
 
                 UpdateFormDisplay(true);
             }
-			// =====
+            // ===End of Line Tool code==
 
-			else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == true)
+            // Added for Rectangle Mode by mwtoolz
+            else if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && Root.RectMode && IsDrawingRectangle)
+            {
+                // 1. Erase the old rectangle position using BitBlt
+                if (oldRectBoxValid)
+                {
+                    BitBlt(canvusDc, oldRectBox.X, oldRectBox.Y, oldRectBox.Width, oldRectBox.Height,
+                           onestrokeDc, oldRectBox.X, oldRectBox.Y, (uint)CopyPixelOperation.SourceCopy);
+                }
+
+                // 2. Calculate new bounding box with padding (handles any drag direction)
+                int padding = 15;
+                int rectX = Math.Min(RectStartPoint.X, CurrentMousePoint.X);
+                int rectY = Math.Min(RectStartPoint.Y, CurrentMousePoint.Y);
+                int rectWidth = Math.Abs(CurrentMousePoint.X - RectStartPoint.X);
+                int rectHeight = Math.Abs(CurrentMousePoint.Y - RectStartPoint.Y);
+
+                int minX = rectX - padding;
+                int minY = rectY - padding;
+                int widthWithPadding = rectWidth + (padding * 2);
+                int heightWithPadding = rectHeight + (padding * 2);
+
+                oldRectBox = new Rectangle(minX, minY, widthWithPadding, heightWithPadding);
+                oldRectBoxValid = true;
+
+                // 3. Draw the new rectangle preview using GDI+
+                using (Graphics g = Graphics.FromHdc(canvusDc))
+                {
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                    Color rectColor;
+                    float width;
+
+                    // Use the exact same pen attribute check as the Line tool
+                    if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                    {
+                        Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];
+                        rectColor = attr.Color;
+                        width = Math.Max(attr.Width / 30f, 1f);
+                    }
+                    else
+                    {
+                        rectColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
+                        width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 30f, 1f);
+                    }
+
+                    using (Pen previewPen = new Pen(rectColor, width))
+                    {
+                        previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                        previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                        g.DrawRectangle(previewPen, rectX, rectY, rectWidth, rectHeight);
+                    }
+                }
+            }
+			// ===End of Rect Tool code
+
+
+
+
+            else if (Root.FormCollection.IC.CollectingInk && Root.EraserMode == true)
 			{
 				ClearCanvus();
 				DrawStrokes();
@@ -651,14 +715,23 @@ namespace gInkPlus
 
 		// Added by mwtoolz, Gemini
 		// Call this from IC_MouseUp when line drawing ends to reset the tracking state
+		// Line tool
 		public void ResetLineDrawingState()
 		{
 			IsDrawingLine = false;
 			oldBoxValid = false;
 		}
-		// ===
 
-		private void FormDisplay_FormClosed(object sender, FormClosedEventArgs e)
+        // Rect tool
+        public void ResetRectDrawingState()
+        {
+            IsDrawingRectangle = false;
+            oldRectBoxValid = false;
+        }
+
+        // ===
+
+        private void FormDisplay_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			DeleteObject(Canvus);
 			//DeleteObject(BlankCanvus);

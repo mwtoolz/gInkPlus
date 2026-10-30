@@ -21,7 +21,7 @@ namespace gInkPlus
 		public Bitmap image_dock, image_dockback;
 		public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
 
-        // Added by mwtoolz
+        // Added by mwtoolz; Line and Rect tool
         public Button btLine;
         public Bitmap image_line, image_line_act;
 		public Button btRect;
@@ -375,6 +375,7 @@ namespace gInkPlus
 			g = Graphics.FromImage(image_line_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_line_act, 0, 0, btLine.Width, btLine.Height);
+
             // == Rect Tool ==         
             image_rect = new Bitmap(btRect.Width, btRect.Height);
             g = Graphics.FromImage(image_rect);
@@ -384,8 +385,8 @@ namespace gInkPlus
             g = Graphics.FromImage(image_rect_act);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_act, 0, 0, btRect.Width, btRect.Height);
-            // ==
 
+            // ====
 
             image_pan_act = new Bitmap(btPan.Width, btPan.Height);
 			g = Graphics.FromImage(image_pan_act);
@@ -497,8 +498,9 @@ namespace gInkPlus
 		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
 
-            // Line mode: discard the unwanted native freehand stroke.
-            if (Root.LineMode && Root.FormDisplay.IsDrawingLine)
+			// Added by mwtoolz
+            // Line & Rect mode: discard the unwanted native freehand stroke.
+            if ((Root.LineMode && Root.FormDisplay.IsDrawingLine) || (Root.RectMode && Root.FormDisplay.IsDrawingRectangle))
             {
                 IC.Ink.DeleteStroke(e.Stroke);
                 return;
@@ -539,7 +541,7 @@ namespace gInkPlus
         private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
 
-            // Added by mwtoolz  by Gemini	
+            // Added by mwtoolz, Gemini	
             if (Root.LineMode)
             {
                 Root.FormDisplay.IsDrawingLine = true;
@@ -557,7 +559,24 @@ namespace gInkPlus
                 e.Cancel = true;
                 return;
             }
-			// ===
+
+            // Rectangle Mode
+            if (Root.RectMode)
+            {
+                Root.FormDisplay.IsDrawingRectangle = true;
+                Root.FormDisplay.RectStartPoint = new Point(e.X, e.Y);
+                Root.FormDisplay.CurrentMousePoint = Root.FormDisplay.RectStartPoint;
+                Root.FormDisplay.oldRectBoxValid = false;
+
+                Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+                Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
+                Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+
+                e.Cancel = true;
+                return;
+            }
+
+            // ======
 
             if (Root.gpPenWidthVisible)
 			{
@@ -590,8 +609,8 @@ namespace gInkPlus
         private void IC_MouseMove(object sender, CancelMouseEventArgs e)
 		{
 
-			//Added by mwtoolz
-			// new from Gemini
+			// Added by mwtoolz, Gemini
+			// Line Mode Tracking			
 			if (Root.LineMode && Root.FormDisplay.IsDrawingLine)
 			{
                 // Just update the live tracking point. Extremely fast!
@@ -600,7 +619,16 @@ namespace gInkPlus
 				e.Cancel = true;
 				return;
 			}
-			// ===
+
+            // Rectangle Mode Tracking
+            if (Root.RectMode && Root.FormDisplay.IsDrawingRectangle)
+            {
+                Root.FormDisplay.CurrentMousePoint = new Point(e.X, e.Y);
+                e.Cancel = true;
+                return;
+            }
+
+            // ====
 
             if (LasteXY.X == 0 && LasteXY.Y == 0)
 			{
@@ -633,8 +661,7 @@ namespace gInkPlus
 		private void IC_MouseUp(object sender, CancelMouseEventArgs e)
 		{
 
-            // Added by mwtoolz
-            // new code by Gemini
+            // Added by mwtoolz, Gemini            
 			// ===== LINE TOOL - CREATE FINAL STROKE =====
             if (Root.LineMode && Root.FormDisplay.IsDrawingLine)
             {
@@ -674,6 +701,59 @@ namespace gInkPlus
                 return;
             }
             // ===== END LINE TOOL =====
+
+            // ===== RECTANGLE TOOL - CREATE FINAL STROKE =====
+            if (Root.RectMode && Root.FormDisplay.IsDrawingRectangle)
+            {
+                Root.FormDisplay.ResetRectDrawingState(); // Or reset your drawing flags accordingly
+
+                // 1. Calculate rectangle bounds in pixels (handles any drag direction)
+                int rectX = Math.Min(Root.FormDisplay.RectStartPoint.X, Root.FormDisplay.CurrentMousePoint.X);
+                int rectY = Math.Min(Root.FormDisplay.RectStartPoint.Y, Root.FormDisplay.CurrentMousePoint.Y);
+                int rectWidth = Math.Abs(Root.FormDisplay.CurrentMousePoint.X - Root.FormDisplay.RectStartPoint.X);
+                int rectHeight = Math.Abs(Root.FormDisplay.CurrentMousePoint.Y - Root.FormDisplay.RectStartPoint.Y);
+
+                // Define the 4 corners + 1 to close the rectangle loop
+                Point p1 = new Point(rectX, rectY);                          // Top-Left
+                Point p2 = new Point(rectX + rectWidth, rectY);              // Top-Right
+                Point p3 = new Point(rectX + rectWidth, rectY + rectHeight); // Bottom-Right
+                Point p4 = new Point(rectX, rectY + rectHeight);             // Bottom-Left
+                Point p5 = new Point(rectX, rectY);                          // Back to Top-Left to close
+
+                // 2. Convert pixel points to ink space coordinates
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref p1);
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref p2);
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref p3);
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref p4);
+                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref p5);
+
+                // 3. Create the permanent Microsoft.Ink stroke using the 5 points
+                Point[] points = new Point[] { p1, p2, p3, p4, p5 };
+                Stroke rectStroke = IC.Ink.CreateStroke(points);
+
+                // 4. Apply current pen attributes
+                if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                {
+                    rectStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
+                }
+                else
+                {
+                    rectStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
+                }
+
+                // 5. Save to undo history and refresh the display cleanly
+                SaveUndoStrokes();
+
+                Root.FormDisplay.ClearCanvus();
+                Root.FormDisplay.DrawStrokes();
+                Root.FormDisplay.DrawButtons(true);
+                Root.FormDisplay.UpdateFormDisplay(true);
+
+                e.Cancel = true;
+                return;
+            }
+            // ===== END RECTANGLE TOOL =====
+
 
             Root.FingerInAction = false;
 			if (Root.Snapping == 2)
@@ -1096,7 +1176,7 @@ namespace gInkPlus
         //== Rectangle tool ==
         private void btRect_Click(object sender, EventArgs e)
         {
-            SelectPen(-5);   // -5 is the value we defined for Line mode
+            SelectPen(-5);   // -5 is the value we defined for Rectangle mode
         }
         //==
 
