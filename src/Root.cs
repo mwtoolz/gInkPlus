@@ -219,7 +219,8 @@ namespace gInkPlus
 
 			if (UndoStrokes == null)
 			{
-				UndoStrokes = new Ink[8];
+				// Added by mwtoolz from 8 to 30
+				UndoStrokes = new Ink[30];
 				UndoStrokes[0] = FormCollection.IC.Ink.Clone();
 				UndoDepth = 0;
 				UndoP = 0;
