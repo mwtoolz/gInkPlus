@@ -25,17 +25,25 @@ namespace gInkPlus
         // Added by mwtoolz by Gemini
         // Add these public/internal tracking variables in FormDisplay.cs
         // Use properties instead of public fields to avoid marshal-by-ref warnings
+
 		// ==For Line tool
         public bool IsDrawingLine { get; set; } = false;
         public Point LineStartPoint { get; set; }
         public Point CurrentMousePoint { get; set; }
         private Rectangle oldLineBox;
 		public bool oldBoxValid = false;
+
         // === For Rect tool        
         public bool IsDrawingRectangle { get; set; } = false;
         public Point RectStartPoint { get; set; }
 		private Rectangle oldRectBox;
         public bool oldRectBoxValid = false;
+
+        // === For RectFilled tool
+        public bool IsDrawingRectFilled { get; set; } = false;
+
+
+        public bool IsDrawingGeometricShape => IsDrawingLine || IsDrawingRectangle || IsDrawingRectFilled;
         // ===
 
         //Bitmap ScreenBitmap;

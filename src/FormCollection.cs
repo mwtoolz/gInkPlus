@@ -21,11 +21,13 @@ namespace gInkPlus
 		public Bitmap image_dock, image_dockback;
 		public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
 
-        // Added by mwtoolz; Line and Rect tool
+        // Added by mwtoolz; Line,Rect, Rect_filled tool
         public Button btLine;
         public Bitmap image_line, image_line_act;
 		public Button btRect;
 		public Bitmap image_rect, image_rect_act;
+        public Button btRectFilled;
+        public Bitmap image_rect_filled, image_rect_filled_act;
 
         public Bitmap image_pointer, image_pointer_act;
 		public Bitmap[] image_pen;
@@ -192,6 +194,29 @@ namespace gInkPlus
             btRect.Left = cumulatedleft;
             cumulatedleft += (int)(btRect.Width * 1.1);
             // ===== END RECTANGLE BUTTON =====
+
+            //Added by mwtoolz
+            // ===== RECT_FILLED BUTTON =====            
+            btRectFilled = new Button();
+            btRectFilled.Width = (int)(gpButtons.Height * 0.88);
+            btRectFilled.Height = (int)(gpButtons.Height * 0.88);
+            btRectFilled.Top = (int)(gpButtons.Height * 0.07);
+            btRectFilled.FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
+            btRectFilled.FlatAppearance.BorderSize = 3;
+            btRectFilled.FlatStyle = FlatStyle.Flat;// Prevent grey background on hover and click
+            btRectFilled.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            btRectFilled.FlatAppearance.MouseDownBackColor = Color.Transparent;
+
+            btRectFilled.ForeColor = Color.Transparent;
+            btRectFilled.UseVisualStyleBackColor = false;
+            btRectFilled.Click += new EventHandler(this.btRectFilled_Click);
+            btRectFilled.Image = image_rect_filled; // Ensure this matches your loaded image variable/resource
+            btRectFilled.ImageAlign = ContentAlignment.MiddleCenter;
+            gpButtons.Controls.Add(btRectFilled);
+            btRectFilled.Visible = true;
+            btRectFilled.Left = cumulatedleft; cumulatedleft += (int)(btRectFilled.Width * 1.1);
+            // ===== END RECT_FILLED BUTTON =====
+
 
 
             if (Root.PanEnabled)
@@ -386,6 +411,17 @@ namespace gInkPlus
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_act, 0, 0, btRect.Width, btRect.Height);
 
+            // == Rect Filled Tool ==         
+            image_rect_filled = new Bitmap(btRectFilled.Width, btRectFilled.Height);
+            g = Graphics.FromImage(image_rect_filled);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_filled, 0, 0, btRectFilled.Width, btRectFilled.Height);
+            image_rect_filled_act = new Bitmap(btRectFilled.Width, btRectFilled.Height);
+            g = Graphics.FromImage(image_rect_filled_act);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_filled_act, 0, 0, btRectFilled.Width, btRectFilled.Height);
+
+
             // ====
 
             image_pan_act = new Bitmap(btPan.Width, btPan.Height);
@@ -500,7 +536,7 @@ namespace gInkPlus
 
 			// Added by mwtoolz
             // Line & Rect mode: discard the unwanted native freehand stroke.
-            if ((Root.LineMode && Root.FormDisplay.IsDrawingLine) || (Root.RectMode && Root.FormDisplay.IsDrawingRectangle))
+            if (Root.FormDisplay?.Root.FormDisplay.IsDrawingGeometricShape == true)
             {
                 IC.Ink.DeleteStroke(e.Stroke);
                 return;
@@ -1173,17 +1209,23 @@ namespace gInkPlus
 				Root.UponSubPanelUpdate = true;
 		}
 
-        //Added by mwtoolz
-		//== Line Tool ==
+        // Added by mwtoolz
+		// == Line tool ==
         private void btLine_Click(object sender, EventArgs e)
         {
             SelectPen(-4);   // -4 is the value we defined for Line mode
         }        
-        //== Rectangle tool ==
+        // == Rectangle tool ==
         private void btRect_Click(object sender, EventArgs e)
         {
             SelectPen(-5);   // -5 is the value we defined for Rectangle mode
         }
+        // == Rect_Filled tool
+        private void btRectFilled_Click(object sender, EventArgs e)
+        {
+            SelectPen(-6);   // -6 is the value we defined for Rect_Filled mode
+        }
+
         //==
 
 

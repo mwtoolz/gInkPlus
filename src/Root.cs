@@ -110,6 +110,10 @@ namespace gInkPlus
         public bool LineMode = false;
 		public bool RectMode = false;
 
+
+
+		// ===
+
         public bool InkVisible = true;
 
 		public Ink[] UndoStrokes;
