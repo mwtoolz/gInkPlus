@@ -227,6 +227,8 @@
     <Content Include="tool_line_act.png" />
     <Content Include="tool_rect.png" />
     <Content Include="tool_rect_act.png" />
+    <Content Include="tool_rect_filled.png" />
+    <Content Include="tool_rect_filled_act.png" />
     <None Include="paneloption.png" />
     <None Include="visible_not.png" />
     <None Include="visible.png" />
