@@ -206,15 +206,16 @@ namespace gInkPlus
             btRectFilled.FlatStyle = FlatStyle.Flat;// Prevent grey background on hover and click
             btRectFilled.FlatAppearance.MouseOverBackColor = Color.Transparent;
             btRectFilled.FlatAppearance.MouseDownBackColor = Color.Transparent;
-
             btRectFilled.ForeColor = Color.Transparent;
             btRectFilled.UseVisualStyleBackColor = false;
-            btRectFilled.Click += new EventHandler(this.btRectFilled_Click);
+            btRectFilled.Click += new EventHandler(this.btRectFilled_Click);       
             btRectFilled.Image = image_rect_filled; // Ensure this matches your loaded image variable/resource
+
             btRectFilled.ImageAlign = ContentAlignment.MiddleCenter;
             gpButtons.Controls.Add(btRectFilled);
             btRectFilled.Visible = true;
-            btRectFilled.Left = cumulatedleft; cumulatedleft += (int)(btRectFilled.Width * 1.1);
+            btRectFilled.Left = cumulatedleft;
+			cumulatedleft += (int)(btRectFilled.Width * 1.1);
             // ===== END RECT_FILLED BUTTON =====
 
 
@@ -408,17 +409,27 @@ namespace gInkPlus
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect, 0, 0, btRect.Width, btRect.Height);
             image_rect_act = new Bitmap(btRect.Width, btRect.Height);
             g = Graphics.FromImage(image_rect_act);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;            
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_act, 0, 0, btRect.Width, btRect.Height);
 
-            // == Rect Filled Tool ==         
+            // == Rect Filled Tool ==
+            // debug
+            //image_rect_filled = new Bitmap(global::gInkPlus.Properties.Resources.tool_rect_filled, btRectFilled.Width, btRectFilled.Height);
+            //         btRectFilled.Image = image_rect_filled;
+
+
+            // graphic operations not necessary
             image_rect_filled = new Bitmap(btRectFilled.Width, btRectFilled.Height);
             g = Graphics.FromImage(image_rect_filled);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_filled, 0, 0, btRectFilled.Width, btRectFilled.Height);
+
+            // debug
+            // image_rect_filled_act = new Bitmap(global::gInkPlus.Properties.Resources.tool_rect_filled_act, btRectFilled.Width, btRectFilled.Height);
+            // btRectFilled.Image = image_rect_filled_act;
             image_rect_filled_act = new Bitmap(btRectFilled.Width, btRectFilled.Height);
             g = Graphics.FromImage(image_rect_filled_act);
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;            
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_filled_act, 0, 0, btRectFilled.Width, btRectFilled.Height);
 
 
@@ -917,7 +928,8 @@ namespace gInkPlus
 		{
 
             // Added by mwtoolz
-            // -4=line, -5=rectangle
+            // -4=line, -5=rectangle, -6=rect_filled
+			// Images need to be initialised here before it shows in toolbar
 
 			// Reset tools
 			// in case mouse up doesn't register
@@ -928,8 +940,55 @@ namespace gInkPlus
             Root.FormDisplay.ResetRectDrawingState();
             Root.RectMode = false;
             btRect.Image = image_rect;
+			
+			Root.RectFilledMode = false;
+			btRectFilled.Image = image_rect_filled;
 
-            if (pen == -5)
+
+			if (pen == -6)
+			{
+                for (int b = 0; b < Root.MaxPenCount; b++)
+                    btPen[b].Image = image_pen[b];
+
+                btEraser.Image = image_eraser;
+                btPointer.Image = image_pointer;
+                btPan.Image = image_pan;
+
+                // Reset Line, Rect button and highlight Rect_Filled button
+                btLine.Image = image_line;
+                btRect.Image = image_rect;
+				btRectFilled.Image = image_rect_filled_act;
+
+                // Disable Line, Rect mode
+                Root.LineMode = false;
+                Root.FormDisplay.IsDrawingLine = false;
+				Root.RectMode = false;
+                Root.FormDisplay.IsDrawingRectangle = false;
+
+				// Enable RectFilled Mode
+				Root.RectFilledMode = true;
+				Root.FormDisplay.IsDrawingRectFilled = true;
+
+                EnterEraserMode(false);
+                Root.UnPointer();
+                Root.PanMode = false;
+
+                // Keep FULL input area so we still receive mouse events
+                try
+                {
+                    IC.SetWindowInputRectangle(
+                        new Rectangle(0, 0, this.Width, this.Height));
+                }
+                catch
+                {
+                    Thread.Sleep(1);
+                    IC.SetWindowInputRectangle(
+                        new Rectangle(0, 0, this.Width, this.Height));
+                }
+            }
+            // ===== END OF RECT_FILLED TOOL =====        
+
+            else if (pen == -5)
             {
                 for (int b = 0; b < Root.MaxPenCount; b++)
                     btPen[b].Image = image_pen[b];
