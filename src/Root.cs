@@ -110,10 +110,11 @@ namespace gInkPlus
         public bool LineMode = false;
 		public bool RectMode = false;
 		public bool RectFilledMode = false;
+		public bool IsShapeMode => LineMode || RectMode || RectFilledMode;
 
 
 
-		// ===
+        // ===
 
         public bool InkVisible = true;
 

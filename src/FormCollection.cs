@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml.Serialization.Configuration;
 
 namespace gInkPlus	
 {
@@ -547,7 +548,7 @@ namespace gInkPlus
 
 			// Added by mwtoolz
             // Line & Rect mode: discard the unwanted native freehand stroke.
-            if (Root.FormDisplay?.Root.FormDisplay.IsDrawingGeometricShape == true)
+            if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
             {
                 IC.Ink.DeleteStroke(e.Stroke);
                 return;
@@ -988,6 +989,7 @@ namespace gInkPlus
             }
             // ===== END OF RECT_FILLED TOOL =====        
 
+            // ===== RECTANGLE TOOL =====
             else if (pen == -5)
             {
                 for (int b = 0; b < Root.MaxPenCount; b++)
@@ -1036,10 +1038,18 @@ namespace gInkPlus
 
                 btEraser.Image = image_eraser;
                 btPointer.Image = image_pointer;
-                btPan.Image = image_pan;      
+                btPan.Image = image_pan;   
+				
+				// Activate Line tool
                 btLine.Image = image_line_act;
-
                 Root.LineMode = true;
+
+                // Rectangle
+                btRect.Image = image_rect;
+                Root.RectMode = false;
+                // Rect_Filled
+                btRectFilled.Image = image_rect_filled;
+                Root.RectFilledMode = false;
 
                 EnterEraserMode(false);
                 Root.UnPointer();
@@ -1058,10 +1068,7 @@ namespace gInkPlus
 			}
 
             // ==== END OF LINE TOOL ====
-            // ===== RECTANGLE TOOL =====
             
-
-
             // -3=pan, -2=pointer, -1=eraser, 0+=pens	
 
             else if (pen == -3)
@@ -1078,8 +1085,11 @@ namespace gInkPlus
                 Root.LineMode = false;
 				// Rectangle
 				btRect.Image = image_rect;
-				Root.RectMode = false;
-				// ===
+				Root.RectMode = false;				
+				// Rect_Filled
+				btRectFilled.Image = image_rect_filled;
+				Root.RectFilledMode = false;
+                // ===
 
                 EnterEraserMode(false);
 				Root.UnPointer();
@@ -1109,6 +1119,7 @@ namespace gInkPlus
                 //Added by mwtoolz
                 Root.LineMode = false;               
                 Root.RectMode = false;
+				Root.RectFilledMode = false;
             }
 			else if (pen == -1)
 			{
@@ -1127,6 +1138,7 @@ namespace gInkPlus
                 //Added by mwtoolz
                 Root.LineMode = false;
                 Root.RectMode = false;
+				Root.RectFilledMode = false;
 
                 if (Root.CanvasCursor == 0)
 				{
@@ -1169,6 +1181,7 @@ namespace gInkPlus
                 //Added by mwtoolz
                 Root.LineMode = false;
                 Root.RectMode = false;
+				Root.RectFilledMode = false;
 
                 if (Root.CanvasCursor == 0)
 				{
