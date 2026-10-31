@@ -883,11 +883,11 @@ namespace gInkPlus
             // Added by mwtoolz
             // -4=line, -5=rectangle
 
-			// Reset
-            Root.FormDisplay.IsDrawingLine = false;
+			// Reset tools
+			Root.FormDisplay.ResetLineDrawingState();            
 			Root.LineMode = false;
-			btLine.Image = image_line;
-            Root.FormDisplay.IsDrawingRectangle = false;
+			btLine.Image = image_line;            
+            Root.FormDisplay.ResetRectDrawingState();
             Root.RectMode = false;
             btRect.Image = image_rect;
 

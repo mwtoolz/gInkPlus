@@ -1,11 +1,12 @@
+using Microsoft.Ink;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
-using Microsoft.Ink;
+using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 
 namespace gInkPlus
 {
@@ -742,7 +743,13 @@ namespace gInkPlus
         public void ResetRectDrawingState()
         {
             IsDrawingRectangle = false;
-            oldRectBoxValid = false;         
+            oldRectBoxValid = false;
+
+            // Clear out stale coordinate data so it doesn't bleed into the next session
+            RectStartPoint = Point.Empty;
+            CurrentMousePoint = Point.Empty;
+            oldRectBox = Rectangle.Empty;
+
         }
 
         // ===
