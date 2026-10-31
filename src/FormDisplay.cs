@@ -743,12 +743,7 @@ namespace gInkPlus
         public void ResetRectDrawingState()
         {
             IsDrawingRectangle = false;
-            oldRectBoxValid = false;
-
-            // Clear out stale coordinate data so it doesn't bleed into the next session
-            RectStartPoint = Point.Empty;
-            CurrentMousePoint = Point.Empty;
-            oldRectBox = Rectangle.Empty;
+            oldRectBoxValid = false;    
 
         }
 

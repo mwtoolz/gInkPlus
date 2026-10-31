@@ -884,9 +884,11 @@ namespace gInkPlus
             // -4=line, -5=rectangle
 
 			// Reset tools
+			// in case mouse up doesn't register
 			Root.FormDisplay.ResetLineDrawingState();            
 			Root.LineMode = false;
-			btLine.Image = image_line;            
+			btLine.Image = image_line;
+            // in case mouse up doesn't register
             Root.FormDisplay.ResetRectDrawingState();
             Root.RectMode = false;
             btRect.Image = image_rect;
