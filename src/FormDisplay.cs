@@ -650,13 +650,24 @@ namespace gInkPlus
 						if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
 						{
 							Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];
-							lineColor = attr.Color;
-							width = Math.Max(attr.Width / 30f, 1f);
+
+                            // New code
+                            lineColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
+
+                            // Old code
+                            // lineColor = attr.Color;
+                            width = Math.Max(attr.Width / 30f, 1f);
 						}
 						else
 						{
-							lineColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
-							width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 30f, 1f);
+
+                            // New code
+                            var attr = Root.FormCollection.IC.DefaultDrawingAttributes;
+                            lineColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
+
+                            // old code
+                            // lineColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
+                            width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 30f, 1f);
 						}
 
 						using (Pen previewPen = new Pen(lineColor, width))
@@ -664,8 +675,14 @@ namespace gInkPlus
 							previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
 							previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
 							g.DrawLine(previewPen, LineStartPoint.X, LineStartPoint.Y, CurrentMousePoint.X, CurrentMousePoint.Y);
-						}
-					}
+                            
+                        }
+
+                        // New code
+                        // Ensure drawing operations are completed
+                        g.Flush();
+                    }
+
                     UpdateFormDisplay(true);
                 }
                 // ===End of Line Tool code==
@@ -712,11 +729,22 @@ namespace gInkPlus
                         if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
                         {
                             Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];
-                            rectColor = attr.Color;
+
+							// New code
+							rectColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
+
+                            // Old code
+                            // rectColor = attr.Color;
                         }
                         else
                         {
-                            rectColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
+
+                            // New code
+                            var attr = Root.FormCollection.IC.DefaultDrawingAttributes;
+							rectColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
+
+                            // Old code
+                            // rectColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
                         }
 
                         if (isFilled)
@@ -748,7 +776,11 @@ namespace gInkPlus
                             }
                         }
 
-						// ===
+                        // New code
+                        // Ensure drawing operations are completed
+                        g.Flush();
+
+                        // ===
 
                         // old code
                         /*
