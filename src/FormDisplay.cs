@@ -289,7 +289,12 @@ namespace gInkPlus
                     Root.FormCollection.IC.Renderer.InkSpaceToPixel(g, ref screenPoints);
 
                     // 3. Get the color from the stroke's pen attributes
-                    Color fillColor = stroke.DrawingAttributes.Color;
+                    // New code
+                    Color fillColor = Color.FromArgb(255 - stroke.DrawingAttributes.Transparency, stroke.DrawingAttributes.Color.R,
+						stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B);
+
+                    // Old code
+                    // Color fillColor = stroke.DrawingAttributes.Color;
 
                     // 4. Fill the shape using GDI+
                     using (SolidBrush brush = new SolidBrush(fillColor))
