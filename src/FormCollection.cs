@@ -815,7 +815,13 @@ namespace gInkPlus
 
                 // 3. Create the permanent Microsoft.Ink stroke using the 5 points
                 Point[] points = new Point[] { p1, p2, p3, p4, p5 };
-                Stroke rectStroke = IC.Ink.CreateStroke(points);
+                Stroke rectStroke = IC.Ink.CreateStroke(points);           
+
+                // 5. Apply fill property ONLY if it is the RectFilled mode
+                if (isFilled)
+                {                   
+                    rectStroke.ExtendedProperties.Add(Root.FilledShapeGuid, true);
+                }
 
                 // 4. Apply current pen attributes
                 if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
@@ -825,12 +831,6 @@ namespace gInkPlus
                 else
                 {
                     rectStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
-                }
-
-                // 5. Apply fill property ONLY if it is the RectFilled mode
-                if (isFilled)
-                {                   
-                    rectStroke.ExtendedProperties.Add(Root.FilledShapeGuid, true);
                 }
 
 
@@ -845,7 +845,7 @@ namespace gInkPlus
                 e.Cancel = true;
                 return;
             }
-            // ===== END RECTANGLE TOOL =====
+            // ===== END RECTANGLE & RECT FILLED TOOL =====
 
 
             Root.FingerInAction = false;
@@ -986,9 +986,12 @@ namespace gInkPlus
             Root.FormDisplay.ResetRectDrawingState();
             Root.RectMode = false;
             btRect.Image = image_rect;
-			
-			Root.RectFilledMode = false;
+
+			// in case mouse up doesn't register
+			Root.FormDisplay.ResetRectFilledDrawingState();
+            Root.RectFilledMode = false;
 			btRectFilled.Image = image_rect_filled;
+
 
 
 			if (pen == -6)

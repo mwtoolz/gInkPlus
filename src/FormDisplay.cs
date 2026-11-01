@@ -140,12 +140,19 @@ namespace gInkPlus
 
 		public void ClearCanvus()
 		{
-			gCanvus.Clear(Color.Transparent);
-		}
+            // new code
+            // gCanvus.Clear(Color.FromArgb(0, 0, 0, 0));
+            // old code
+            gCanvus.Clear(Color.Transparent);
+
+        }
 		public void ClearCanvus(Graphics g)
 		{
-			g.Clear(Color.Transparent);
-		}
+			// new code
+			// g.Clear(Color.FromArgb(0, 0, 0, 0));
+            // old code
+            g.Clear(Color.Transparent);
+        }
 
 		public void DrawSnapping(Rectangle rect)
 		{
@@ -252,6 +259,7 @@ namespace gInkPlus
 		}
 
         // Added by mwtoolz for filled polygons
+		// ===
         public void DrawStrokes()
         {
             if (!Root.InkVisible) return;
@@ -263,7 +271,9 @@ namespace gInkPlus
         {
             if (!Root.InkVisible) return;
 
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+			// g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+			// AntiAlias produces white outlines on the filled polygons
+			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
 
             // Loop through every stroke in the ink collection
             foreach (Stroke stroke in Root.FormCollection.IC.Ink.Strokes)
@@ -294,9 +304,6 @@ namespace gInkPlus
                 }
             }
         }
-
-
-
 
         // Old code
         /*
@@ -696,7 +703,8 @@ namespace gInkPlus
                     // c. Draw the new rectangle preview using GDI+
                     using (Graphics g = Graphics.FromHdc(canvusDc))
                     {
-                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+						// g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+						g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
 
                         Color rectColor;
 
