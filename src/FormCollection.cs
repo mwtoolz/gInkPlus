@@ -413,21 +413,11 @@ namespace gInkPlus
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;            
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_act, 0, 0, btRect.Width, btRect.Height);
 
-            // == Rect Filled Tool ==
-            // debug
-            //image_rect_filled = new Bitmap(global::gInkPlus.Properties.Resources.tool_rect_filled, btRectFilled.Width, btRectFilled.Height);
-            //         btRectFilled.Image = image_rect_filled;
-
-
-            // graphic operations not necessary
+            // == Rect Filled Tool ==      
             image_rect_filled = new Bitmap(btRectFilled.Width, btRectFilled.Height);
             g = Graphics.FromImage(image_rect_filled);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_filled, 0, 0, btRectFilled.Width, btRectFilled.Height);
-
-            // debug
-            // image_rect_filled_act = new Bitmap(global::gInkPlus.Properties.Resources.tool_rect_filled_act, btRectFilled.Width, btRectFilled.Height);
-            // btRectFilled.Image = image_rect_filled_act;
             image_rect_filled_act = new Bitmap(btRectFilled.Width, btRectFilled.Height);
             g = Graphics.FromImage(image_rect_filled_act);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;            
