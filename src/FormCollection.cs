@@ -596,12 +596,28 @@ namespace gInkPlus
                 // CRITICAL: Prevent gInkPlus from starting a normal freehand pencil stroke
                 e.Cancel = true;
                 return;
-            }
+			}
 
-            // Rectangle Mode
-            if (Root.RectMode)
+			// Rectangle Mode
+			if (Root.RectMode)
+			{
+				Root.FormDisplay.IsDrawingRectangle = true;
+				Root.FormDisplay.RectStartPoint = new Point(e.X, e.Y);
+				Root.FormDisplay.CurrentMousePoint = Root.FormDisplay.RectStartPoint;
+				Root.FormDisplay.oldRectBoxValid = false;
+
+				Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+				Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
+				Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+
+				e.Cancel = true;
+				return;
+			}
+
+            // RectFilled Mode
+            if (Root.RectFilledMode)
             {
-                Root.FormDisplay.IsDrawingRectangle = true;
+                Root.FormDisplay.IsDrawingRectFilled = true; // Or a unified flag like IsDrawingRectangle = true with a shape type
                 Root.FormDisplay.RectStartPoint = new Point(e.X, e.Y);
                 Root.FormDisplay.CurrentMousePoint = Root.FormDisplay.RectStartPoint;
                 Root.FormDisplay.oldRectBoxValid = false;
@@ -648,7 +664,9 @@ namespace gInkPlus
 		{
 
 			// Added by mwtoolz, Gemini
-			// Line Mode Tracking			
+			// Old Code
+			// Line Mode Tracking	
+			/*		
 			if (Root.LineMode && Root.FormDisplay.IsDrawingLine)
 			{
                 // Just update the live tracking point. Extremely fast!
@@ -665,6 +683,25 @@ namespace gInkPlus
                 e.Cancel = true;
                 return;
             }
+
+            // RectFilled Mode Tracking
+            if (Root.RectFilledMode && Root.FormDisplay.IsDrawingRectFilled)
+            {
+                Root.FormDisplay.CurrentMousePoint = new Point(e.X, e.Y);
+                e.Cancel = true;
+                return;
+            }
+			*/
+
+			// New Code
+			// Line, Rect, RectFilled Mode Tracking
+			if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
+			{
+                Root.FormDisplay.CurrentMousePoint = new Point(e.X, e.Y);
+                e.Cancel = true;
+                return;
+            }
+
 
             // ====
 
@@ -740,10 +777,21 @@ namespace gInkPlus
             }
             // ===== END LINE TOOL =====
 
-            // ===== RECTANGLE TOOL - CREATE FINAL STROKE =====
-            if (Root.RectMode && Root.FormDisplay.IsDrawingRectangle)
+            // ===== RECTANGLE & RECT FILLED TOOL - CREATE FINAL STROKE =====
+            if ((Root.RectMode && Root.FormDisplay.IsDrawingRectangle) ||
+				(Root.RectFilledMode && Root.FormDisplay.IsDrawingRectFilled))
             {
-                Root.FormDisplay.ResetRectDrawingState(); // Or reset your drawing flags accordingly
+                // Determine if this specific shape is filled based on which mode is active
+                bool isFilled = Root.RectFilledMode;
+
+				if (!isFilled) 
+				{ 
+					Root.FormDisplay.ResetRectDrawingState();
+				}
+				else
+				{
+                    Root.FormDisplay.ResetRectFilledDrawingState();
+                }				
 
                 // 1. Calculate rectangle bounds in pixels (handles any drag direction)
                 int rectX = Math.Min(Root.FormDisplay.RectStartPoint.X, Root.FormDisplay.CurrentMousePoint.X);
@@ -779,7 +827,14 @@ namespace gInkPlus
                     rectStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
                 }
 
-                // 5. Save to undo history and refresh the display cleanly
+                // 5. Apply fill property ONLY if it is the RectFilled mode
+                if (isFilled)
+                {                   
+                    rectStroke.ExtendedProperties.Add(Root.FilledShapeGuid, true);
+                }
+
+
+                // 6. Save to undo history and refresh the display cleanly
                 SaveUndoStrokes();
 
                 Root.FormDisplay.ClearCanvus();

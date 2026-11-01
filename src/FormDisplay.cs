@@ -251,6 +251,55 @@ namespace gInkPlus
 			}
 		}
 
+        // Added by mwtoolz for filled polygons
+        public void DrawStrokes()
+        {
+            if (!Root.InkVisible) return;
+            DrawStrokes(gCanvus);
+
+        }
+
+        public void DrawStrokes(Graphics g)
+        {
+            if (!Root.InkVisible) return;
+
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+            // Loop through every stroke in the ink collection
+            foreach (Stroke stroke in Root.FormCollection.IC.Ink.Strokes)
+            {
+                // Check if this stroke was marked as a filled shape
+                if (stroke.ExtendedProperties.DoesPropertyExist(Root.FilledShapeGuid))
+                {
+                    // 1. Get the 5 points making up the rectangle/polygon
+                    Point[] inkPoints = stroke.GetPoints();
+                    Point[] screenPoints = (Point[])inkPoints.Clone();
+
+                    // 2. Convert from Ink Space coordinates back to Pixel/Screen space
+                    Root.FormCollection.IC.Renderer.InkSpaceToPixel(g, ref screenPoints);
+
+                    // 3. Get the color from the stroke's pen attributes
+                    Color fillColor = stroke.DrawingAttributes.Color;
+
+                    // 4. Fill the shape using GDI+
+                    using (SolidBrush brush = new SolidBrush(fillColor))
+                    {
+                        g.FillPolygon(brush, screenPoints);
+                    }
+                }
+                else
+                {
+                    // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer
+                    Root.FormCollection.IC.Renderer.Draw(g, stroke);
+                }
+            }
+        }
+
+
+
+
+        // Old code
+        /*
         public void DrawStrokes()
 		{
 			if (Root.InkVisible)
@@ -261,8 +310,9 @@ namespace gInkPlus
 			if (Root.InkVisible)
 				Root.FormCollection.IC.Renderer.Draw(g, Root.FormCollection.IC.Ink.Strokes);
 		}
+		*/
 
-		public void MoveStrokes(int dy)
+        public void MoveStrokes(int dy)
 		{
 			Point pt1 = new Point(0, 0);
 			Point pt2 = new Point(0, 100);
@@ -539,7 +589,7 @@ namespace gInkPlus
 
 				// Added by mwtoolz !Root.LineMode and !Root.RectMode
 				// 1. DEFAULT STROKE RENDERING (Only runs when there ARE existing strokes and we are NOT drawing shapes)
-				if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.LineMode && !Root.RectMode)
+				if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.LineMode && !Root.RectMode && !Root.RectFilledMode)
 				// if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.LineMode)
 				// if (Root.FormCollection.IC.Ink.Strokes.Count > 0)
 
@@ -616,9 +666,10 @@ namespace gInkPlus
                 // Added for Rectangle Mode by mwtoolz
                 // else if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && Root.RectMode && IsDrawingRectangle)
 
-                // 3. RECTANGLE TOOL PREVIEW (Works even on a blank canvas)
-                else if (Root.RectMode && IsDrawingRectangle)
-                {               
+                // 3. RECTANGLE & RECT_FILLED TOOL PREVIEW (Works even on a blank canvas)
+                else if (Root.RectMode && IsDrawingRectangle || Root.RectFilledMode && IsDrawingRectFilled)
+                {
+                    bool isFilled = Root.RectFilledMode;
 
                     // a. Erase the old rectangle position using BitBlt
                     if (oldRectBoxValid)
@@ -648,6 +699,51 @@ namespace gInkPlus
                         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
                         Color rectColor;
+
+                        // New Code
+                        if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                        {
+                            Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];
+                            rectColor = attr.Color;
+                        }
+                        else
+                        {
+                            rectColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
+                        }
+
+                        if (isFilled)
+                        {
+                            // Draw filled rectangle preview
+                            using (SolidBrush previewBrush = new SolidBrush(rectColor))
+                            {
+                                g.FillRectangle(previewBrush, rectX, rectY, rectWidth, rectHeight);
+                            }
+                        }
+                        else
+                        {
+                            // Draw outline rectangle preview (using your original width logic)
+                            float width;
+                            if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                            {
+                                width = Math.Max(Root.PenAttr[Root.CurrentPen].Width / 30f, 1f);
+                            }
+                            else
+                            {
+                                width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 30f, 1f);
+                            }
+
+                            using (Pen previewPen = new Pen(rectColor, width))
+                            {
+                                previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                                previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                                g.DrawRectangle(previewPen, rectX, rectY, rectWidth, rectHeight);
+                            }
+                        }
+
+						// ===
+
+                        // old code
+                        /*
                         float width;
 
                         // Use the exact same pen attribute check as the Line tool
@@ -669,6 +765,8 @@ namespace gInkPlus
                             previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
                             g.DrawRectangle(previewPen, rectX, rectY, rectWidth, rectHeight);
                         }
+
+						*/
                     }
 
                     UpdateFormDisplay(true);
@@ -752,7 +850,14 @@ namespace gInkPlus
         {
             IsDrawingRectangle = false;
             oldRectBoxValid = false;    
+        }
 
+        // Rect_Filled tool
+
+        public void ResetRectFilledDrawingState()
+        {
+			IsDrawingRectFilled = false;
+            oldRectBoxValid = false;
         }
 
         // ===
