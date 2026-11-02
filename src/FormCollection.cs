@@ -983,64 +983,40 @@ namespace gInkPlus
             // ===== RECT_FILLED TOOL =====
             if (pen == -6)
 			{
-
                 // Activate RectFilled Mode
                 btRectFilled.Image = image_rect_filled_act;
                 Root.RectFilledMode = true;
 
-                // Keep FULL input area so we still receive mouse events
-                try
-                {
-                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-                }
-                catch
-                {
-                    Thread.Sleep(1);
-                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-                }
+				// Keep FULL input area so we still receive mouse events
+				SetFullInputArea();
+
             }
             // ===== END OF RECT_FILLED TOOL =====        
 
             // ===== RECTANGLE TOOL =====
             else if (pen == -5)
             { 
-
                 // Activate Rectangle mode
                 btRect.Image = image_rect_act;
                 Root.RectMode = true;
 
                 // Keep FULL input area so we still receive mouse events
-                try
-                {
-                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-                }
-                catch
-                {
-                    Thread.Sleep(1);
-                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-                }
+                SetFullInputArea();
+
             }
             // ===== END OF RECTANGLE TOOL =====
 
             // ===== LINE TOOL =====
             else if (pen == -4)   
             {   
-				
 				// Activate Line tool
                 btLine.Image = image_line_act;
                 Root.LineMode = true;
 
                 // Keep FULL input area so we still receive mouse events
-                try
-				{
-					IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-				}
-				catch
-				{
-					Thread.Sleep(1);
-					IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-				}
-			}
+                SetFullInputArea();
+
+            }
 
             // ==== END OF LINE TOOL ====
             
@@ -1051,16 +1027,9 @@ namespace gInkPlus
                 btPan.Image = image_pan_act;
                 Root.PanMode = true;
 
-				try
-				{
-					IC.SetWindowInputRectangle(new Rectangle(0, 0, 1, 1));
-				}
-				catch
-				{
-					Thread.Sleep(1);
-					IC.SetWindowInputRectangle(new Rectangle(0, 0, 1, 1));
-				}
-			}
+                SetFullInputArea();
+
+            }
 			else if (pen == -2)
 			{
 				// Activate Pointer tool
@@ -1084,16 +1053,9 @@ namespace gInkPlus
 				else if (Root.CanvasCursor == 1)
 					SetPenTipCursor();
 
-				try
-				{
-					IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-				}
-				catch
-				{
-					Thread.Sleep(1);
-					IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-				}
-			}
+                SetFullInputArea();
+
+            }
 			else if (pen >= 0)
 			{
 				if (this.Cursor != System.Windows.Forms.Cursors.Default) this.Cursor = System.Windows.Forms.Cursors.Default;
@@ -1111,16 +1073,9 @@ namespace gInkPlus
 				}
 				else if (Root.CanvasCursor == 1) SetPenTipCursor();
 
-				try
-				{
-					IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-				}
-				catch
-				{
-					Thread.Sleep(1);
-					IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-				}
-			}
+                SetFullInputArea();
+
+            }
 
 			Root.CurrentPen = pen;
 
@@ -1906,7 +1861,31 @@ namespace gInkPlus
             Root.PanMode = false;
         }
 
-		// ===
+        // ===
+
+        // Added by mwtoolz
+        // Keep full input area so mouse events are received across the entire form     
+        private void SetFullInputArea()
+        {
+            if (this.IsDisposed || this.Disposing ||
+                !this.IsHandleCreated || IC == null)
+                return;
+
+            // Do not modify InkOverlay while it is collecting ink
+            if (IC.CollectingInk)
+                return;
+
+            try
+            {
+                IC.SetWindowInputRectangle(
+                    new Rectangle(0, 0, this.Width, this.Height));
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "SetFullInputArea failed: " + ex.Message);
+            }
+        }
 
         [DllImport("user32.dll")]
 		static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
