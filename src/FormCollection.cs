@@ -1016,7 +1016,8 @@ namespace gInkPlus
 
 				// Enable RectFilled Mode
 				Root.RectFilledMode = true;
-				Root.FormDisplay.IsDrawingRectFilled = true;
+                Root.FormDisplay.ResetRectFilledDrawingState();
+                // Root.FormDisplay.IsDrawingRectFilled = true;
 
                 EnterEraserMode(false);
                 Root.UnPointer();
@@ -1057,7 +1058,8 @@ namespace gInkPlus
 
                 // Enable Rectangle mode
                 Root.RectMode = true;
-                Root.FormDisplay.IsDrawingRectangle = true;
+                Root.FormDisplay.ResetRectDrawingState();
+                // Root.FormDisplay.IsDrawingRectangle = true;
 
                 EnterEraserMode(false);
                 Root.UnPointer();
