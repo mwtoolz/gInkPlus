@@ -973,24 +973,16 @@ namespace gInkPlus
 		public void SelectPen(int pen)
 		{
 
-			// Added by mwtoolz
-			// -4=line, -5=rectangle, -6=rect_filled
-			// Images need to be initialised here before it shows in toolbar
-			// Reset Shape tools
-			ResetShapeToolsMode();
+            // Added by mwtoolz
+            // -4=line, -5=rectangle, -6=rect_filled
+
+            // Reset all existing tool states and toolbar images
+            ResetShapeToolsMode();
+            ResetGeneralToolsMode();
 
             // ===== RECT_FILLED TOOL =====
             if (pen == -6)
 			{
-                for (int b = 0; b < Root.MaxPenCount; b++)
-                    btPen[b].Image = image_pen[b];
-
-                btEraser.Image = image_eraser;
-                btPointer.Image = image_pointer;
-                btPan.Image = image_pan;   
-                EnterEraserMode(false);
-                Root.UnPointer();
-                Root.PanMode = false;
 
                 // Activate RectFilled Mode
                 btRectFilled.Image = image_rect_filled_act;
@@ -1013,16 +1005,7 @@ namespace gInkPlus
 
             // ===== RECTANGLE TOOL =====
             else if (pen == -5)
-            {
-                for (int b = 0; b < Root.MaxPenCount; b++)
-                    btPen[b].Image = image_pen[b];
-
-                btEraser.Image = image_eraser;
-                btPointer.Image = image_pointer;
-                btPan.Image = image_pan;
-                EnterEraserMode(false);
-                Root.UnPointer();
-                Root.PanMode = false;
+            { 
 
                 // Activate Rectangle mode
                 btRect.Image = image_rect_act;
@@ -1045,18 +1028,9 @@ namespace gInkPlus
 
             // ===== LINE TOOL =====
             else if (pen == -4)   
-            {
-                for (int b = 0; b < Root.MaxPenCount; b++)
-                    btPen[b].Image = image_pen[b];
-
-                btEraser.Image = image_eraser;
-                btPointer.Image = image_pointer;
-                btPan.Image = image_pan;
-                EnterEraserMode(false);
-                Root.UnPointer();
-                Root.PanMode = false;
-
-                // Activate Line tool
+            {   
+				
+				// Activate Line tool
                 btLine.Image = image_line_act;
                 Root.LineMode = true;
 
@@ -1075,16 +1049,8 @@ namespace gInkPlus
             // ==== END OF LINE TOOL ====
             
             // -3=pan, -2=pointer, -1=eraser, 0+=pens	
-
             else if (pen == -3)
-			{
-				for (int b = 0; b < Root.MaxPenCount; b++)
-					btPen[b].Image = image_pen[b];
-
-				btEraser.Image = image_eraser;
-                EnterEraserMode(false);
-				Root.UnPointer();
-
+			{			
 				// Activate Pan tool
                 btPan.Image = image_pan_act;
                 Root.PanMode = true;
@@ -1101,31 +1067,18 @@ namespace gInkPlus
 			}
 			else if (pen == -2)
 			{
-				for (int b = 0; b < Root.MaxPenCount; b++)
-					btPen[b].Image = image_pen[b];
-
-				btEraser.Image = image_eraser;
+				// Activate Pointer tool
 				btPointer.Image = image_pointer_act;
-				btPan.Image = image_pan;
-				EnterEraserMode(false);
-				Root.Pointer();
-				Root.PanMode = false;
-      
+                Root.Pointer();
             }
 			else if (pen == -1)
 			{
 				if (this.Cursor != System.Windows.Forms.Cursors.Default)
 					this.Cursor = System.Windows.Forms.Cursors.Default;
 
-				for (int b = 0; b < Root.MaxPenCount; b++)
-					btPen[b].Image = image_pen[b];
-
+				// Activate Eraser tool
 				btEraser.Image = image_eraser_act;
-				btPointer.Image = image_pointer;
-				btPan.Image = image_pan;
-				EnterEraserMode(true);
-				Root.UnPointer();
-				Root.PanMode = false;
+                EnterEraserMode(true);
 
                 if (Root.CanvasCursor == 0)
 				{
@@ -1155,18 +1108,9 @@ namespace gInkPlus
 				{
 					IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;
 				}
-				for (int b = 0; b < Root.MaxPenCount; b++)
-					btPen[b].Image = image_pen[b];
 
+				// Activate Selected Pen tool
 				btPen[pen].Image = image_pen_act[pen];
-
-				btEraser.Image = image_eraser;
-				btPointer.Image = image_pointer;
-				btPan.Image = image_pan;
-				EnterEraserMode(false);
-				Root.UnPointer();
-				Root.PanMode = false;
-      
 
                 if (Root.CanvasCursor == 0)
 				{
