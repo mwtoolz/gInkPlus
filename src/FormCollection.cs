@@ -977,7 +977,7 @@ namespace gInkPlus
 			// -4=line, -5=rectangle, -6=rect_filled
 			// Images need to be initialised here before it shows in toolbar
 			// Reset Shape tools
-			ResetShapeTools();
+			ResetShapeToolsMode();
 
             // ===== RECT_FILLED TOOL =====
             if (pen == -6)
@@ -987,27 +987,14 @@ namespace gInkPlus
 
                 btEraser.Image = image_eraser;
                 btPointer.Image = image_pointer;
-                btPan.Image = image_pan;
-
-                // Reset Line, Rect button and highlight Rect_Filled button
-                btLine.Image = image_line;
-                btRect.Image = image_rect;
-				btRectFilled.Image = image_rect_filled_act;
-
-                // Disable Line, Rect mode
-                Root.LineMode = false;
-                Root.FormDisplay.IsDrawingLine = false;
-				Root.RectMode = false;
-                Root.FormDisplay.IsDrawingRectangle = false;
-
-				// Enable RectFilled Mode
-				Root.RectFilledMode = true;
-                // Root.FormDisplay.ResetRectFilledDrawingState();
-                // Root.FormDisplay.IsDrawingRectFilled = true;
-
+                btPan.Image = image_pan;   
                 EnterEraserMode(false);
                 Root.UnPointer();
                 Root.PanMode = false;
+
+                // Activate RectFilled Mode
+                btRectFilled.Image = image_rect_filled_act;
+                Root.RectFilledMode = true;
 
                 // Keep FULL input area so we still receive mouse events
                 try
@@ -1033,23 +1020,13 @@ namespace gInkPlus
                 btEraser.Image = image_eraser;
                 btPointer.Image = image_pointer;
                 btPan.Image = image_pan;
-
-                // Reset Line button and highlight Rectangle button
-                btLine.Image = image_line;
-                btRect.Image = image_rect_act;
-
-                // Disable Line mode
-                Root.LineMode = false;
-                Root.FormDisplay.IsDrawingLine = false;
-
-                // Enable Rectangle mode
-                Root.RectMode = true;
-                // Root.FormDisplay.ResetRectDrawingState();
-                // Root.FormDisplay.IsDrawingRectangle = true;
-
                 EnterEraserMode(false);
                 Root.UnPointer();
                 Root.PanMode = false;
+
+                // Activate Rectangle mode
+                btRect.Image = image_rect_act;
+                Root.RectMode = true;
 
                 // Keep FULL input area so we still receive mouse events
                 try
@@ -1074,25 +1051,17 @@ namespace gInkPlus
 
                 btEraser.Image = image_eraser;
                 btPointer.Image = image_pointer;
-                btPan.Image = image_pan;   
-				
-				// Activate Line tool
-                btLine.Image = image_line_act;
-                Root.LineMode = true;
-
-                // Rectangle
-                btRect.Image = image_rect;
-                Root.RectMode = false;
-                // Rect_Filled
-                btRectFilled.Image = image_rect_filled;
-                Root.RectFilledMode = false;
-
+                btPan.Image = image_pan;
                 EnterEraserMode(false);
                 Root.UnPointer();
                 Root.PanMode = false;
 
-				// Keep FULL input area so we still receive mouse events
-				try
+                // Activate Line tool
+                btLine.Image = image_line_act;
+                Root.LineMode = true;
+
+                // Keep FULL input area so we still receive mouse events
+                try
 				{
 					IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
 				}
@@ -1111,25 +1080,14 @@ namespace gInkPlus
 			{
 				for (int b = 0; b < Root.MaxPenCount; b++)
 					btPen[b].Image = image_pen[b];
+
 				btEraser.Image = image_eraser;
-
-				// Added by mwtoolz
-				// Line
-				btLine.Image = image_line;
-				btPointer.Image = image_pointer;
-				btPan.Image = image_pan_act;
-                Root.LineMode = false;
-				// Rectangle
-				btRect.Image = image_rect;
-				Root.RectMode = false;				
-				// Rect_Filled
-				btRectFilled.Image = image_rect_filled;
-				Root.RectFilledMode = false;
-                // ===
-
                 EnterEraserMode(false);
 				Root.UnPointer();
-				Root.PanMode = true;
+
+				// Activate Pan tool
+                btPan.Image = image_pan_act;
+                Root.PanMode = true;
 
 				try
 				{
@@ -1145,17 +1103,14 @@ namespace gInkPlus
 			{
 				for (int b = 0; b < Root.MaxPenCount; b++)
 					btPen[b].Image = image_pen[b];
+
 				btEraser.Image = image_eraser;
 				btPointer.Image = image_pointer_act;
 				btPan.Image = image_pan;
 				EnterEraserMode(false);
 				Root.Pointer();
 				Root.PanMode = false;
-
-                //Added by mwtoolz
-                Root.LineMode = false;               
-                Root.RectMode = false;
-				Root.RectFilledMode = false;
+      
             }
 			else if (pen == -1)
 			{
@@ -1164,17 +1119,13 @@ namespace gInkPlus
 
 				for (int b = 0; b < Root.MaxPenCount; b++)
 					btPen[b].Image = image_pen[b];
+
 				btEraser.Image = image_eraser_act;
 				btPointer.Image = image_pointer;
 				btPan.Image = image_pan;
 				EnterEraserMode(true);
 				Root.UnPointer();
 				Root.PanMode = false;
-
-                //Added by mwtoolz
-                Root.LineMode = false;
-                Root.RectMode = false;
-				Root.RectFilledMode = false;
 
                 if (Root.CanvasCursor == 0)
 				{
@@ -1206,18 +1157,16 @@ namespace gInkPlus
 				}
 				for (int b = 0; b < Root.MaxPenCount; b++)
 					btPen[b].Image = image_pen[b];
+
 				btPen[pen].Image = image_pen_act[pen];
+
 				btEraser.Image = image_eraser;
 				btPointer.Image = image_pointer;
 				btPan.Image = image_pan;
 				EnterEraserMode(false);
 				Root.UnPointer();
 				Root.PanMode = false;
-
-                //Added by mwtoolz
-                Root.LineMode = false;
-                Root.RectMode = false;
-				Root.RectFilledMode = false;
+      
 
                 if (Root.CanvasCursor == 0)
 				{
@@ -1992,7 +1941,7 @@ namespace gInkPlus
      
         // Added by mwtoolz
         // Reset all custom shape tools
-        private void ResetShapeTools()
+        private void ResetShapeToolsMode()
         {
             // Line
             Root.FormDisplay.ResetLineDrawingState();
