@@ -1185,6 +1185,12 @@ namespace gInkPlus
 
 			Root.gpPenWidthVisible = false;
 
+            // Added by mwtoolz
+            // new code
+            SetInkInputRectangle(new Rectangle(0, 0, 1, 1));
+
+            // old code
+            /*
 			try
 			{
 				IC.SetWindowInputRectangle(new Rectangle(0, 0, 1, 1));
@@ -1194,7 +1200,10 @@ namespace gInkPlus
 				Thread.Sleep(1);
 				IC.SetWindowInputRectangle(new Rectangle(0, 0, 1, 1));
 			}
-			Root.SnappingX = -1;
+
+			*/
+
+            Root.SnappingX = -1;
 			Root.SnappingY = -1;
 			Root.SnappingRect = new Rectangle(0, 0, 0, 0);
 			Root.Snapping = 1;
@@ -1204,16 +1213,10 @@ namespace gInkPlus
 
 		public void ExitSnapping()
 		{
-			try
-			{
-				IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-			}
-			catch
-			{
-				Thread.Sleep(1);
-				IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-			}
-			Root.SnappingX = -1;
+
+			SetFullInputArea();
+
+            Root.SnappingX = -1;
 			Root.SnappingY = -1;
 			Root.Snapping = -60;
 			ButtonsEntering = 1;
@@ -1859,6 +1862,7 @@ namespace gInkPlus
             EnterEraserMode(false);
             Root.UnPointer();
             Root.PanMode = false;
+			
         }
 
         // ===
@@ -1867,25 +1871,51 @@ namespace gInkPlus
         // Keep full input area so mouse events are received across the entire form     
         private void SetFullInputArea()
         {
-            if (this.IsDisposed || this.Disposing ||
-                !this.IsHandleCreated || IC == null)
+            SetInkInputRectangle(new Rectangle(0, 0, Width, Height));
+        }
+
+
+        // Added by mwtoolz
+        private void SetInkInputRectangle(Rectangle rect)
+        {
+
+            //debug
+            // System.Diagnostics.Debug.WriteLine($"SetInkInputRectangle called. CollectingInk={IC.CollectingInk}, Rectangle={rect}");
+
+            if (IsDisposed || Disposing || !IsHandleCreated || IC == null)
                 return;
 
-            // Do not modify InkOverlay while it is collecting ink
             if (IC.CollectingInk)
+			{
+                // System.Diagnostics.Debug.WriteLine("Skipped: InkOverlay is collecting ink.");
                 return;
+            }
 
             try
             {
-                IC.SetWindowInputRectangle(
-                    new Rectangle(0, 0, this.Width, this.Height));
+                IC.SetWindowInputRectangle(rect);
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(
-                    "SetFullInputArea failed: " + ex.Message);
+                    "SetInkInputRectangle failed: " + ex.Message);
             }
+
+            // old code
+            /*
+			try
+			{
+				IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
+			}
+			catch
+			{
+				Thread.Sleep(1);
+				IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
+			}
+			*/
         }
+
+
 
         [DllImport("user32.dll")]
 		static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
