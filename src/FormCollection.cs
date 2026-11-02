@@ -1960,6 +1960,30 @@ namespace gInkPlus
         }
 
 
+        // Added by mwtoolz
+        // Reset general toolbar buttons and modes
+        private void ResetGeneralToolsMode()
+        {
+            // Restore all pen buttons
+            for (int b = 0; b < Root.MaxPenCount; b++)
+                btPen[b].Image = image_pen[b];
+
+            // Restore other toolbar buttons
+            btEraser.Image = image_eraser;
+            btPointer.Image = image_pointer;
+            btPan.Image = image_pan;
+
+            // Deactivate other modes
+            EnterEraserMode(false);
+            Root.UnPointer();
+            Root.PanMode = false;
+        }
+
+
+
+
+
+
         [DllImport("user32.dll")]
 		static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 		[DllImport("user32.dll", SetLastError = true)]
