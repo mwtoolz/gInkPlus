@@ -973,28 +973,14 @@ namespace gInkPlus
 		public void SelectPen(int pen)
 		{
 
-            // Added by mwtoolz
-            // -4=line, -5=rectangle, -6=rect_filled
+			// Added by mwtoolz
+			// -4=line, -5=rectangle, -6=rect_filled
 			// Images need to be initialised here before it shows in toolbar
+			// Reset Shape tools
+			ResetShapeTools();
 
-			// Reset tools
-			// in case mouse up doesn't register
-			Root.FormDisplay.ResetLineDrawingState();            
-			Root.LineMode = false;
-			btLine.Image = image_line;
-            // in case mouse up doesn't register
-            Root.FormDisplay.ResetRectDrawingState();
-            Root.RectMode = false;
-            btRect.Image = image_rect;
-
-			// in case mouse up doesn't register
-			Root.FormDisplay.ResetRectFilledDrawingState();
-            Root.RectFilledMode = false;
-			btRectFilled.Image = image_rect_filled;
-
-
-
-			if (pen == -6)
+            // ===== RECT_FILLED TOOL =====
+            if (pen == -6)
 			{
                 for (int b = 0; b < Root.MaxPenCount; b++)
                     btPen[b].Image = image_pen[b];
@@ -2003,8 +1989,29 @@ namespace gInkPlus
 
 			LastF4Status = retVal;
 		}
+     
+        // Added by mwtoolz
+        // Reset all custom shape tools
+        private void ResetShapeTools()
+        {
+            // Line
+            Root.FormDisplay.ResetLineDrawingState();
+            Root.LineMode = false;
+            btLine.Image = image_line;
 
-		[DllImport("user32.dll")]
+            // Rectangle
+            Root.FormDisplay.ResetRectDrawingState();
+            Root.RectMode = false;
+            btRect.Image = image_rect;
+
+            // Filled Rectangle
+            Root.FormDisplay.ResetRectFilledDrawingState();
+            Root.RectFilledMode = false;
+            btRectFilled.Image = image_rect_filled;
+        }
+
+
+        [DllImport("user32.dll")]
 		static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 		[DllImport("user32.dll", SetLastError = true)]
 		static extern UInt32 GetWindowLong(IntPtr hWnd, int nIndex);
