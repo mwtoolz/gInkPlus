@@ -991,14 +991,12 @@ namespace gInkPlus
                 // Keep FULL input area so we still receive mouse events
                 try
                 {
-                    IC.SetWindowInputRectangle(
-                        new Rectangle(0, 0, this.Width, this.Height));
+                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
                 }
                 catch
                 {
                     Thread.Sleep(1);
-                    IC.SetWindowInputRectangle(
-                        new Rectangle(0, 0, this.Width, this.Height));
+                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
                 }
             }
             // ===== END OF RECT_FILLED TOOL =====        
@@ -1014,14 +1012,12 @@ namespace gInkPlus
                 // Keep FULL input area so we still receive mouse events
                 try
                 {
-                    IC.SetWindowInputRectangle(
-                        new Rectangle(0, 0, this.Width, this.Height));
+                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
                 }
                 catch
                 {
                     Thread.Sleep(1);
-                    IC.SetWindowInputRectangle(
-                        new Rectangle(0, 0, this.Width, this.Height));
+                    IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
                 }
             }
             // ===== END OF RECTANGLE TOOL =====
@@ -1100,14 +1096,10 @@ namespace gInkPlus
 			}
 			else if (pen >= 0)
 			{
-				if (this.Cursor != System.Windows.Forms.Cursors.Default)
-					this.Cursor = System.Windows.Forms.Cursors.Default;
+				if (this.Cursor != System.Windows.Forms.Cursors.Default) this.Cursor = System.Windows.Forms.Cursors.Default;
 
 				IC.DefaultDrawingAttributes = Root.PenAttr[pen].Clone();
-				if (Root.PenWidthEnabled)
-				{
-					IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;
-				}
+				if (Root.PenWidthEnabled) IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;				
 
 				// Activate Selected Pen tool
 				btPen[pen].Image = image_pen_act[pen];
@@ -1117,8 +1109,7 @@ namespace gInkPlus
 					cursorred = new System.Windows.Forms.Cursor(gInkPlus.Properties.Resources.cursorred.Handle);
 					IC.Cursor = cursorred;
 				}
-				else if (Root.CanvasCursor == 1)
-					SetPenTipCursor();
+				else if (Root.CanvasCursor == 1) SetPenTipCursor();
 
 				try
 				{
@@ -1138,11 +1129,9 @@ namespace gInkPlus
 				Root.gpPenWidthVisible = false;
 				Root.UponSubPanelUpdate = true;
 			}
-			else
-				Root.UponButtonsUpdate |= 0x2;
+			else Root.UponButtonsUpdate |= 0x2;
 
-			if (pen != -2)
-				Root.LastPen = pen;
+			if (pen != -2) Root.LastPen = pen;
 		}
 
 		public void RetreatAndExit()
@@ -1170,14 +1159,8 @@ namespace gInkPlus
 			}
 
 			LastTickTime = DateTime.Now;
-			if (!Root.Docked)
-			{
-				Root.Dock();
-			}
-			else
-			{
-				Root.UnDock();
-			}
+			if (!Root.Docked) Root.Dock();
+			else Root.UnDock();
 		}
 
 		public void btPointer_Click(object sender, EventArgs e)
@@ -1884,6 +1867,8 @@ namespace gInkPlus
 		}
      
         // Added by mwtoolz
+		// ===
+
         // Reset all custom shape tools
         private void ResetShapeToolsMode()
         {
@@ -1903,8 +1888,6 @@ namespace gInkPlus
             btRectFilled.Image = image_rect_filled;
         }
 
-
-        // Added by mwtoolz
         // Reset general toolbar buttons and modes
         private void ResetGeneralToolsMode()
         {
@@ -1923,10 +1906,7 @@ namespace gInkPlus
             Root.PanMode = false;
         }
 
-
-
-
-
+		// ===
 
         [DllImport("user32.dll")]
 		static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
