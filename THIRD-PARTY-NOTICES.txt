@@ -1,0 +1,16 @@
+Third-Party Acknowledgements
+
+gInk
+Original project by Weizhi Nai.
+https://github.com/geovens/gInk
+
+ppInk
+An independent project based on gInk, which served as a reference
+for additional annotation features.
+https://github.com/pubpub-zz/ppInk
+
+Icons
+Certain icons used in gInkPlus were sourced from Freepik.
+The applicable asset-specific licence and attribution requirements
+should be observed.
+https://www.freepik.com/
