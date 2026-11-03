@@ -1,6 +1,8 @@
 # gInkPlus
 
-A simple, lightweight on-screen annotation tool for Windows.
+A simple, lightweight on-screen annotation tool for Windows. gInkPlus is a screen annotation tool based on the original gInk.
+
+![gInkPlus Screenshot](screenshots/gInkPlus-1.2.1.jpg)
 
 ## Introduction
 
