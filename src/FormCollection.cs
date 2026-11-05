@@ -573,11 +573,11 @@ namespace gInkPlus
 			}
 
 			// Added by mwtoolz
-            // Skip native ink buffer preparation during geometric shape drawing
-            if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
-                return;
+			// Skip native ink buffer preparation during geometric shape drawing
+			if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
+				return;
 
-            Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+			Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
 			Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
 			Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 		}
@@ -703,8 +703,8 @@ namespace gInkPlus
 			}
 			else if (Root.PanMode && Root.FingerInAction)
 			{
-				Root.Pan(currentxy.X - LasteXY.X, currentxy.Y - LasteXY.Y);			
-			}
+				Root.Pan(currentxy.X - LasteXY.X, currentxy.Y - LasteXY.Y);
+            }
 
 			LasteXY = currentxy;
 		}
@@ -998,12 +998,12 @@ namespace gInkPlus
             
             // -3=pan, -2=pointer, -1=eraser, 0+=pens	
             else if (pen == -3)
-			{			
-				// Activate Pan tool
+			{         
+                // Activate Pan tool
                 btPan.Image = image_pan_act;
                 Root.PanMode = true;
 
-                SetFullInputArea();
+                SetInkInputRectangle(new Rectangle(0, 0, 1, 1));
 
             }
 			else if (pen == -2)
