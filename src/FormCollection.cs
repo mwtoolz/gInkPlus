@@ -365,8 +365,8 @@ namespace gInkPlus
 			cursorred = new System.Windows.Forms.Cursor(gInkPlus.Properties.Resources.cursorred.Handle);
 			//IC.Cursor = cursorred;
 			IC.Enabled = true;
-
-			image_exit = new Bitmap(btStop.Width, btStop.Height);
+     
+            image_exit = new Bitmap(btStop.Width, btStop.Height);
 			Graphics g = Graphics.FromImage(image_exit);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.exit, 0, 0, btStop.Width, btStop.Height);
@@ -536,15 +536,14 @@ namespace gInkPlus
 		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
 
-			// Added by mwtoolz
+            // Added by mwtoolz        
             // Line & Rect mode: discard the unwanted native freehand stroke.
             if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
-            {
+			{ 
                 IC.Ink.DeleteStroke(e.Stroke);
                 return;
             }
-			
-            SaveUndoStrokes();
+			SaveUndoStrokes();
 		}
 
 		private void SaveUndoStrokes()
@@ -566,12 +565,18 @@ namespace gInkPlus
 
 		private void IC_CursorDown(object sender, InkCollectorCursorDownEventArgs e)
 		{
-			if (!Root.InkVisible && Root.Snapping <= 0)
+            // Added by mwtoolz     
+            if (!Root.InkVisible && Root.Snapping <= 0)
 			{
 				Root.SetInkVisible(true);
 			}
 
-			Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+			// Added by mwtoolz
+            // Skip native ink buffer preparation during geometric shape drawing
+            if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
+                return;
+
+            Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
 			Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
 			Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 		}
@@ -663,36 +668,7 @@ namespace gInkPlus
         private void IC_MouseMove(object sender, CancelMouseEventArgs e)
 		{
 
-			// Added by mwtoolz, Gemini
-			// Old Code
-			// Line Mode Tracking	
-			/*		
-			if (Root.LineMode && Root.FormDisplay.IsDrawingLine)
-			{
-                // Just update the live tracking point. Extremely fast!
-                Root.FormDisplay.CurrentMousePoint = new Point(e.X, e.Y);
-
-				e.Cancel = true;
-				return;
-			}
-
-            // Rectangle Mode Tracking
-            if (Root.RectMode && Root.FormDisplay.IsDrawingRectangle)
-            {
-                Root.FormDisplay.CurrentMousePoint = new Point(e.X, e.Y);
-                e.Cancel = true;
-                return;
-            }
-
-            // RectFilled Mode Tracking
-            if (Root.RectFilledMode && Root.FormDisplay.IsDrawingRectFilled)
-            {
-                Root.FormDisplay.CurrentMousePoint = new Point(e.X, e.Y);
-                e.Cancel = true;
-                return;
-            }
-			*/
-
+			// Added by mwtoolz
 			// New Code
 			// Line, Rect, RectFilled Mode Tracking
 			if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
@@ -701,7 +677,6 @@ namespace gInkPlus
                 e.Cancel = true;
                 return;
             }
-
 
             // ====
 
@@ -762,7 +737,7 @@ namespace gInkPlus
                 else
                 {
                     lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
-                }
+                }	
 
                 // 4. Save to undo history and refresh the display cleanly
                 SaveUndoStrokes();
@@ -771,7 +746,7 @@ namespace gInkPlus
                 Root.FormDisplay.DrawStrokes();
                 Root.FormDisplay.DrawButtons(true);
                 Root.FormDisplay.UpdateFormDisplay(true);
-
+          
                 e.Cancel = true;
                 return;
             }
@@ -1879,7 +1854,7 @@ namespace gInkPlus
         private void SetInkInputRectangle(Rectangle rect)
         {
 
-            //debug
+            // Debug
             // System.Diagnostics.Debug.WriteLine($"SetInkInputRectangle called. CollectingInk={IC.CollectingInk}, Rectangle={rect}");
 
             if (IsDisposed || Disposing || !IsHandleCreated || IC == null)
