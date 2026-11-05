@@ -27,7 +27,7 @@ namespace gInkPlus
             about += "https://github.com/mwtoolz/gInkPlus\r\n";
             about += "\r\n";
             about += "Original gInk source code is licensed under MIT.\r\n";
-			about += "Additional modifications and features by mwtoolz.\r\b";
+			about += "Additional modifications and features by mwtoolz.\r\n";
             about += "\r\n";
             about += "Credits:\r\n";
 			about += "Some button icons are designed by Freepik.com.\r\n";
