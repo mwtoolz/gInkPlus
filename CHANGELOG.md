@@ -1,5 +1,6 @@
 v1.2.2 (Nov 5, 2026)
 =================
+- Fixed a bug on ink collection during Pan Mode.
 - Added graphics tablet configuration guidance.
 - Updated application version information.
 - Fixed About dialog line-break formatting.
