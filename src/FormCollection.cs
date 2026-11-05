@@ -29,6 +29,7 @@ namespace gInkPlus
 		public Bitmap image_rect, image_rect_act;
         public Button btRectFilled;
         public Bitmap image_rect_filled, image_rect_filled_act;
+		// ===
 
         public Bitmap image_pointer, image_pointer_act;
 		public Bitmap[] image_pen;
