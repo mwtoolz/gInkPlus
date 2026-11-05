@@ -27,6 +27,17 @@ https://github.com/mwtoolz/gInkPlus/releases/
 Start gInkPlus and an icon will appear in the system tray. Click the icon (or use a hotkey) to start drawing on screen.
 Click the exit button or press ESC to exit drawing.
 
+## Graphics Tablet Configuration
+
+For the best drawing experience with gInkPlus, we recommend disabling **Windows Ink** in your graphics tablet's driver utility.
+
+- **Windows Ink disabled:** Provides better shape-drawing behaviour without unwanted temporary stroke previews.
+- **Windows Ink enabled:** Supports pen pressure sensitivity, but may cause unwanted temporary stroke previews when using geometric shape tools.
+
+If pen pressure sensitivity is important to you, you may prefer to keep Windows Ink enabled and accept this limitation.
+
+*Note: The availability and naming of this setting depend on your graphics tablet and its driver.*
+
 ## Features
 
 **Original gInk features**
@@ -58,3 +69,4 @@ Original project by Weizhi Nai
 gInkPlus
 https://github.com/mwtoolz/gInkPlus
 Maintained by mwtoolz
+
