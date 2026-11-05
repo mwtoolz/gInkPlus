@@ -1,3 +1,9 @@
+v1.2.2 (Nov 5, 2026)
+=================
+- Added graphics tablet configuration guidance.
+- Updated application version information.
+- Fixed About dialog line-break formatting.
+
 v1.2.1 (Nov 3, 2026)
 =================
 - Fixed bug of isDrawing wrongly set to true during SelectPen.
