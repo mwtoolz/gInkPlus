@@ -1,3 +1,8 @@
+v1.2.3 (Nov 7, 2026)
+=================
+- Added Arabic, Assamese, Hindi, Hebrew, Croatian, Korean and Lithuanian language.
+
+
 v1.2.2 (Nov 5, 2026)
 =================
 - Fixed a bug on ink collection during Pan Mode.
