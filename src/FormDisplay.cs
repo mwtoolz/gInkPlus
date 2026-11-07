@@ -917,7 +917,11 @@ namespace gInkPlus
 				DeleteObject(hScreenBitmap);
 				DeleteDC(memscreenDc);
 			}
-		}
+
+            // Added by gInk-1.2.0
+            gpButtonsImage.Dispose();
+            gpPenWidthImage.Dispose();
+        }
 
 		[DllImport("user32.dll")]
 		static extern IntPtr GetDC(IntPtr hWnd);

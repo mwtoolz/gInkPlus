@@ -240,14 +240,22 @@ namespace gInkPlus
 		}
 		public void StopInk()
 		{
+			// TODO by mwtoolz; Adding FormClosed cleanup for FormCollection
 			FormCollection.Close();
+
+			// TODO by mwtoolz for future cleanup of unmanaged resources
 			FormDisplay.Close();
 			FormButtonHitter.Close();
-			//FormCollection.Dispose();
-			//FormDisplay.Dispose();
-			GC.Collect();
-			FormCollection = null;
-			FormDisplay = null;
+
+            //FormCollection.Dispose();
+            //FormDisplay.Dispose();
+
+            // Modified by mwtoolz; Assign FormCollection and FormDisplay to null first before GC.
+            FormCollection = null;
+            FormDisplay = null;
+            GC.Collect();
+			// FormCollection = null;
+			// FormDisplay = null;
 
 			if (UponBalloonSnap)
 			{

@@ -64,7 +64,10 @@ namespace gInkPlus
 			Root = root;
 			InitializeComponent();
 
-			PrimaryLeft = Screen.PrimaryScreen.Bounds.Left - SystemInformation.VirtualScreen.Left;
+            // Added by mwtoolz
+            this.FormClosed += FormCollection_FormClosed;
+
+            PrimaryLeft = Screen.PrimaryScreen.Bounds.Left - SystemInformation.VirtualScreen.Left;
 			PrimaryTop = Screen.PrimaryScreen.Bounds.Top - SystemInformation.VirtualScreen.Top;     
             gpButtons.Height = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
 			btClear.Height = (int)(gpButtons.Height * 0.88);
@@ -502,16 +505,18 @@ namespace gInkPlus
 			{
 				if (Root.PenAttr[b].Transparency >= 100)
 				{
-					image_pen[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
+
+					// Modified by mwtoolz; Memory Leak here
+					// image_pen[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
 					image_pen[b] = image_highlighter;
-					image_pen_act[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
+					// image_pen_act[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
 					image_pen_act[b] = image_highlighter_act;
 				}
 				else
 				{
-					image_pen[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
+					// image_pen[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
 					image_pen[b] = image_pencil;
-					image_pen_act[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
+					// image_pen_act[b] = new Bitmap(btPen[b].Width, btPen[b].Height);
 					image_pen_act[b] = image_pencil_act;
 				}
 			}
@@ -1161,23 +1166,8 @@ namespace gInkPlus
 
 			Root.gpPenWidthVisible = false;
 
-            // Added by mwtoolz
-            // new code
-            SetInkInputRectangle(new Rectangle(0, 0, 1, 1));
-
-            // old code
-            /*
-			try
-			{
-				IC.SetWindowInputRectangle(new Rectangle(0, 0, 1, 1));
-			}
-			catch
-			{
-				Thread.Sleep(1);
-				IC.SetWindowInputRectangle(new Rectangle(0, 0, 1, 1));
-			}
-
-			*/
+            // Added by mwtoolz           
+            SetInkInputRectangle(new Rectangle(0, 0, 1, 1));   
 
             Root.SnappingX = -1;
 			Root.SnappingY = -1;
@@ -1799,9 +1789,76 @@ namespace gInkPlus
 
 			LastF4Status = retVal;
 		}
-     
-        // Added by mwtoolz
+
+        // Added by mwtoolz for FormCollection memory cleanup
+        // ===
+        private void FormCollection_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // Unsubscribe InkOverlay events
+            if (IC != null)
+            {
+                IC.CursorInRange -= IC_CursorInRange;
+				IC.MouseDown -= IC_MouseDown;
+                IC.MouseMove -= IC_MouseMove;
+                IC.MouseUp -= IC_MouseUp;
+                IC.CursorDown -= IC_CursorDown;
+                IC.Stroke -= IC_Stroke;
+
+                // Dispose InkOverlay
+                IC.Dispose();
+                IC = null;
+            }
+
+            // Dispose toolbar images
+            image_exit?.Dispose();
+            image_clear?.Dispose();
+            image_undo?.Dispose();
+            image_snap?.Dispose();
+            image_penwidth?.Dispose();
+
+            image_dock?.Dispose();
+            image_dockback?.Dispose();
+
+            image_pencil?.Dispose();
+            image_highlighter?.Dispose();
+            image_pencil_act?.Dispose();
+            image_highlighter_act?.Dispose();
+
+            image_pointer?.Dispose();
+            image_pointer_act?.Dispose();
+
+            image_eraser?.Dispose();
+            image_eraser_act?.Dispose();
+
+            image_pan?.Dispose();
+            image_pan_act?.Dispose();
+
+            image_visible?.Dispose();
+            image_visible_not?.Dispose();
+
+            // Dispose custom gInkPlus tool images
+            image_line?.Dispose();
+            image_line_act?.Dispose();
+
+            image_rect?.Dispose();
+            image_rect_act?.Dispose();
+
+            image_rect_filled?.Dispose();
+            image_rect_filled_act?.Dispose();        
+
+            // Dispose custom cursor
+            cursorred?.Dispose();
+            cursorred = null;
+            cursorsnap?.Dispose();
+			cursorsnap = null;
+            cursortip?.Dispose();
+			cursortip = null;            
+        }
+
 		// ===
+
+
+
 
         // Reset all custom shape tools
         private void ResetShapeToolsMode()
