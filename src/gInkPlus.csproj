@@ -131,6 +131,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormButtonHitter.resx">
       <DependentUpon>FormButtonHitter.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="FormDisplay.resx">
       <DependentUpon>FormDisplay.cs</DependentUpon>

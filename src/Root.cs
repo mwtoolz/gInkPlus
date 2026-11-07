@@ -1,13 +1,15 @@
-﻿using System;
+﻿using Microsoft.Ink;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using System.IO;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Net;
-using System.Threading;
 using System.Runtime.InteropServices;
-using Microsoft.Ink;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace gInkPlus
 {
@@ -155,9 +157,9 @@ namespace gInkPlus
 			SetDefaultConfig();
 			ReadOptions("pens.ini");
 			ReadOptions("config.ini");
-			ReadOptions("hotkeys.ini");			
+			ReadOptions("hotkeys.ini");
 
-			Size size = SystemInformation.SmallIconSize;
+            System.Drawing.Size size = SystemInformation.SmallIconSize;
 			trayIcon = new NotifyIcon();
 			trayIcon.Text = "gInkPlus";
 			trayIcon.ContextMenu = trayMenu;
@@ -166,14 +168,14 @@ namespace gInkPlus
 			trayIcon.BalloonTipText = Local.NotificationSnapshot;
 			trayIcon.BalloonTipClicked += TrayIcon_BalloonTipClicked;
 			SetTrayIconColor();
-
+			
 			SetHotkey();
-
 			TestMessageFilter mf = new TestMessageFilter(this);
-			Application.AddMessageFilter(mf);
+			System.Windows.Forms.Application.AddMessageFilter(mf);
 
-			FormCollection = null;
-			FormDisplay = null;
+			// Modified by mwtoolz; not necessary
+			// FormCollection = null;
+			// FormDisplay = null;
 		}
 
 		private void TrayIcon_BalloonTipClicked(object sender, EventArgs e)
@@ -203,8 +205,8 @@ namespace gInkPlus
 
 		public void StartInk()
 		{
-			if (FormDisplay != null || FormCollection != null)
-				return;
+			if (FormDisplay != null || FormCollection != null || FormButtonHitter != null)
+                return;
 
 			//Docked = false;
 			FormDisplay = new FormDisplay(this);
@@ -240,24 +242,17 @@ namespace gInkPlus
 		}
 		public void StopInk()
 		{
-			// TODO by mwtoolz; Adding FormClosed cleanup for FormCollection
-			FormCollection.Close();
+            // Modified by mwtoolz
+            // run in this order, reversed from StartInk
+            FormButtonHitter.Close();
+            FormCollection.Close();
+            FormDisplay.Close();
 
-			// TODO by mwtoolz for future cleanup of unmanaged resources
-			FormDisplay.Close();
-			FormButtonHitter.Close();
-
-            //FormCollection.Dispose();
-            //FormDisplay.Dispose();
-
-            // Modified by mwtoolz; Assign FormCollection and FormDisplay to null first before GC.
+            FormButtonHitter = null;
             FormCollection = null;
             FormDisplay = null;
-            GC.Collect();
-			// FormCollection = null;
-			// FormDisplay = null;
 
-			if (UponBalloonSnap)
+            if (UponBalloonSnap)
 			{
 				ShowBalloonSnapshot();
 				UponBalloonSnap = false;
@@ -483,7 +478,6 @@ namespace gInkPlus
 				else
 					trayIcon.Icon = global::gInkPlus.Properties.Resources.icon_red;
 			}
-
 
 		}
 
@@ -980,6 +974,8 @@ namespace gInkPlus
 			UnsetHotkey();
 
 			trayIcon.Dispose();
+
+			// TODO Create more robust Application Exit code
 			Application.Exit();
 		}
 

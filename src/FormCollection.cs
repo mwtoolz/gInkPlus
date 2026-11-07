@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -356,12 +357,14 @@ namespace gInkPlus
 			IC.AutoRedraw = false;
 			IC.DynamicRendering = false;
 			IC.EraserMode = InkOverlayEraserMode.StrokeErase;
+			
 			IC.CursorInRange += IC_CursorInRange;
 			IC.MouseDown += IC_MouseDown;
 			IC.MouseMove += IC_MouseMove;
 			IC.MouseUp += IC_MouseUp;
 			IC.CursorDown += IC_CursorDown;
 			IC.Stroke += IC_Stroke;
+		
             IC.DefaultDrawingAttributes.Width = 80;
 			IC.DefaultDrawingAttributes.Transparency = 30;
 			IC.DefaultDrawingAttributes.AntiAliased = true;
@@ -1787,13 +1790,15 @@ namespace gInkPlus
 					RetreatAndExit();
 			}
 
-			LastF4Status = retVal;
-		}
+			LastF4Status = retVal;       
+
+        }
 
         // Added by mwtoolz for FormCollection memory cleanup
         // ===
         private void FormCollection_FormClosed(object sender, FormClosedEventArgs e)
         {
+
             // Unsubscribe InkOverlay events
             if (IC != null)
             {
@@ -1806,8 +1811,8 @@ namespace gInkPlus
 
                 // Dispose InkOverlay
                 IC.Dispose();
-                IC = null;
-            }
+                IC = null;              
+            }      
 
             // Dispose toolbar images
             image_exit?.Dispose();
@@ -1856,7 +1861,6 @@ namespace gInkPlus
         }
 
 		// ===
-
 
 
 
@@ -1911,16 +1915,11 @@ namespace gInkPlus
         // Added by mwtoolz
         private void SetInkInputRectangle(Rectangle rect)
         {
-
-            // Debug
-            // System.Diagnostics.Debug.WriteLine($"SetInkInputRectangle called. CollectingInk={IC.CollectingInk}, Rectangle={rect}");
-
             if (IsDisposed || Disposing || !IsHandleCreated || IC == null)
                 return;
 
             if (IC.CollectingInk)
-			{
-                // System.Diagnostics.Debug.WriteLine("Skipped: InkOverlay is collecting ink.");
+			{             
                 return;
             }
 
@@ -1932,22 +1931,8 @@ namespace gInkPlus
             {
                 System.Diagnostics.Debug.WriteLine(
                     "SetInkInputRectangle failed: " + ex.Message);
-            }
-
-            // old code
-            /*
-			try
-			{
-				IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-			}
-			catch
-			{
-				Thread.Sleep(1);
-				IC.SetWindowInputRectangle(new Rectangle(0, 0, this.Width, this.Height));
-			}
-			*/
+            }			         
         }
-
 
 
         [DllImport("user32.dll")]

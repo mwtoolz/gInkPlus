@@ -905,13 +905,16 @@ namespace gInkPlus
             oldRectBoxValid = false;
         }
 
-        // ===
+        // === 
 
         private void FormDisplay_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			DeleteObject(Canvus);
+            // Added by mwtoolz to try to fix IC cleanup
+            timer1.Stop();
+            DeleteObject(Canvus);
 			//DeleteObject(BlankCanvus);
 			DeleteDC(canvusDc);
+
 			if (Root.AutoScroll)
 			{
 				DeleteObject(hScreenBitmap);

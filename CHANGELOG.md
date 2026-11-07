@@ -1,5 +1,6 @@
 v1.2.3 (Nov 7, 2026)
 =================
+- Added code for memory clean up and optimization.
 - Added Arabic, Assamese, Hindi, Hebrew, Croatian, Korean and Lithuanian language.
 
 v1.2.2 (Nov 5, 2026)
