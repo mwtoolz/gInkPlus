@@ -1,3 +1,11 @@
+v1.4.0 (Nov 9, 2026)
+=================
+- Migrated project from .NET Framework 4.8 to .NET 10.
+- Updated project structure and build configuration.
+- Added runtime resource and configuration file handling.
+- Updated repository organisation and Git exclusions.
+- Verified application functionality, drawing and hotkeys.
+
 v1.3.0 (Nov 7, 2026)
 =================
 - Added code for memory clean up and optimization.
