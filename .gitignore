@@ -1,18 +1,20 @@
-build
-release
-bin/crash.txt
-
-*.pdb
-*.exp
-*.sdf
+## Visual Studio
+.vs/
 *.suo
+*.sdf
 *.opensdf
-*.lnk
 *vshost.exe*
 
-## added by me
-.vs/
-*.zip
-bin/config.ini
+## Build output
 **/bin/
 **/obj/
+build/
+release/
+
+## Debug and temporary files
+*.pdb
+*.exp
+*.lnk
+
+## Release packages
+*.zip

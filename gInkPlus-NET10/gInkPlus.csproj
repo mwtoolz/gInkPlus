@@ -1,19 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
-    <Nullable>disable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Platforms>x86</Platforms>
-	<PlatformTarget>x86</PlatformTarget>
+	<PropertyGroup>
+		
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<Nullable>disable</Nullable>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Platforms>x86</Platforms>
+		<PlatformTarget>x86</PlatformTarget>
 
-	<OutputPath>bin\</OutputPath>
-	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-	<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<OutputPath>bin\</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		
+		<AssemblyName>gInkPlus</AssemblyName>
+		<Version>1.4.0</Version>
+		<AssemblyVersion>1.4.0.0</AssemblyVersion>
+		<FileVersion>1.4.0.0</FileVersion>
+		<Product>gInkPlus</Product>
+		<Company>mwtoolz</Company>
+		<Copyright>Copyright © 2016-2020 Weizhi Nai (gInk); Copyright © 2026 mwtoolz</Copyright>
 
-  </PropertyGroup>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<Reference Include="Microsoft.Ink">
@@ -65,7 +74,7 @@
 			<Link>THIRD-PARTY-NOTICES.txt</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
-	</ItemGroup>	
-	
+	</ItemGroup>
+
 
 </Project>
