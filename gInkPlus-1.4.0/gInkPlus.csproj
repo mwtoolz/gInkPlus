@@ -15,14 +15,17 @@
 		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 		
 		<AssemblyName>gInkPlus</AssemblyName>
+		<ApplicationIcon>src\icon_red.ico</ApplicationIcon>
+		
 		<Version>1.4.0</Version>
 		<AssemblyVersion>1.4.0.0</AssemblyVersion>
 		<AssemblyInformationalVersion>1.4.0</AssemblyInformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		<FileVersion>1.4.0.0</FileVersion>
+		
 		<Product>gInkPlus</Product>
 		<Company>mwtoolz</Company>
-		<Copyright>Copyright © 2016-2020 Weizhi Nai (gInk); Copyright © 2026 mwtoolz</Copyright>
+		<Copyright>Copyright © 2016-2020 Weizhi Nai (gInk); Copyright © 2026 mwtoolz (gInkPlus)</Copyright>
 
 	</PropertyGroup>
 
