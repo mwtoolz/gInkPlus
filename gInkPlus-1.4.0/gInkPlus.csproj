@@ -17,6 +17,8 @@
 		<AssemblyName>gInkPlus</AssemblyName>
 		<Version>1.4.0</Version>
 		<AssemblyVersion>1.4.0.0</AssemblyVersion>
+		<AssemblyInformationalVersion>1.4.0</AssemblyInformationalVersion>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 		<FileVersion>1.4.0.0</FileVersion>
 		<Product>gInkPlus</Product>
 		<Company>mwtoolz</Company>

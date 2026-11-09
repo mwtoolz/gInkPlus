@@ -18,8 +18,8 @@ namespace gInkPlus
 		private void FormAbout_Load(object sender, EventArgs e)
 		{
 			this.Icon = gInkPlus.Properties.Resources.icon_red;
-			string version = Application.ProductVersion.Substring(0, Application.ProductVersion.Length - 2);
-			string about = "gInkPlus v" + version + "\r\n";
+            string version = Application.ProductVersion.Split('+')[0];
+            string about = "gInkPlus v" + version + "\r\n";
             about += "\r\n";
             about += "gInkPlus (c) 2026 mwtoolz\r\n";		
             about += "Based on gInk by (c) 2016-2020 Weizhi Nai\r\n";
