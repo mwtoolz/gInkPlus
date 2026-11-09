@@ -13,5 +13,6 @@ bin/crash.txt
 ## added by me
 .vs/
 *.zip
-config.ini
-bin/gInkPlus.exe
+bin/config.ini
+**/bin/
+**/obj/

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Update="src\FormAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\FormButtonHitter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\FormCollection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\FormDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\FormOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\HotkeyInputBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="src\Properties\Resources.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
