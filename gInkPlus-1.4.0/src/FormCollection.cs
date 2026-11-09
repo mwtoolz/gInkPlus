@@ -378,11 +378,13 @@ namespace gInkPlus
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.exit, 0, 0, btStop.Width, btStop.Height);
 			btStop.Image = image_exit;
+
 			image_clear = new Bitmap(btClear.Width, btClear.Height);
 			g = Graphics.FromImage(image_clear);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.garbage, 0, 0, btClear.Width, btClear.Height);
 			btClear.Image = image_clear;
+
 			image_undo = new Bitmap(btUndo.Width, btUndo.Height);
 			g = Graphics.FromImage(image_undo);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -393,6 +395,7 @@ namespace gInkPlus
 			g = Graphics.FromImage(image_eraser_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.eraser_act, 0, 0, btEraser.Width, btEraser.Height);
+
 			image_eraser = new Bitmap(btEraser.Width, btEraser.Height);
 			g = Graphics.FromImage(image_eraser);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;

@@ -1,3 +1,7 @@
+v.1.4.1 (Nov 9, 2026)
+=================
+- Added a self-contained x86 distribution, bundling the .NET 10 Runtime to eliminate the need for users to install it separately.
+
 v1.4.0 (Nov 9, 2026)
 =================
 - Migrated project from .NET Framework 4.8 to .NET 10.
