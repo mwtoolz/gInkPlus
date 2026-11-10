@@ -92,7 +92,14 @@ namespace gInkPlus
 		public Hotkey Hotkey_Snap = new Hotkey();
 		public Hotkey Hotkey_Clear = new Hotkey();
 
-		public bool EraserMode = false;
+        // Added by mwtoolz
+		// ====
+        public Hotkey Hotkey_Line = new Hotkey();
+
+
+		// ====
+
+        public bool EraserMode = false;
 		public bool Docked = false;
 		public bool PointerMode = false;
         public bool FingerInAction = false;  // true when mouse down, either drawing or snapping or whatever
@@ -973,8 +980,7 @@ namespace gInkPlus
 			UnsetHotkey();
 
 			trayIcon.Dispose();
-
-			// TODO Create more robust Application Exit code
+			
 			Application.Exit();
 		}
 
