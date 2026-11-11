@@ -4,6 +4,7 @@
 *.sdf
 *.opensdf
 *vshost.exe*
+*.csproj.user
 
 ## Build output
 **/bin/
