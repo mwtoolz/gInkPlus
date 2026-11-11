@@ -166,9 +166,13 @@ namespace gInkPlus
 			hiRedo.Hotkey = Root.Hotkey_Redo;
 			hiClear.Hotkey = Root.Hotkey_Clear;
 
+			// Added by mwtoolz- Hotkeys
+			hiLine.Hotkey = Root.Hotkey_Line;
+
 			FormOptions_LocalReload();
 		}
 
+		// Refresh displayed text and language-dependent labels
 		private void FormOptions_LocalReload()
 		{
 			this.Text = Root.Local.MenuEntryOptions + " - gInkPlus";
@@ -182,6 +186,13 @@ namespace gInkPlus
 			this.cbAllowDragging.Text = Root.Local.OptionsGeneralAllowdragging;
 			this.lbNote.Text = Root.Local.OptionsGeneralNotePenwidth;
 
+			// Added by mwtoolz- Hotkeys
+			//===
+			this.lbHkLine.Text = Root.Local.ButtonNameLine;
+
+
+			//===
+		
 			this.lbHkClear.Text = Root.Local.ButtonNameClear;
 			this.lbHkEraser.Text = Root.Local.ButtonNameErasor;
 			this.lbHkInkVisible.Text = Root.Local.ButtonNameInkVisible;

@@ -92,7 +92,7 @@ namespace gInkPlus
 		public Hotkey Hotkey_Snap = new Hotkey();
 		public Hotkey Hotkey_Clear = new Hotkey();
 
-        // Added by mwtoolz
+        // Added by mwtoolz- Hotkey
 		// ====
         public Hotkey Hotkey_Line = new Hotkey();
 
@@ -605,7 +605,14 @@ namespace gInkPlus
 							Hotkey_Clear.Parse(sPara);
 							break;
 
-						case "WHITE_TRAY_ICON":
+                        // Added by mwtoolz- Hotkey
+                        case "HOTKEY_LINE":
+                            Hotkey_Line.Parse(sPara);
+                            break;
+
+
+
+                        case "WHITE_TRAY_ICON":
 							if (sPara.ToUpper() == "TRUE" || sPara == "1" || sPara.ToUpper() == "ON")
 								WhiteTrayIcon = true;
 							else
@@ -804,7 +811,13 @@ namespace gInkPlus
 							sPara = Hotkey_Clear.ToString();
 							break;
 
-						case "WHITE_TRAY_ICON":
+                        //Added by mwtoolz- Hotkeys
+                        case "HOTKEY_LINE":
+                            sPara = Hotkey_Line.ToString();
+                            break;
+
+
+                        case "WHITE_TRAY_ICON":
 							if (WhiteTrayIcon)
 								sPara = "True";
 							else

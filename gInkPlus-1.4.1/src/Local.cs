@@ -23,6 +23,14 @@ namespace gInkPlus
 		public string ButtonNameUndo = "Undo";
 		public string ButtonNameRedo = "Redo";
 		public string ButtonNameClear = "Clear";
+
+		// Added by mwtoolz- Hotkeys
+		//===
+		public string ButtonNameLine = "Line";
+
+
+		//===
+
 		public string ButtonNameExit = "Exit drawing";
 		public string ButtonNameDock = "Dock";
 

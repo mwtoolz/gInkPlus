@@ -1219,7 +1219,11 @@ namespace gInkPlus
 		bool LastSnapStatus = false;
 		bool LastClearStatus = false;
 
-		private void gpPenWidth_MouseDown(object sender, MouseEventArgs e)
+		// Added  by mwtoolz- Hotkeys
+		bool LastLineStatus = false;
+
+
+        private void gpPenWidth_MouseDown(object sender, MouseEventArgs e)
 		{
 			gpPenWidth_MouseOn = true;
 		}
@@ -1523,6 +1527,20 @@ namespace gInkPlus
 					SelectPen(-3);
 				}
 				LastPanStatus = pressed;
+
+                // Added by mwtoolz- Hotkeys
+                // ===
+                pressed = (GetKeyState(Root.Hotkey_Line.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastLineStatus && Root.Hotkey_Line.ModifierMatch(control, alt, shift, win))
+                {
+                    SelectPen(-4);
+				}
+				LastLineStatus = pressed;
+
+				//===
+
+
+
 
 				pressed = (GetKeyState(Root.Hotkey_Clear.Key) & 0x8000) == 0x8000;
 				if (pressed && !LastClearStatus && Root.Hotkey_Clear.ModifierMatch(control, alt, shift, win))
