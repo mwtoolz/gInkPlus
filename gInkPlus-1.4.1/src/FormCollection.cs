@@ -590,8 +590,7 @@ namespace gInkPlus
 
 			// Added by mwtoolz
 			// Skip native ink buffer preparation during geometric shape drawing
-			if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
-				return;
+			if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape) return;
 
 			Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
 			Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
@@ -979,8 +978,11 @@ namespace gInkPlus
                 btRectFilled.Image = image_rect_filled_act;
                 Root.RectFilledMode = true;
 
-				// Keep FULL input area so we still receive mouse events
-				SetFullInputArea();
+				// Set Cursor
+				SetCanvasCursor();
+
+                // Keep FULL input area so we still receive mouse events
+                SetFullInputArea();
 
             }
             // ===== END OF RECT_FILLED TOOL =====        
@@ -991,6 +993,9 @@ namespace gInkPlus
                 // Activate Rectangle mode
                 btRect.Image = image_rect_act;
                 Root.RectMode = true;
+
+				// Set Cursor
+				SetCanvasCursor();
 
                 // Keep FULL input area so we still receive mouse events
                 SetFullInputArea();
@@ -1005,9 +1010,11 @@ namespace gInkPlus
                 btLine.Image = image_line_act;
                 Root.LineMode = true;
 
+                // Set Cursor
+                SetCanvasCursor();
+
                 // Keep FULL input area so we still receive mouse events
                 SetFullInputArea();
-
             }
 
             // ==== END OF LINE TOOL ====
@@ -1037,14 +1044,9 @@ namespace gInkPlus
 				btEraser.Image = image_eraser_act;
                 EnterEraserMode(true);
 
-                if (Root.CanvasCursor == 0)
-				{
-					cursorred = new System.Windows.Forms.Cursor(gInkPlus.Properties.Resources.cursorred.Handle);
-					IC.Cursor = cursorred;
-				}
-				else if (Root.CanvasCursor == 1)
-					SetPenTipCursor();
-
+                // Modified by mwtoolz- set cursor
+                // Set Cursor
+                SetCanvasCursor();
                 SetFullInputArea();
 
             }
@@ -1058,13 +1060,9 @@ namespace gInkPlus
 				// Activate Selected Pen tool
 				btPen[pen].Image = image_pen_act[pen];
 
-                if (Root.CanvasCursor == 0)
-				{
-					cursorred = new System.Windows.Forms.Cursor(gInkPlus.Properties.Resources.cursorred.Handle);
-					IC.Cursor = cursorred;
-				}
-				else if (Root.CanvasCursor == 1) SetPenTipCursor();
-
+                // Modified by mwtoolz- cursor
+                // Set Cursor
+                SetCanvasCursor();
                 SetFullInputArea();
 
             }
@@ -1176,6 +1174,9 @@ namespace gInkPlus
 			this.Cursor = cursorsnap;
 
 			Root.gpPenWidthVisible = false;
+
+            // Added by mwtoolz- Cancel any active shape drawing mode
+            ResetShapeToolsMode();
 
             // Added by mwtoolz           
             SetInkInputRectangle(new Rectangle(0, 0, 1, 1));   
@@ -1293,6 +1294,22 @@ namespace gInkPlus
 			Root.UponSubPanelUpdate = true;
 			gpPenWidth_MouseOn = false;
 		}
+
+		// Added by mwtoolz- Cursor
+		private void SetCanvasCursor()
+		{
+            if (Root.CanvasCursor == 0)
+            {
+                cursorred = new System.Windows.Forms.Cursor(
+                    gInkPlus.Properties.Resources.cursorred.Handle);
+
+                IC.Cursor = cursorred;
+            }
+            else if (Root.CanvasCursor == 1)
+            {
+                SetPenTipCursor();
+            }
+        }
 
 		private void SetPenTipCursor()
 		{
