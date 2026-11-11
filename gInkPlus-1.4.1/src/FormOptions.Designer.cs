@@ -31,19 +31,20 @@
 
 		private void InitializeComponent()
 		{
+			// Modified by mwtoolz- refactored
 			this.components = new System.ComponentModel.Container();
-			gInkPlus.Hotkey hotkey1 = new gInkPlus.Hotkey();	// Ink Visible
-			gInkPlus.Hotkey hotkey2 = new gInkPlus.Hotkey();	// Snapshot
-			gInkPlus.Hotkey hotkey3 = new gInkPlus.Hotkey();	// Clear
-			gInkPlus.Hotkey hotkey4 = new gInkPlus.Hotkey();	// Pan
-			gInkPlus.Hotkey hotkey5 = new gInkPlus.Hotkey();	// Pointer (not using currently)
-			gInkPlus.Hotkey hotkey6 = new gInkPlus.Hotkey();	// Redo
-			gInkPlus.Hotkey hotkey7 = new gInkPlus.Hotkey();	// Undo
-			gInkPlus.Hotkey hotkey8 = new gInkPlus.Hotkey();	// Eraser
-			gInkPlus.Hotkey hotkey9 = new gInkPlus.Hotkey();	// Global
+			gInkPlus.Hotkey hotkey_inkVisible = new gInkPlus.Hotkey();	// Ink Visible
+			gInkPlus.Hotkey hotkey_snapShot = new gInkPlus.Hotkey();	// Snapshot
+			gInkPlus.Hotkey hotkey_clear = new gInkPlus.Hotkey();	// Clear
+			gInkPlus.Hotkey hotkey_pan = new gInkPlus.Hotkey();	// Pan
+			gInkPlus.Hotkey hotkey_pointer = new gInkPlus.Hotkey();	// Pointer (not using currently)
+			gInkPlus.Hotkey hotkey_redo = new gInkPlus.Hotkey();	// Redo
+			gInkPlus.Hotkey hotkey_undo = new gInkPlus.Hotkey();	// Undo
+			gInkPlus.Hotkey hotkey_eraser = new gInkPlus.Hotkey();	// Eraser
+			gInkPlus.Hotkey hotkey_global = new gInkPlus.Hotkey();	// Global
 
 			// Added by mwtoolz- hotkeys
-			gInkPlus.Hotkey hotkey_line = new gInkPlus.Hotkey();
+			gInkPlus.Hotkey hotkey_line = new gInkPlus.Hotkey();	// Line
 
 
 			this.cbEraserEnabled = new System.Windows.Forms.CheckBox();
@@ -430,7 +431,7 @@
             // 
             this.hiGlobal.BackColor = System.Drawing.Color.White;
             this.hiGlobal.ExternalConflictFlag = false;
-            this.hiGlobal.Hotkey = hotkey9;
+            this.hiGlobal.Hotkey = hotkey_global;
             this.hiGlobal.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiGlobal.Location = new System.Drawing.Point(28, 60);
             this.hiGlobal.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -469,7 +470,7 @@
             // 
             this.hiEraser.BackColor = System.Drawing.Color.White;
             this.hiEraser.ExternalConflictFlag = false;
-            this.hiEraser.Hotkey = hotkey8;
+            this.hiEraser.Hotkey = hotkey_eraser;
             this.hiEraser.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiEraser.Location = new System.Drawing.Point(510, 185);
             this.hiEraser.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -495,7 +496,7 @@
             // 
             this.hiPan.BackColor = System.Drawing.Color.White;
             this.hiPan.ExternalConflictFlag = false;
-            this.hiPan.Hotkey = hotkey4;
+            this.hiPan.Hotkey = hotkey_pan;
             this.hiPan.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiPan.Location = new System.Drawing.Point(510, 226);
             this.hiPan.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -522,7 +523,7 @@
             // 
             this.hiPointer.BackColor = System.Drawing.Color.White;
             this.hiPointer.ExternalConflictFlag = false;
-            this.hiPointer.Hotkey = hotkey5;
+            this.hiPointer.Hotkey = hotkey_pointer;
             this.hiPointer.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiPointer.Location = new System.Drawing.Point(510, 269);
             this.hiPointer.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -549,7 +550,7 @@
             // 
             this.hiInkVisible.BackColor = System.Drawing.Color.White;
             this.hiInkVisible.ExternalConflictFlag = false;
-            this.hiInkVisible.Hotkey = hotkey1;
+            this.hiInkVisible.Hotkey = hotkey_inkVisible;
             this.hiInkVisible.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiInkVisible.Location = new System.Drawing.Point(510, 311);
             this.hiInkVisible.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -575,7 +576,7 @@
             // 
             this.hiSnapshot.BackColor = System.Drawing.Color.White;
             this.hiSnapshot.ExternalConflictFlag = false;
-            this.hiSnapshot.Hotkey = hotkey2;
+            this.hiSnapshot.Hotkey = hotkey_snapShot;
             this.hiSnapshot.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiSnapshot.Location = new System.Drawing.Point(510, 352);
             this.hiSnapshot.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -601,7 +602,7 @@
             // 
             this.hiUndo.BackColor = System.Drawing.Color.White;
             this.hiUndo.ExternalConflictFlag = false;
-            this.hiUndo.Hotkey = hotkey7;
+            this.hiUndo.Hotkey = hotkey_undo;
             this.hiUndo.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiUndo.Location = new System.Drawing.Point(510, 394);
             this.hiUndo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -627,7 +628,7 @@
             // 
             this.hiRedo.BackColor = System.Drawing.Color.White;
             this.hiRedo.ExternalConflictFlag = false;
-            this.hiRedo.Hotkey = hotkey6;
+            this.hiRedo.Hotkey = hotkey_redo;
             this.hiRedo.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiRedo.Location = new System.Drawing.Point(510, 435);
             this.hiRedo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
@@ -653,7 +654,7 @@
             // 
             this.hiClear.BackColor = System.Drawing.Color.White;
             this.hiClear.ExternalConflictFlag = false;
-            this.hiClear.Hotkey = hotkey3;
+            this.hiClear.Hotkey = hotkey_clear;
             this.hiClear.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.hiClear.Location = new System.Drawing.Point(510, 477);
             this.hiClear.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);

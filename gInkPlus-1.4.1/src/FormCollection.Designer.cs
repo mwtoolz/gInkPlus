@@ -272,10 +272,10 @@
 			// 
 			this.gpPenWidth.BackColor = System.Drawing.Color.WhiteSmoke;
 			this.gpPenWidth.BackgroundImage = global::gInkPlus.Properties.Resources.penwidthpanel;
-			this.gpPenWidth.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-			this.gpPenWidth.Controls.Add(this.pboxPenWidthIndicator);
+			this.gpPenWidth.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;            
+            this.gpPenWidth.Controls.Add(this.pboxPenWidthIndicator);
 			this.gpPenWidth.Location = new System.Drawing.Point(174, 326);
-			this.gpPenWidth.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gpPenWidth.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.gpPenWidth.Name = "gpPenWidth";
 			this.gpPenWidth.Size = new System.Drawing.Size(300, 80);
 			this.gpPenWidth.TabIndex = 4;
@@ -285,9 +285,9 @@
 			// 
 			// pboxPenWidthIndicator
 			// 
-			this.pboxPenWidthIndicator.BackColor = System.Drawing.Color.Orange;
-			this.pboxPenWidthIndicator.Location = new System.Drawing.Point(117, 0);
-			this.pboxPenWidthIndicator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.pboxPenWidthIndicator.BackColor = System.Drawing.Color.Orange;       
+            this.pboxPenWidthIndicator.Location = new System.Drawing.Point(117, 0);    
+            this.pboxPenWidthIndicator.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.pboxPenWidthIndicator.Name = "pboxPenWidthIndicator";
 			this.pboxPenWidthIndicator.Size = new System.Drawing.Size(8, 80);
 			this.pboxPenWidthIndicator.TabIndex = 5;
@@ -298,10 +298,8 @@
             // 
             // FormCollection
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);      
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-
+            this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
 			this.ClientSize = new System.Drawing.Size(1294, 789);
 			this.Controls.Add(this.gpPenWidth);

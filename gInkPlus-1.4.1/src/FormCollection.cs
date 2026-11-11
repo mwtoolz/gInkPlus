@@ -66,7 +66,8 @@ namespace gInkPlus
 			InitializeComponent();
 
             // Added by mwtoolz
-            this.FormClosed += FormCollection_FormClosed;
+            this.FormClosed += FormCollection_FormClosed;    
+
 
             PrimaryLeft = Screen.PrimaryScreen.Bounds.Left - SystemInformation.VirtualScreen.Left;
 			PrimaryTop = Screen.PrimaryScreen.Bounds.Top - SystemInformation.VirtualScreen.Top;     
@@ -152,6 +153,7 @@ namespace gInkPlus
 			}
 
             //Added by mwtoolz
+
             // ===== LINE BUTTON =====
             btLine = new Button();
             btLine.Width = (int)(gpButtons.Height * 0.88);
@@ -225,7 +227,6 @@ namespace gInkPlus
             // ===== END RECT_FILLED BUTTON =====
 
 
-
             if (Root.PanEnabled)
 			{
 				btPan.Visible = true;
@@ -247,6 +248,7 @@ namespace gInkPlus
 				btPointer.Visible = false;
 			}
 			cumulatedleft += (int)(btStop.Width * 0.8);
+
 			if (Root.PenWidthEnabled)
 			{
 				btPenWidth.Visible = true;
@@ -349,7 +351,8 @@ namespace gInkPlus
 			gpPenWidth.Top = gpButtonsTop - gpPenWidth.Height - 10;
 
 			pboxPenWidthIndicator.Top = 0;
-			pboxPenWidthIndicator.Left = (int)Math.Sqrt(Root.GlobalPenWidth * 30);
+			pboxPenWidthIndicator.Left = (int)Math.Sqrt(Root.GlobalPenWidth * 30);			
+			
 			gpPenWidth.Controls.Add(pboxPenWidthIndicator);
 
 			IC = new InkOverlay(this.Handle);
@@ -461,11 +464,13 @@ namespace gInkPlus
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.snap, 0, 0, btSnap.Width, btSnap.Height);
 			btSnap.Image = image_snap;
+
 			image_penwidth = new Bitmap(btPenWidth.Width, btPenWidth.Height);
 			g = Graphics.FromImage(image_penwidth);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.penwidth, 0, 0, btPenWidth.Width, btPenWidth.Height);
 			btPenWidth.Image = image_penwidth;
+
 			image_dock = new Bitmap(btDock.Width, btDock.Height);
 			g = Graphics.FromImage(image_dock);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
