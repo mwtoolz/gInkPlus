@@ -85,17 +85,6 @@
 			this.lbGlobalHotkey = new System.Windows.Forms.Label();
 			this.hiInkVisible = new gInkPlus.HotkeyInputBox();
 			this.hiSnapshot = new gInkPlus.HotkeyInputBox();
-
-
-            // Added by mwtoolz- Hotkeys
-            //===
-            this.lbHkLine = new System.Windows.Forms.Label();
-            this.hiLine = new gInkPlus.HotkeyInputBox();
-
-
-
-			//===
-
             this.hiClear = new gInkPlus.HotkeyInputBox();
 			this.hiPan = new gInkPlus.HotkeyInputBox();
 			this.hiPointer = new gInkPlus.HotkeyInputBox();
@@ -393,14 +382,6 @@
 			this.tabPage3.Controls.Add(this.hiInkVisible);
 			this.tabPage3.Controls.Add(this.hiSnapshot);
 			this.tabPage3.Controls.Add(this.hiClear);
-
-			// Added by mwtoolz- Hotkeys
-			//===
-			this.tabPage3.Controls.Add(this.lbHkLine);
-			this.tabPage3.Controls.Add(this.hiLine);
-
-
-			//===
 			this.tabPage3.Controls.Add(this.hiPan);
 			this.tabPage3.Controls.Add(this.hiPointer);
 			this.tabPage3.Controls.Add(this.hiRedo);
@@ -665,32 +646,6 @@
             this.hiClear.Text = "None";
             this.hiClear.OnHotkeyChanged += new System.EventHandler(this.hi_OnHotkeyChanged);
 
-            // Added by mwtoolz- Hotkeys
-            // lbHKLine
-            this.lbHkLine.AutoSize = true;
-            //this.lbHkLine.Location = new System.Drawing.Point(354, 519);
-            // this.lbHkLine.Location = new System.Drawing.Point(750,185);
-            this.lbHkLine.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lbHkLine.Name = "lbHkLine";
-            this.lbHkLine.Size = new System.Drawing.Size(46, 20);
-            this.lbHkLine.TabIndex = 14;
-            this.lbHkLine.Text = "Line";
-            // hiLine
-            this.hiLine.BackColor = System.Drawing.Color.White;
-            this.hiLine.ExternalConflictFlag = false;
-            this.hiLine.Hotkey = hotkey_line;
-            this.hiLine.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            // this.hiLine.Location = new System.Drawing.Point(510, 519);
-            this.hiLine.Location = new System.Drawing.Point(880, 185);
-            this.hiLine.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.hiLine.Name = "hiLine";
-            this.hiLine.RequireModifier = false;
-            this.hiLine.Size = new System.Drawing.Size(178, 26);
-            this.hiLine.TabIndex = 16;
-            this.hiLine.Text = "None";
-            this.hiLine.OnHotkeyChanged += new System.EventHandler(this.hi_OnHotkeyChanged);
-
-
             // 
             // FormOptions
             // 
@@ -698,8 +653,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
 
-			// Modified by mwtoolz- Hotkeys form size (third column- add x: +220)
-			// this.ClientSize = new System.Drawing.Size(730, 697);
+			// Modified by mwtoolz- Hotkeys Form Size
             this.ClientSize = new System.Drawing.Size(1120, 697);
 
             this.Controls.Add(this.tabControl1);
@@ -760,17 +714,6 @@
 		private HotkeyInputBox hiClear;
 		private System.Windows.Forms.Label lbHkSnapshot;
 		private System.Windows.Forms.Label lbHkClear;
-
-
-		// Added by mwtoolz- Hotkeys
-		// ===
-		private HotkeyInputBox hiLine;
-		private System.Windows.Forms.Label lbHkLine;
-
-
-		//===
-
-
 		private HotkeyInputBox hiPan;
 		private System.Windows.Forms.Label lbHkPan;
 		private HotkeyInputBox hiInkVisible;
