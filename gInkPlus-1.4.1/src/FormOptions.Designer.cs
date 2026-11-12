@@ -20,7 +20,6 @@
 			base.Dispose(disposing);
 		}
 
-		// Modified by mwtoolz- Hotkeys Ignore this warning.
 		#region Windows Form Designer generated code
 
 		/// <summary>
@@ -42,10 +41,6 @@
 			gInkPlus.Hotkey hotkey_undo = new gInkPlus.Hotkey();	// Undo
 			gInkPlus.Hotkey hotkey_eraser = new gInkPlus.Hotkey();	// Eraser
 			gInkPlus.Hotkey hotkey_global = new gInkPlus.Hotkey();	// Global
-
-			// Added by mwtoolz- hotkeys
-			gInkPlus.Hotkey hotkey_line = new gInkPlus.Hotkey();	// Line
-
 
 			this.cbEraserEnabled = new System.Windows.Forms.CheckBox();
 			this.cbPointerEnabled = new System.Windows.Forms.CheckBox();
