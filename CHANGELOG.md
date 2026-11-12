@@ -1,3 +1,9 @@
+v1.4.2 (Nov 12, 2026)
+=================
+- Added configurable hotkeys for shape tools: Line, Dotted Line, Arrow Line, Rectangle, Filled Rectangle, Circle and Filled Circle.
+- Fixed issues affecting pen width.
+- Fixed cursor-related bugs.
+
 v.1.4.1 (Nov 9, 2026)
 =================
 - Added a self-contained x86 distribution, bundling the .NET 10 Runtime to eliminate the need for users to install it separately.
