@@ -23,6 +23,15 @@ ButtonNameClear = "Clear"
 ButtonNameExit = "Exit drawing"
 ButtonNameDock = "Dock/Undock"
 
+# Added by mwtoolz- Shape Tool Names
+ButtonNameLine = "Line"
+ButtonNameDottedLine = "Dotted Line"
+ButtonNameArrowLine = "Arrow Line"
+ButtonNameRectangle = "Rectangle"
+ButtonNameFilledRectangle = "Filled Rectangle"
+ButtonNameCircle = "Circle"
+ButtonNameFilledCircle = "Filled Circle"
+
 MenuEntryExit = "Exit"
 MenuEntryOptions = "Options"
 MenuEntryAbout = "About"

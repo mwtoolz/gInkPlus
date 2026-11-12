@@ -23,17 +23,29 @@ namespace gInkPlus
 		Label[] lbHotkeyPens = new Label[10];
 		HotkeyInputBox[] hiPens = new HotkeyInputBox[10];
 
+        // Added by mwtoolz- hotkeys tab3 column 3 table
+        private TableLayoutPanel tlpShapeHotkeys;
+        private HotkeyInputBox[] shapeHotkeyBoxes;
+		private Label[] shapeHotkeyLabels;
+		
+
 		public FormOptions(Root root)
 		{
 			Root = root;
 			InitializeComponent();
-		}
+
+		
+        }
 
 		private void FormOptions_Load(object sender, EventArgs e)
 		{
 			Root.UnsetHotkey();
 
-			if (Root.EraserEnabled)
+            // Added by mwtoolz- Hotkeys
+            CreateShapeHotkeyTable();
+
+			// Tab 1 General
+            if (Root.EraserEnabled)
 				cbEraserEnabled.Checked = true;
 			if (Root.PointerEnabled)
 				cbPointerEnabled.Checked = true;
@@ -88,7 +100,8 @@ namespace gInkPlus
 			
 			tabPage2.Controls.Add(lbcomboPensWidth);
 
-			for (int p = 0; p < Root.MaxPenCount; p++)
+
+            for (int p = 0; p < Root.MaxPenCount; p++)
 			{
 				int top = p * (int)(this.Height * 0.075) + (int)(this.Height * 0.09);
 				lbPens[p] = new Label();
@@ -167,9 +180,17 @@ namespace gInkPlus
 			hiClear.Hotkey = Root.Hotkey_Clear;
 
 			// Added by mwtoolz- Hotkeys
-			hiLine.Hotkey = Root.Hotkey_Line;
+			// hiLine.Hotkey = Root.Hotkey_Line;
+            // Added by mwtoolz- Hotkeys			
+            shapeHotkeyBoxes[0].Hotkey = Root.Hotkey_Line;
+            shapeHotkeyBoxes[1].Hotkey = Root.Hotkey_Dotted_Line;
+            shapeHotkeyBoxes[2].Hotkey = Root.Hotkey_Arrow_Line;
+            shapeHotkeyBoxes[3].Hotkey = Root.Hotkey_Rectangle;
+            shapeHotkeyBoxes[4].Hotkey = Root.Hotkey_Filled_Rectangle;
+            shapeHotkeyBoxes[5].Hotkey = Root.Hotkey_Circle;
+            shapeHotkeyBoxes[6].Hotkey = Root.Hotkey_Filled_Circle;
 
-			FormOptions_LocalReload();
+            FormOptions_LocalReload();
 		}
 
 		// Refresh displayed text and language-dependent labels
@@ -186,14 +207,21 @@ namespace gInkPlus
 			this.cbAllowDragging.Text = Root.Local.OptionsGeneralAllowdragging;
 			this.lbNote.Text = Root.Local.OptionsGeneralNotePenwidth;
 
-			// Added by mwtoolz- Hotkeys
-			//===
-			this.lbHkLine.Text = Root.Local.ButtonNameLine;
+            // Added by mwtoolz- Hotkeys
+            //===
+            shapeHotkeyLabels[0].Text = Root.Local.ButtonNameLine;
+            shapeHotkeyLabels[1].Text = Root.Local.ButtonNameDottedLine;
+            shapeHotkeyLabels[2].Text = Root.Local.ButtonNameArrowLine;
+            shapeHotkeyLabels[3].Text = Root.Local.ButtonNameRectangle;
+            shapeHotkeyLabels[4].Text = Root.Local.ButtonNameFilledRectangle;
+            shapeHotkeyLabels[5].Text = Root.Local.ButtonNameCircle;
+            shapeHotkeyLabels[6].Text = Root.Local.ButtonNameFilledCircle;
 
 
-			//===
-		
-			this.lbHkClear.Text = Root.Local.ButtonNameClear;
+
+            //===
+
+            this.lbHkClear.Text = Root.Local.ButtonNameClear;
 			this.lbHkEraser.Text = Root.Local.ButtonNameErasor;
 			this.lbHkInkVisible.Text = Root.Local.ButtonNameInkVisible;
 			this.lbHkPan.Text = Root.Local.ButtonNamePan;
@@ -447,5 +475,73 @@ namespace gInkPlus
 				FormOptions_LocalReload();
 			}
 		}
-	}
+
+        // Added by mwtoolz- Hotkeys tab 3, Tools Table - 2 Columns
+        private void CreateShapeHotkeyTable()
+        {
+
+            shapeHotkeyLabels = new Label[7];
+
+            // Table
+            tlpShapeHotkeys = new TableLayoutPanel();
+            tlpShapeHotkeys.Size = new Size(400, 300);
+            tlpShapeHotkeys.Name = "tlpShapeHotkeys";
+            tlpShapeHotkeys.Location = new Point(583, 139);
+            tlpShapeHotkeys.AutoSize = true;
+            tlpShapeHotkeys.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+
+            tlpShapeHotkeys.ColumnCount = 2;
+
+            // Follow num of labels of tool hotkeys
+            tlpShapeHotkeys.RowCount = shapeHotkeyLabels.Length;
+            tlpShapeHotkeys.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
+
+            // First column: automatically adjusts to label text
+            tlpShapeHotkeys.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+
+            // Second column: takes up the remaining space
+            tlpShapeHotkeys.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            tlpShapeHotkeys.CellBorderStyle = TableLayoutPanelCellBorderStyle.None;
+            tlpShapeHotkeys.Margin = new Padding(0);
+            tlpShapeHotkeys.Padding = new Padding(0);
+
+            // Input box array
+            shapeHotkeyBoxes = new HotkeyInputBox[shapeHotkeyLabels.Length];
+
+            // Create rows
+            for (int i = 0; i < shapeHotkeyLabels.Length; i++)
+            {
+                tlpShapeHotkeys.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                // tlpShapeHotkeys.RowStyles.Add(new RowStyle(SizeType.AutoSize, 0F));
+
+                // Label
+                Label lbl = new Label();
+
+                lbl.Name = "lblShapeHotkey" + i;               
+                lbl.AutoSize = true;
+                lbl.Anchor = AnchorStyles.Left;
+                lbl.TextAlign = ContentAlignment.MiddleLeft;
+                lbl.Margin = new Padding(3, 6, 15, 6);
+                shapeHotkeyLabels[i] = lbl;
+
+                HotkeyInputBox hotkeyBox = new HotkeyInputBox();
+   
+                hotkeyBox.Anchor = AnchorStyles.Left;
+                hotkeyBox.Margin = new Padding(3, 6, 3, 6);
+                shapeHotkeyBoxes[i] = hotkeyBox;
+
+
+                // Add controls               
+                tlpShapeHotkeys.Controls.Add(lbl, 0, i);
+                tlpShapeHotkeys.Controls.Add(hotkeyBox, 1, i);
+            }
+
+            // Add table to tab page
+            this.tabPage3.Controls.Add(tlpShapeHotkeys);
+            tlpShapeHotkeys.BringToFront();
+
+        }
+
+
+    }
 }

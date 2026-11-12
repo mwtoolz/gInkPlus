@@ -92,12 +92,19 @@ namespace gInkPlus
 		public Hotkey Hotkey_Snap = new Hotkey();
 		public Hotkey Hotkey_Clear = new Hotkey();
 
-        // Added by mwtoolz- Hotkey
-		// ====
+        // Added by mwtoolz- Hotkeys
+		// ====        
         public Hotkey Hotkey_Line = new Hotkey();
+        public Hotkey Hotkey_Dotted_Line = new Hotkey();
+        public Hotkey Hotkey_Arrow_Line = new Hotkey();
+        public Hotkey Hotkey_Rectangle = new Hotkey();
+        public Hotkey Hotkey_Filled_Rectangle = new Hotkey();
+        public Hotkey Hotkey_Circle = new Hotkey();
+        public Hotkey Hotkey_Filled_Circle = new Hotkey();
 
 
-		// ====
+
+        // ====
 
         public bool EraserMode = false;
 		public bool Docked = false;
@@ -605,10 +612,37 @@ namespace gInkPlus
 							Hotkey_Clear.Parse(sPara);
 							break;
 
-                        // Added by mwtoolz- Hotkey
+                        // Added by mwtoolz- Hotkeys
+						// ===
                         case "HOTKEY_LINE":
                             Hotkey_Line.Parse(sPara);
                             break;
+                        case "HOTKEY_DOTTED_LINE":
+                            Hotkey_Dotted_Line.Parse(sPara);
+                            break;
+
+                        case "HOTKEY_ARROW_LINE":
+                            Hotkey_Arrow_Line.Parse(sPara);
+                            break;
+
+                        case "HOTKEY_RECTANGLE":
+                            Hotkey_Rectangle.Parse(sPara);
+                            break;
+
+                        case "HOTKEY_FILLED_RECTANGLE":
+                            Hotkey_Filled_Rectangle.Parse(sPara);
+                            break;
+
+                        case "HOTKEY_CIRCLE":
+                            Hotkey_Circle.Parse(sPara);
+                            break;
+
+                        case "HOTKEY_FILLED_CIRCLE":
+                            Hotkey_Filled_Circle.Parse(sPara);
+                            break;
+
+
+						//===
 
 
 
@@ -812,10 +846,37 @@ namespace gInkPlus
 							break;
 
                         //Added by mwtoolz- Hotkeys
+						// ===
                         case "HOTKEY_LINE":
                             sPara = Hotkey_Line.ToString();
                             break;
+                        case "HOTKEY_DOTTED_LINE":
+                            Hotkey_Dotted_Line.Parse(sPara);
+                            break;
 
+                        case "HOTKEY_ARROW_LINE":
+                            Hotkey_Arrow_Line.Parse(sPara);
+                            break;
+
+                        case "HOTKEY_RECTANGLE":
+                            Hotkey_Rectangle.Parse(sPara);
+                            break;
+
+                        case "HOTKEY_FILLED_RECTANGLE":
+                            Hotkey_Filled_Rectangle.Parse(sPara);
+                            break;
+
+                        case "HOTKEY_CIRCLE":
+                            Hotkey_Circle.Parse(sPara);
+                            break;
+
+                        case "HOTKEY_FILLED_CIRCLE":
+                            Hotkey_Filled_Circle.Parse(sPara);
+                            break;
+
+
+
+						// ===
 
                         case "WHITE_TRAY_ICON":
 							if (WhiteTrayIcon)

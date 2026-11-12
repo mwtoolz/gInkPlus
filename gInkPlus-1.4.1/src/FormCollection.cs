@@ -1225,9 +1225,18 @@ namespace gInkPlus
 		bool LastSnapStatus = false;
 		bool LastClearStatus = false;
 
-		// Added  by mwtoolz- Hotkeys
-		bool LastLineStatus = false;
+        // Added  by mwtoolz- Hotkeys       
+		// ===
+        bool LastLineStatus = false;
+        bool LastDottedLineStatus = false;
+        bool LastArrowLineStatus = false;
+        bool LastRectangleStatus = false;
+        bool LastFilledRectangleStatus = false;
+        bool LastCircleStatus = false;
+        bool LastFilledCircleStatus = false;
 
+
+		//===
 
         private void gpPenWidth_MouseDown(object sender, MouseEventArgs e)
 		{
@@ -1552,19 +1561,54 @@ namespace gInkPlus
 
                 // Added by mwtoolz- Hotkeys
                 // ===
+				// Line
                 pressed = (GetKeyState(Root.Hotkey_Line.Key) & 0x8000) == 0x8000;
                 if (pressed && !LastLineStatus && Root.Hotkey_Line.ModifierMatch(control, alt, shift, win))
                 {
                     SelectPen(-4);
 				}
 				LastLineStatus = pressed;
+                // Rectangle
+                pressed = (GetKeyState(Root.Hotkey_Rectangle.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastRectangleStatus &&
+                    Root.Hotkey_Rectangle.ModifierMatch(control, alt, shift, win))
+                {
+                    SelectPen(-5);
+                }
+                LastRectangleStatus = pressed;
+                // Filled Rectangle
+                pressed = (GetKeyState(Root.Hotkey_Filled_Rectangle.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastFilledRectangleStatus &&
+                    Root.Hotkey_Filled_Rectangle.ModifierMatch(control, alt, shift, win))
+                {
+                    SelectPen(-6);
+                }
+                LastFilledRectangleStatus = pressed;
+                // Dotted Line
+                pressed = (GetKeyState(Root.Hotkey_Dotted_Line.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastDottedLineStatus &&
+                    Root.Hotkey_Dotted_Line.ModifierMatch(control, alt, shift, win))
+                {
+                    SelectPen(-7); // Confirm the mode value
+                }
+                LastDottedLineStatus = pressed;
 
-				//===
+                // Arrow Line
+                pressed = (GetKeyState(Root.Hotkey_Arrow_Line.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastArrowLineStatus &&
+                    Root.Hotkey_Arrow_Line.ModifierMatch(control, alt, shift, win))
+                {
+                    SelectPen(-8); // Confirm the mode value
+                }
+                LastArrowLineStatus = pressed;
 
 
 
 
-				pressed = (GetKeyState(Root.Hotkey_Clear.Key) & 0x8000) == 0x8000;
+                //===
+
+
+                pressed = (GetKeyState(Root.Hotkey_Clear.Key) & 0x8000) == 0x8000;
 				if (pressed && !LastClearStatus && Root.Hotkey_Clear.ModifierMatch(control, alt, shift, win))
 				{
 					btClear_Click(null, null);

@@ -668,7 +668,8 @@
             // Added by mwtoolz- Hotkeys
             // lbHKLine
             this.lbHkLine.AutoSize = true;
-            this.lbHkLine.Location = new System.Drawing.Point(354, 519);
+            //this.lbHkLine.Location = new System.Drawing.Point(354, 519);
+            // this.lbHkLine.Location = new System.Drawing.Point(750,185);
             this.lbHkLine.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lbHkLine.Name = "lbHkLine";
             this.lbHkLine.Size = new System.Drawing.Size(46, 20);
@@ -679,7 +680,8 @@
             this.hiLine.ExternalConflictFlag = false;
             this.hiLine.Hotkey = hotkey_line;
             this.hiLine.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.hiLine.Location = new System.Drawing.Point(510, 519);
+            // this.hiLine.Location = new System.Drawing.Point(510, 519);
+            this.hiLine.Location = new System.Drawing.Point(880, 185);
             this.hiLine.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.hiLine.Name = "hiLine";
             this.hiLine.RequireModifier = false;
@@ -695,8 +697,12 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-			this.ClientSize = new System.Drawing.Size(730, 697);
-			this.Controls.Add(this.tabControl1);
+
+			// Modified by mwtoolz- Hotkeys form size (third column- add x: +220)
+			// this.ClientSize = new System.Drawing.Size(730, 697);
+            this.ClientSize = new System.Drawing.Size(1120, 697);
+
+            this.Controls.Add(this.tabControl1);
 			this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.MaximizeBox = false;
 			this.Name = "FormOptions";
