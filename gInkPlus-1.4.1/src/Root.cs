@@ -851,27 +851,27 @@ namespace gInkPlus
                             sPara = Hotkey_Line.ToString();
                             break;
                         case "HOTKEY_DOTTED_LINE":
-                            Hotkey_Dotted_Line.Parse(sPara);
+                            sPara = Hotkey_Dotted_Line.ToString();
                             break;
 
                         case "HOTKEY_ARROW_LINE":
-                            Hotkey_Arrow_Line.Parse(sPara);
+                            sPara = Hotkey_Arrow_Line.ToString();
                             break;
 
                         case "HOTKEY_RECTANGLE":
-                            Hotkey_Rectangle.Parse(sPara);
+                            sPara = Hotkey_Rectangle.ToString();
                             break;
 
                         case "HOTKEY_FILLED_RECTANGLE":
-                            Hotkey_Filled_Rectangle.Parse(sPara);
+                            sPara = Hotkey_Filled_Rectangle.ToString();
                             break;
 
                         case "HOTKEY_CIRCLE":
-                            Hotkey_Circle.Parse(sPara);
+                            sPara = Hotkey_Circle.ToString();
                             break;
 
                         case "HOTKEY_FILLED_CIRCLE":
-                            Hotkey_Filled_Circle.Parse(sPara);
+                            sPara = Hotkey_Filled_Circle.ToString();
                             break;
 
 

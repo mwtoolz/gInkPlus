@@ -179,9 +179,7 @@ namespace gInkPlus
 			hiRedo.Hotkey = Root.Hotkey_Redo;
 			hiClear.Hotkey = Root.Hotkey_Clear;
 
-			// Added by mwtoolz- Hotkeys
-			// hiLine.Hotkey = Root.Hotkey_Line;
-            // Added by mwtoolz- Hotkeys			
+			// Added by mwtoolz- Hotkeys				
             shapeHotkeyBoxes[0].Hotkey = Root.Hotkey_Line;
             shapeHotkeyBoxes[1].Hotkey = Root.Hotkey_Dotted_Line;
             shapeHotkeyBoxes[2].Hotkey = Root.Hotkey_Arrow_Line;
