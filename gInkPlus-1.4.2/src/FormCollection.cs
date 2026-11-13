@@ -421,7 +421,7 @@ namespace gInkPlus
             image_highlighter_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.highlighter_act, btPen[2]);
 
 			image_pointer = CreateToolbarImage(global::gInkPlus.Properties.Resources.pointer, btPointer);
-            image_pointer = CreateToolbarImage(global::gInkPlus.Properties.Resources.pointer_act, btPointer);
+            image_pointer_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.pointer_act, btPointer);
 
             // Added by mwtoolz- Shape Tools
             image_line_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_line_act, btLine);
