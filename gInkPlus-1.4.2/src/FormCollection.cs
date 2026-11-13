@@ -152,9 +152,20 @@ namespace gInkPlus
 				btEraser.Visible = false;
 			}
 
-            //Added by mwtoolz
+            //Added by mwtoolz for Shape tools Button Attributes
+            btLine = new Button();
+            SetupShapeButton(btLine, this.btLine_Click, ref cumulatedleft);
 
+            btRect = new Button();
+            SetupShapeButton(btRect, this.btRect_Click, ref cumulatedleft);
+
+            btRectFilled = new Button();
+            SetupShapeButton(btRectFilled, this.btRectFilled_Click, ref cumulatedleft);
+
+			// Replacing code with Helper function SetupShapeButtons
+			/*
             // ===== LINE BUTTON =====
+			
             btLine = new Button();
             btLine.Width = (int)(gpButtons.Height * 0.88);
             btLine.Height = (int)(gpButtons.Height * 0.88);
@@ -221,8 +232,8 @@ namespace gInkPlus
             btRectFilled.Left = cumulatedleft;
 			cumulatedleft += (int)(btRectFilled.Width * 1.1);
             // ===== END RECT_FILLED BUTTON =====
-
-
+			*/
+			
             if (Root.PanEnabled)
 			{
 				btPan.Visible = true;
@@ -475,7 +486,35 @@ namespace gInkPlus
 
 		}
 
-        // Added by mwtoolz- Readability; helper method CreateToolbarImage()
+        // Added by mwtoolz- Readability; Helper method for Shape Tool Button Attributes
+        private void SetupShapeButton(Button button, EventHandler clickHandler, ref int cumulatedleft)
+        {
+            button.Width = (int)(gpButtons.Height * 0.88);
+            button.Height = (int)(gpButtons.Height * 0.88);
+            button.Top = (int)(gpButtons.Height * 0.07);
+
+            button.FlatAppearance.BorderColor = Color.WhiteSmoke;
+            button.FlatAppearance.BorderSize = 3;
+            button.FlatStyle = FlatStyle.Flat;
+
+            button.FlatAppearance.MouseOverBackColor = Color.Transparent;
+            button.FlatAppearance.MouseDownBackColor = Color.Transparent;
+
+            button.ForeColor = Color.Transparent;
+            button.UseVisualStyleBackColor = false;
+            button.ImageAlign = ContentAlignment.MiddleCenter;
+
+            button.Click += clickHandler;
+            gpButtons.Controls.Add(button);
+
+            // TODO by mwtoolz for Tab 1- General form options
+            button.Visible = true;
+            button.Left = cumulatedleft;
+            cumulatedleft += (int)(button.Width * 1.1);
+        }
+
+
+        // Added by mwtoolz- Readability; Helper method CreateToolbarImage()
         private Bitmap CreateToolbarImage(Image resource, Button button)
         {
             Bitmap image = new Bitmap(button.Width, button.Height);
