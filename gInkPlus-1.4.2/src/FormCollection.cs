@@ -74,14 +74,18 @@ namespace gInkPlus
             gpButtons.Height = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
 
             // Modified by mwtooz- readability in declaring height, width and top of toolbar buttons
-            // Added by mwtoolz- Shape tool; Buttons declaration
+            // Added by mwtoolz- Shape tool; Buttons declaration and setup
 			// ===
 			btLine = new Button();
             btRect = new Button();
             btRectFilled = new Button();
 
+            SetupShapeButton(btLine, this.btLine_Click);
+            SetupShapeButton(btRect, this.btRect_Click);
+            SetupShapeButton(btRectFilled, this.btRectFilled_Click);
 
-			// ===
+
+            // ===
 
             int buttonHeight = (int)(gpButtons.Height * 0.88);
             int buttonTop = (int)(gpButtons.Height * 0.06);
@@ -104,6 +108,9 @@ namespace gInkPlus
             }
 
 			btPen = new Button[Root.MaxPenCount];
+
+			// Comment by mwtoolz; Toolbar Button's visibility and positioning
+			// == START HERE ==
 
 			int cumulatedleft = (int)(btStop.Width * 1.2);
 
@@ -147,23 +154,15 @@ namespace gInkPlus
 
 			cumulatedleft += (int)(btStop.Width * 0.8);
 
-			if (Root.EraserEnabled)
-			{
-				btEraser.Visible = true;
-				btEraser.Left = cumulatedleft;
-				cumulatedleft += (int)(btEraser.Width * 1.1);
-			}
-			else
-			{
-				btEraser.Visible = false;
-			}
+            PositionButton(btEraser, Root.EraserEnabled, ref cumulatedleft);
 
-            // Added by mwtoolz- Shape tools Button Attributes; Adding Shape tool buttons after Eraser
+			// Added by mwtoolz- Shape tools Button Attributes; Adding Shape tool buttons after Eraser
 			// Placement of this code decides the position of button in toolbar.
-			// ===            
-            SetupShapeButton(btLine, this.btLine_Click, ref cumulatedleft);          
-            SetupShapeButton(btRect, this.btRect_Click, ref cumulatedleft);
-            SetupShapeButton(btRectFilled, this.btRectFilled_Click, ref cumulatedleft);
+			// ===
+
+			PositionButton(btLine, Root.LineEnabled, ref cumulatedleft);
+			PositionButton(btRect, Root.RectEnabled, ref cumulatedleft);
+			PositionButton(btRectFilled, Root.RectFilledEnabled, ref cumulatedleft);         
 
 
             // ===	
@@ -181,88 +180,16 @@ namespace gInkPlus
             PositionButton(btUndo, Root.UndoEnabled, ref cumulatedleft);
             PositionButton(btClear, Root.ClearEnabled, ref cumulatedleft);
 
-            // remove code
-			/*
-            // ===
-            if (Root.PanEnabled)
-			{
-				btPan.Visible = true;
-				btPan.Left = cumulatedleft;
-				cumulatedleft += (int)(btPan.Width * 1.1);
-			}
-			else
-			{
-				btPan.Visible = false;
-			}
-			if (Root.PointerEnabled)
-			{
-				btPointer.Visible = true;
-				btPointer.Left = cumulatedleft;
-				cumulatedleft += (int)(btPointer.Width * 1.1);
-			}
-			else
-			{
-				btPointer.Visible = false;
-			}
 			cumulatedleft += (int)(btStop.Width * 0.8);
 
-			if (Root.PenWidthEnabled)
-			{
-				btPenWidth.Visible = true;
-				btPenWidth.Left = cumulatedleft;
-				cumulatedleft += (int)(btPenWidth.Width * 1.1);
-			}
-			else
-			{
-				btPenWidth.Visible = false;
-			}
-			if (Root.InkVisibleEnabled)
-			{
-				btInkVisible.Visible = true;
-				btInkVisible.Left = cumulatedleft;
-				cumulatedleft += (int)(btInkVisible.Width * 1.1);
-			}
-			else
-			{
-				btInkVisible.Visible = false;
-			}
-			if (Root.SnapEnabled)
-			{
-				btSnap.Visible = true;
-				btSnap.Left = cumulatedleft;
-				cumulatedleft += (int)(btSnap.Width * 1.1);
-			}
-			else
-			{
-				btSnap.Visible = false;
-			}
-			if (Root.UndoEnabled)
-			{
-				btUndo.Visible = true;
-				btUndo.Left = cumulatedleft;
-				cumulatedleft += (int)(btUndo.Width * 1.1);
-			}
-			else
-			{
-				btUndo.Visible = false;
-			}
-			if (Root.ClearEnabled)
-			{
-				btClear.Visible = true;
-				btClear.Left = cumulatedleft;
-				cumulatedleft += (int)(btClear.Width * 1.1);
-			}
-			else
-			{
-				btClear.Visible = false;
-			}
-
-			// ===
-			*/
-
-			cumulatedleft += (int)(btStop.Width * 0.8);
 			btStop.Left = cumulatedleft;
-			gpButtons.Width = btStop.Right + (int)(btStop.Width * 0.5);
+
+
+            // Comment by mwtoolz; Toolbar visibility and positioning
+            // == ENDS HERE = 
+
+
+            gpButtons.Width = btStop.Right + (int)(btStop.Width * 0.5);
 			
 
 			this.Left = SystemInformation.VirtualScreen.Left;
@@ -282,6 +209,8 @@ namespace gInkPlus
 
 			gpButtonsWidth = gpButtons.Width;
 			gpButtonsHeight = gpButtons.Height;
+
+			// TODO by mwtoolz- check this? 
 			if (true || Root.AllowDraggingToolbar)
 			{
 				gpButtonsLeft = Root.gpButtonsLeft;
@@ -453,7 +382,7 @@ namespace gInkPlus
         }
 
         // Added by mwtoolz- Readability; Helper method for Shape Tool Button Attributes
-        private void SetupShapeButton(Button button, EventHandler clickHandler, ref int cumulatedleft)
+        private void SetupShapeButton(Button button, EventHandler clickHandler)
         {	
 
             button.FlatAppearance.BorderColor = Color.WhiteSmoke;
@@ -469,11 +398,7 @@ namespace gInkPlus
 
             button.Click += clickHandler;
             gpButtons.Controls.Add(button);
-
-            // TODO by mwtoolz for Tab 1- General form options
-            button.Visible = true;
-            button.Left = cumulatedleft;
-            cumulatedleft += (int)(button.Width * 1.1);
+			
         }
 
 

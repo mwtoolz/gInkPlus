@@ -63,6 +63,14 @@ namespace gInkPlus
 		public bool ClearEnabled = true;
 		public bool PanEnabled = true;
 		public bool InkVisibleEnabled = true;
+
+		// Added by mwtoolz for Shape Tools in Form Options Tab 1 (General)
+		public bool LineEnabled = true;
+		public bool RectEnabled = true;
+		public bool RectFilledEnabled = true;
+
+
+
 		public DrawingAttributes[] PenAttr = new DrawingAttributes[MaxPenCount];
 		public bool AutoScroll;
 		public bool WhiteTrayIcon;
