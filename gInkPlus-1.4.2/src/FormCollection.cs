@@ -152,7 +152,8 @@ namespace gInkPlus
 				btEraser.Visible = false;
 			}
 
-            //Added by mwtoolz for Shape tools Button Attributes
+            //Added by mwtoolz for Shape tools Button Attributes; Adding Shape tool buttons after Eraser
+			// ===
             btLine = new Button();
             SetupShapeButton(btLine, this.btLine_Click, ref cumulatedleft);
 
@@ -162,77 +163,8 @@ namespace gInkPlus
             btRectFilled = new Button();
             SetupShapeButton(btRectFilled, this.btRectFilled_Click, ref cumulatedleft);
 
-			// Replacing code with Helper function SetupShapeButtons
-			/*
-            // ===== LINE BUTTON =====
-			
-            btLine = new Button();
-            btLine.Width = (int)(gpButtons.Height * 0.88);
-            btLine.Height = (int)(gpButtons.Height * 0.88);
-            btLine.Top = (int)(gpButtons.Height * 0.07);
-            btLine.FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
-            btLine.FlatAppearance.BorderSize = 3;
-            btLine.FlatStyle = FlatStyle.Flat;
 
-            // Prevent grey background on hover and click
-            btLine.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            btLine.FlatAppearance.MouseDownBackColor = Color.Transparent;
-
-            btLine.ForeColor = Color.Transparent;
-            btLine.UseVisualStyleBackColor = false;
-            btLine.Click += new EventHandler(this.btLine_Click);
-            btLine.ImageAlign = ContentAlignment.MiddleCenter;
-            gpButtons.Controls.Add(btLine);
-            btLine.Visible = true;
-            btLine.Left = cumulatedleft;
-            cumulatedleft += (int)(btLine.Width * 1.1);
-            // ===== END LINE BUTTON =====
-
-            //Added by mwtoolz
-            // ===== RECT BUTTON =====
-            btRect = new Button();
-            btRect.Width = (int)(gpButtons.Height * 0.88);
-            btRect.Height = (int)(gpButtons.Height * 0.88);
-            btRect.Top = (int)(gpButtons.Height * 0.07);
-            btRect.FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
-            btRect.FlatAppearance.BorderSize = 3;
-            btRect.FlatStyle = FlatStyle.Flat;
-
-            // Prevent grey background on hover and click
-            btRect.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            btRect.FlatAppearance.MouseDownBackColor = Color.Transparent;
-
-            btRect.ForeColor = Color.Transparent;
-            btRect.UseVisualStyleBackColor = false;
-            btRect.Click += new EventHandler(this.btRect_Click);
-            btRect.ImageAlign = ContentAlignment.MiddleCenter;
-            gpButtons.Controls.Add(btRect);
-            btRect.Visible = true;
-            btRect.Left = cumulatedleft;
-            cumulatedleft += (int)(btRect.Width * 1.1);
-            // ===== END RECTANGLE BUTTON =====
-
-            //Added by mwtoolz
-            // ===== RECT_FILLED BUTTON =====            
-            btRectFilled = new Button();
-            btRectFilled.Width = (int)(gpButtons.Height * 0.88);
-            btRectFilled.Height = (int)(gpButtons.Height * 0.88);
-            btRectFilled.Top = (int)(gpButtons.Height * 0.07);
-            btRectFilled.FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
-            btRectFilled.FlatAppearance.BorderSize = 3;
-            btRectFilled.FlatStyle = FlatStyle.Flat;// Prevent grey background on hover and click
-            btRectFilled.FlatAppearance.MouseOverBackColor = Color.Transparent;
-            btRectFilled.FlatAppearance.MouseDownBackColor = Color.Transparent;
-            btRectFilled.ForeColor = Color.Transparent;
-            btRectFilled.UseVisualStyleBackColor = false;
-            btRectFilled.Click += new EventHandler(this.btRectFilled_Click);
-            btRectFilled.ImageAlign = ContentAlignment.MiddleCenter;
-            gpButtons.Controls.Add(btRectFilled);
-            btRectFilled.Visible = true;
-            btRectFilled.Left = cumulatedleft;
-			cumulatedleft += (int)(btRectFilled.Width * 1.1);
-            // ===== END RECT_FILLED BUTTON =====
-			*/
+			// ===			
 			
             if (Root.PanEnabled)
 			{
