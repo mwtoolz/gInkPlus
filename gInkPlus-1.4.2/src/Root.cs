@@ -40,7 +40,7 @@ namespace gInkPlus
 				else
 				{
 					//Root.Pointer();
-					Root.SelectPen(-2);
+					Root.SelectPen(Root.Tool.Pointer);
 				}
 			}
 			return false;
@@ -49,7 +49,19 @@ namespace gInkPlus
 
 	public class Root
 	{
-		public Local Local = new Local();
+        // Added by mwtoolz- SelectPen Tool identifiers
+        public static class Tool
+        {
+            public const int Eraser = -1;
+            public const int Pointer = -2;
+            public const int Pan = -3;
+            public const int Line = -4;
+            public const int Rectangle = -5;
+            public const int FilledRect = -6;
+        }
+
+
+        public Local Local = new Local();
 		public const int MaxPenCount = 10;
 
 		// options
@@ -65,12 +77,14 @@ namespace gInkPlus
 		public bool InkVisibleEnabled = true;
 
 		// Added by mwtoolz for Shape Tools in Form Options Tab 1 (General)
+		// ===
 		public bool LineEnabled = true;
 		public bool RectEnabled = true;
 		public bool RectFilledEnabled = true;
 
 
 
+		// ===
 		public DrawingAttributes[] PenAttr = new DrawingAttributes[MaxPenCount];
 		public bool AutoScroll;
 		public bool WhiteTrayIcon;
@@ -130,7 +144,7 @@ namespace gInkPlus
 
 		public bool PanMode = false;
 
-        // Added by mwtoolz
+        // Added by mwtoolz- Shape Tools Mode
         public bool LineMode = false;
 		public bool RectMode = false;
 		public bool RectFilledMode = false;

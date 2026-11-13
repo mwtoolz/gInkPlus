@@ -821,7 +821,7 @@ namespace gInkPlus
             ResetGeneralToolsMode();
 
             // ===== RECT_FILLED TOOL =====
-            if (pen == -6)
+            if (pen == Root.Tool.FilledRect)
 			{
                 // Activate RectFilled Mode
                 btRectFilled.Image = image_rect_filled_act;
@@ -837,7 +837,7 @@ namespace gInkPlus
             // ===== END OF RECT_FILLED TOOL =====        
 
             // ===== RECTANGLE TOOL =====
-            else if (pen == -5)
+            else if (pen == Root.Tool.Rectangle)
             { 
                 // Activate Rectangle mode
                 btRect.Image = image_rect_act;
@@ -853,7 +853,7 @@ namespace gInkPlus
             // ===== END OF RECTANGLE TOOL =====
 
             // ===== LINE TOOL =====
-            else if (pen == -4)   
+            else if (pen == Root.Tool.Line)   
             {   
 				// Activate Line tool
                 btLine.Image = image_line_act;
@@ -869,7 +869,7 @@ namespace gInkPlus
             // ==== END OF LINE TOOL ====
             
             // -3=pan, -2=pointer, -1=eraser, 0+=pens	
-            else if (pen == -3)
+            else if (pen == Root.Tool.Pan)
 			{         
                 // Activate Pan tool
                 btPan.Image = image_pan_act;
@@ -878,13 +878,13 @@ namespace gInkPlus
                 SetInkInputRectangle(new Rectangle(0, 0, 1, 1));
 
             }
-			else if (pen == -2)
+			else if (pen == Root.Tool.Pointer)
 			{
 				// Activate Pointer tool
 				btPointer.Image = image_pointer_act;
                 Root.Pointer();
             }
-			else if (pen == -1)
+			else if (pen == Root.Tool.Eraser)
 			{
 				if (this.Cursor != System.Windows.Forms.Cursors.Default)
 					this.Cursor = System.Windows.Forms.Cursors.Default;
@@ -925,7 +925,7 @@ namespace gInkPlus
 			}
 			else Root.UponButtonsUpdate |= 0x2;
 
-			if (pen != -2) Root.LastPen = pen;
+			if (pen != Root.Tool.Pointer) Root.LastPen = pen;
 		}
 
 		public void RetreatAndExit()
@@ -965,7 +965,7 @@ namespace gInkPlus
 				return;
 			}
 
-			SelectPen(-2);
+			SelectPen(Root.Tool.Pointer);
 		}
 
 
@@ -991,17 +991,17 @@ namespace gInkPlus
 		// == Line tool ==
         private void btLine_Click(object sender, EventArgs e)
         {
-            SelectPen(-4);   // -4 is the value we defined for Line mode
+            SelectPen(Root.Tool.Line);   // -4 is the value we defined for Line mode
         }        
         // == Rectangle tool ==
         private void btRect_Click(object sender, EventArgs e)
         {
-            SelectPen(-5);   // -5 is the value we defined for Rectangle mode
+            SelectPen(Root.Tool.Rectangle);   // -5 is the value we defined for Rectangle mode
         }
         // == Rect_Filled tool
         private void btRectFilled_Click(object sender, EventArgs e)
         {
-            SelectPen(-6);   // -6 is the value we defined for Rect_Filled mode
+            SelectPen(Root.Tool.FilledRect);   // -6 is the value we defined for Rect_Filled mode
         }
 
         //==
@@ -1366,7 +1366,7 @@ namespace gInkPlus
 				pressed = (GetKeyState(Root.Hotkey_Eraser.Key) & 0x8000) == 0x8000;
 				if (pressed && !LastEraserStatus && Root.Hotkey_Eraser.ModifierMatch(control, alt, shift, win))
 				{
-					SelectPen(-1);
+					SelectPen(Root.Tool.Eraser);
 				}
 				LastEraserStatus = pressed;
 
@@ -1397,14 +1397,14 @@ namespace gInkPlus
 				pressed = (GetKeyState(Root.Hotkey_Pointer.Key) & 0x8000) == 0x8000;
 				if (pressed && !LastPointerStatus && Root.Hotkey_Pointer.ModifierMatch(control, alt, shift, win))
 				{
-					SelectPen(-2);
+					SelectPen(Root.Tool.Pointer);
 				}
 				LastPointerStatus = pressed;
 
 				pressed = (GetKeyState(Root.Hotkey_Pan.Key) & 0x8000) == 0x8000;
 				if (pressed && !LastPanStatus && Root.Hotkey_Pan.ModifierMatch(control, alt, shift, win))
 				{
-					SelectPen(-3);
+					SelectPen(Root.Tool.Pan);
 				}
 				LastPanStatus = pressed;
 
@@ -1414,7 +1414,7 @@ namespace gInkPlus
                 pressed = (GetKeyState(Root.Hotkey_Line.Key) & 0x8000) == 0x8000;
                 if (pressed && !LastLineStatus && Root.Hotkey_Line.ModifierMatch(control, alt, shift, win))
                 {
-                    SelectPen(-4);
+                    SelectPen(Root.Tool.Line);
 				}
 				LastLineStatus = pressed;
                 // Rectangle
@@ -1422,7 +1422,7 @@ namespace gInkPlus
                 if (pressed && !LastRectangleStatus &&
                     Root.Hotkey_Rectangle.ModifierMatch(control, alt, shift, win))
                 {
-                    SelectPen(-5);
+                    SelectPen(Root.Tool.Rectangle);
                 }
                 LastRectangleStatus = pressed;
                 // Filled Rectangle
@@ -1430,7 +1430,7 @@ namespace gInkPlus
                 if (pressed && !LastFilledRectangleStatus &&
                     Root.Hotkey_Filled_Rectangle.ModifierMatch(control, alt, shift, win))
                 {
-                    SelectPen(-6);
+                    SelectPen(Root.Tool.FilledRect);
                 }
                 LastFilledRectangleStatus = pressed;
                 // Dotted Line
