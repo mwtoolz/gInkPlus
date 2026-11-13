@@ -170,7 +170,9 @@ namespace gInkPlus
             btLine.ForeColor = Color.Transparent;
             btLine.UseVisualStyleBackColor = false;
             btLine.Click += new EventHandler(this.btLine_Click);
-            btLine.Image = image_line;
+
+            // test- declare below
+			// btLine.Image = image_line;
             btLine.ImageAlign = ContentAlignment.MiddleCenter;
             gpButtons.Controls.Add(btLine);
             btLine.Visible = true;
@@ -195,7 +197,9 @@ namespace gInkPlus
             btRect.ForeColor = Color.Transparent;
             btRect.UseVisualStyleBackColor = false;
             btRect.Click += new EventHandler(this.btRect_Click);
-            btRect.Image = image_rect;
+
+            // test- declare below
+			// btRect.Image = image_rect;
             btRect.ImageAlign = ContentAlignment.MiddleCenter;
             gpButtons.Controls.Add(btRect);
             btRect.Visible = true;
@@ -216,8 +220,10 @@ namespace gInkPlus
             btRectFilled.FlatAppearance.MouseDownBackColor = Color.Transparent;
             btRectFilled.ForeColor = Color.Transparent;
             btRectFilled.UseVisualStyleBackColor = false;
-            btRectFilled.Click += new EventHandler(this.btRectFilled_Click);       
-            btRectFilled.Image = image_rect_filled; // Ensure this matches your loaded image variable/resource
+            btRectFilled.Click += new EventHandler(this.btRectFilled_Click);
+
+            // test- declare below
+            // btRectFilled.Image = image_rect_filled; // Ensure this matches your loaded image variable/resource
 
             btRectFilled.ImageAlign = ContentAlignment.MiddleCenter;
             gpButtons.Controls.Add(btRectFilled);
@@ -375,7 +381,68 @@ namespace gInkPlus
 			cursorred = new System.Windows.Forms.Cursor(gInkPlus.Properties.Resources.cursorred.Handle);
 			//IC.Cursor = cursorred;
 			IC.Enabled = true;
-     
+
+			// Modified by mwtoolz- Readability; replaced with helper method CreateToolbarImage()
+			// ===
+			image_exit = CreateToolbarImage(global::gInkPlus.Properties.Resources.exit, btStop);
+			btStop.Image = image_exit;
+
+            image_clear = CreateToolbarImage(global::gInkPlus.Properties.Resources.garbage, btClear);
+			btClear.Image = image_clear;
+
+            image_undo = CreateToolbarImage(global::gInkPlus.Properties.Resources.undo, btUndo);
+			btUndo.Image = image_undo;
+
+            image_eraser_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.eraser_act, btEraser);
+            image_eraser = CreateToolbarImage(global::gInkPlus.Properties.Resources.eraser, btEraser);
+			btEraser.Image = image_eraser;
+
+            image_pan_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.pan_act, btPan);
+            image_pan = CreateToolbarImage(global::gInkPlus.Properties.Resources.pan, btPan);
+            btPan.Image = image_pan;
+
+            image_visible_not = CreateToolbarImage(global::gInkPlus.Properties.Resources.visible_not, btInkVisible);
+            image_visible = CreateToolbarImage(global::gInkPlus.Properties.Resources.visible, btInkVisible);
+            btInkVisible.Image = image_visible;
+
+            image_snap = CreateToolbarImage(global::gInkPlus.Properties.Resources.snap, btSnap);
+            btSnap.Image = image_snap;
+
+            image_penwidth = CreateToolbarImage(global::gInkPlus.Properties.Resources.penwidth, btPenWidth);
+            btPenWidth.Image = image_penwidth;
+
+            image_dock = CreateToolbarImage(global::gInkPlus.Properties.Resources.dock, btDock);
+            image_dockback = CreateToolbarImage(global::gInkPlus.Properties.Resources.dockback, btDock);
+			if (Root.Docked) btDock.Image = image_dockback; else btDock.Image = image_dock;
+            
+			image_pencil = CreateToolbarImage(global::gInkPlus.Properties.Resources.pencil, btPen[2]);
+            image_pencil_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.pencil_act, btPen[2]);
+            image_highlighter = CreateToolbarImage(global::gInkPlus.Properties.Resources.highlighter, btPen[2]);
+            image_highlighter_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.highlighter_act, btPen[2]);
+
+			image_pointer = CreateToolbarImage(global::gInkPlus.Properties.Resources.pointer, btPointer);
+            image_pointer = CreateToolbarImage(global::gInkPlus.Properties.Resources.pointer_act, btPointer);
+
+            // Added by mwtoolz- Shape Tools
+            image_line_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_line_act, btLine);
+            image_line = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_line, btLine);
+			btLine.Image = image_line;
+
+			image_rect_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_rect_act, btRect);
+            image_rect = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_rect, btRect);
+			btRect.Image = image_rect;
+
+            image_rect_filled_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_rect_filled_act, btRectFilled);
+            image_rect_filled = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_rect_filled, btRectFilled);
+            btRectFilled.Image = image_rect_filled;
+
+			// ===
+
+
+
+			// Replaced code with helper function			
+			// === FROM HERE
+			/*
             image_exit = new Bitmap(btStop.Width, btStop.Height);
 			Graphics g = Graphics.FromImage(image_exit);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -436,13 +503,13 @@ namespace gInkPlus
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;            
             g.DrawImage(global::gInkPlus.Properties.Resources.tool_rect_filled_act, 0, 0, btRectFilled.Width, btRectFilled.Height);
 
-
             // ====
 
             image_pan_act = new Bitmap(btPan.Width, btPan.Height);
 			g = Graphics.FromImage(image_pan_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.pan_act, 0, 0, btPan.Width, btPan.Height);
+
 			image_pan = new Bitmap(btPan.Width, btPan.Height);
 			g = Graphics.FromImage(image_pan);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -453,6 +520,7 @@ namespace gInkPlus
 			g = Graphics.FromImage(image_visible_not);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.visible_not, 0, 0, btInkVisible.Width, btInkVisible.Height);
+
 			image_visible = new Bitmap(btInkVisible.Width, btInkVisible.Height);
 			g = Graphics.FromImage(image_visible);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -475,6 +543,7 @@ namespace gInkPlus
 			g = Graphics.FromImage(image_dock);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.dock, 0, 0, btDock.Width, btDock.Height);
+
 			image_dockback = new Bitmap(btDock.Width, btDock.Height);
 			g = Graphics.FromImage(image_dockback);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -488,14 +557,17 @@ namespace gInkPlus
 			g = Graphics.FromImage(image_pencil);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.pencil, 0, 0, btPen[2].Width, btPen[2].Height);
+
 			image_highlighter = new Bitmap(btPen[2].Width, btPen[2].Height);
 			g = Graphics.FromImage(image_highlighter);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.highlighter, 0, 0, btPen[2].Width, btPen[2].Height);
+
 			image_pencil_act = new Bitmap(btPen[2].Width, btPen[2].Height);
 			g = Graphics.FromImage(image_pencil_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.pencil_act, 0, 0, btPen[2].Width, btPen[2].Height);
+
 			image_highlighter_act = new Bitmap(btPen[2].Width, btPen[2].Height);
 			g = Graphics.FromImage(image_highlighter_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
@@ -505,13 +577,18 @@ namespace gInkPlus
 			g = Graphics.FromImage(image_pointer);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.pointer, 0, 0, btPointer.Width, btPointer.Height);
+
 			image_pointer_act = new Bitmap(btPointer.Width, btPointer.Height);
 			g = Graphics.FromImage(image_pointer_act);
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			g.DrawImage(global::gInkPlus.Properties.Resources.pointer_act, 0, 0, btPointer.Width, btPointer.Height);
 
+			*/
+			// === TO HERE
+
 			image_pen = new Bitmap[Root.MaxPenCount];
 			image_pen_act = new Bitmap[Root.MaxPenCount];
+
 			for (int b = 0; b < Root.MaxPenCount; b++)
 			{
 				if (Root.PenAttr[b].Transparency >= 100)
@@ -550,7 +627,21 @@ namespace gInkPlus
 			this.toolTip.SetToolTip(this.btStop, Root.Local.ButtonNameExit + " (ESC)");
 		}
 
-		private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
+        // Added by mwtoolz- Readability; helper method CreateToolbarImage()
+        private Bitmap CreateToolbarImage(Image resource, Button button)
+        {
+            Bitmap image = new Bitmap(button.Width, button.Height);
+
+            using (Graphics g = Graphics.FromImage(image))
+            {
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                g.DrawImage(resource, 0, 0, button.Width, button.Height);
+            }
+
+            return image;
+        }
+
+        private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
 
             // Added by mwtoolz        
