@@ -23,13 +23,13 @@ namespace gInkPlus
 		public Bitmap image_dock, image_dockback;
 		public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
 
-        // Added by mwtoolz; Line,Rect, Rect_filled tool
-        public Button btLine;
-        public Bitmap image_line, image_line_act;
-		public Button btRect;
-		public Bitmap image_rect, image_rect_act;
-        public Button btRectFilled;
+        // Added by mwtoolz- Shape tools; Line,Rect, Rect_filled tool
+        public Button btLine, btRect, btRectFilled;
+        public Bitmap image_line, image_line_act;	
+		public Bitmap image_rect, image_rect_act;  
         public Bitmap image_rect_filled, image_rect_filled_act;
+
+
 		// ===
 
         public Bitmap image_pointer, image_pointer_act;
@@ -72,44 +72,48 @@ namespace gInkPlus
             PrimaryLeft = Screen.PrimaryScreen.Bounds.Left - SystemInformation.VirtualScreen.Left;
 			PrimaryTop = Screen.PrimaryScreen.Bounds.Top - SystemInformation.VirtualScreen.Top;     
             gpButtons.Height = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
-			btClear.Height = (int)(gpButtons.Height * 0.88);
-			btClear.Width = btClear.Height;
-			btClear.Top = (int)(gpButtons.Height * 0.07);
-			btDock.Height = (int)(gpButtons.Height * 0.88);
-			btDock.Width = (int)(btDock.Height * 0.75);
-			btDock.Top = (int)(gpButtons.Height * 0.07);
-			btEraser.Height = (int)(gpButtons.Height * 0.88);
-			btEraser.Width = btEraser.Height;
-			btEraser.Top = (int)(gpButtons.Height * 0.07);
-			btInkVisible.Height = (int)(gpButtons.Height * 0.88);
-			btInkVisible.Width = btInkVisible.Height;
-			btInkVisible.Top = (int)(gpButtons.Height * 0.07);
-			btPan.Height = (int)(gpButtons.Height * 0.88);
-			btPan.Width = btPan.Height;
-			btPan.Top = (int)(gpButtons.Height * 0.07);
-			btPointer.Height = (int)(gpButtons.Height * 0.88);
-			btPointer.Width = btPointer.Height;
-			btPointer.Top = (int)(gpButtons.Height * 0.07);
-			btSnap.Height = (int)(gpButtons.Height * 0.88);
-			btSnap.Width = btSnap.Height;
-			btSnap.Top = (int)(gpButtons.Height * 0.07);
-			btStop.Height = (int)(gpButtons.Height * 0.88);
-			btStop.Width = btStop.Height;
-			btStop.Top = (int)(gpButtons.Height * 0.07);
-			btUndo.Height = (int)(gpButtons.Height * 0.88);
-			btUndo.Width = btUndo.Height;
-			btUndo.Top = (int)(gpButtons.Height * 0.07);
+
+            // Modified by mwtooz- readability in declaring height, width and top of toolbar buttons
+            // Added by mwtoolz- Shape tool; Buttons declaration
+			// ===
+			btLine = new Button();
+            btRect = new Button();
+            btRectFilled = new Button();
+
+
+			// ===
+
+            int buttonHeight = (int)(gpButtons.Height * 0.88);
+            int buttonTop = (int)(gpButtons.Height * 0.06);
+            // int buttonTop = (int)(gpButtons.Height * 0.07);
+
+            Button[] buttons =
+            {
+				btDock, btEraser, btPan, btPointer, btInkVisible, btSnap, btUndo, btClear, btStop,
+                btLine, btRect, btRectFilled
+
+            };
+
+            foreach (Button button in buttons)
+            {
+                button.Height = buttonHeight;
+                button.Width = button == btDock
+                    ? (int)(buttonHeight * 0.75)
+                    : buttonHeight;
+                button.Top = buttonTop;
+            }
 
 			btPen = new Button[Root.MaxPenCount];
 
 			int cumulatedleft = (int)(btStop.Width * 1.2);
+
 			for (int b = 0; b < Root.MaxPenCount; b++)
 			{
 				btPen[b] = new Button();
 				btPen[b].Width = (int)(gpButtons.Height * 0.88);
-				btPen[b].Height = (int)(gpButtons.Height * 0.88);
-				btPen[b].Top = (int)(gpButtons.Height * 0.08);
-				btPen[b].FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
+				btPen[b].Height = (int)(gpButtons.Height * 0.88);               
+                btPen[b].Top = (int)(gpButtons.Height * 0.08);
+                btPen[b].FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
 				btPen[b].FlatAppearance.BorderSize = 3;
 				btPen[b].FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(250, 50, 50);
 				btPen[b].FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -140,7 +144,9 @@ namespace gInkPlus
 					btPen[b].Visible = false;
 				}
 			}
+
 			cumulatedleft += (int)(btStop.Width * 0.8);
+
 			if (Root.EraserEnabled)
 			{
 				btEraser.Visible = true;
@@ -152,20 +158,32 @@ namespace gInkPlus
 				btEraser.Visible = false;
 			}
 
-            //Added by mwtoolz for Shape tools Button Attributes; Adding Shape tool buttons after Eraser
-			// ===
-            btLine = new Button();
-            SetupShapeButton(btLine, this.btLine_Click, ref cumulatedleft);
-
-            btRect = new Button();
+            // Added by mwtoolz- Shape tools Button Attributes; Adding Shape tool buttons after Eraser
+			// Placement of this code decides the position of button in toolbar.
+			// ===            
+            SetupShapeButton(btLine, this.btLine_Click, ref cumulatedleft);          
             SetupShapeButton(btRect, this.btRect_Click, ref cumulatedleft);
-
-            btRectFilled = new Button();
             SetupShapeButton(btRectFilled, this.btRectFilled_Click, ref cumulatedleft);
 
 
-			// ===			
-			
+            // ===	
+
+
+            // Modified by mwtoolz- Readability; Adding helper method PositionButton() to handle Toolbar Button's Visibility and Positioning
+            PositionButton(btPan, Root.PanEnabled, ref cumulatedleft);
+            PositionButton(btPointer, Root.PointerEnabled, ref cumulatedleft);
+
+            cumulatedleft += (int)(btStop.Width * 0.8);
+
+            PositionButton(btPenWidth, Root.PenWidthEnabled, ref cumulatedleft);
+            PositionButton(btInkVisible, Root.InkVisibleEnabled, ref cumulatedleft);
+            PositionButton(btSnap, Root.SnapEnabled, ref cumulatedleft);
+            PositionButton(btUndo, Root.UndoEnabled, ref cumulatedleft);
+            PositionButton(btClear, Root.ClearEnabled, ref cumulatedleft);
+
+            // remove code
+			/*
+            // ===
             if (Root.PanEnabled)
 			{
 				btPan.Visible = true;
@@ -238,6 +256,10 @@ namespace gInkPlus
 			{
 				btClear.Visible = false;
 			}
+
+			// ===
+			*/
+
 			cumulatedleft += (int)(btStop.Width * 0.8);
 			btStop.Left = cumulatedleft;
 			gpButtons.Width = btStop.Right + (int)(btStop.Width * 0.5);
@@ -418,12 +440,21 @@ namespace gInkPlus
 
 		}
 
+        //Added  by mwtoolz- Readability; Helper method for Toolbar Button's Visibility and Positioning
+        private void PositionButton(Button button, bool enabled, ref int left)
+        {
+            button.Visible = enabled;
+
+            if (enabled)
+            {
+                button.Left = left;
+                left += (int)(button.Width * 1.1);
+            }
+        }
+
         // Added by mwtoolz- Readability; Helper method for Shape Tool Button Attributes
         private void SetupShapeButton(Button button, EventHandler clickHandler, ref int cumulatedleft)
-        {
-            button.Width = (int)(gpButtons.Height * 0.88);
-            button.Height = (int)(gpButtons.Height * 0.88);
-            button.Top = (int)(gpButtons.Height * 0.07);
+        {	
 
             button.FlatAppearance.BorderColor = Color.WhiteSmoke;
             button.FlatAppearance.BorderSize = 3;
