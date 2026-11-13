@@ -73,7 +73,7 @@ namespace gInkPlus
 			PrimaryTop = Screen.PrimaryScreen.Bounds.Top - SystemInformation.VirtualScreen.Top;     
             gpButtons.Height = (int)(Screen.PrimaryScreen.Bounds.Height * Root.ToolbarHeight);
 
-            // Modified by mwtooz- readability in declaring height, width and top of toolbar buttons
+            // Modified by mwtooz- readability in declaring height, width and Position from top of toolbar for toolbar buttons
             // Added by mwtoolz- Shape tool; Buttons declaration and setup
 			// ===
 			btLine = new Button();
@@ -88,8 +88,7 @@ namespace gInkPlus
             // ===
 
             int buttonHeight = (int)(gpButtons.Height * 0.88);
-            int buttonTop = (int)(gpButtons.Height * 0.06);
-            // int buttonTop = (int)(gpButtons.Height * 0.07);
+            int buttonTop = (int)(gpButtons.Height * 0.06);         
 
             Button[] buttons =
             {
@@ -138,25 +137,17 @@ namespace gInkPlus
 				btPen[b].MouseMove += gpButtons_MouseMove;
 				btPen[b].MouseUp += gpButtons_MouseUp;
 
-				gpButtons.Controls.Add(btPen[b]);
+				gpButtons.Controls.Add(btPen[b]);		
 
-				if (Root.PenEnabled[b])
-				{
-					btPen[b].Visible = true;
-					btPen[b].Left = cumulatedleft;
-					cumulatedleft += (int)(btPen[b].Width * 1.1);
-				}
-				else
-				{
-					btPen[b].Visible = false;
-				}
-			}
+                PositionButton(btPen[b], Root.PenEnabled[b], ref cumulatedleft);
+            }
+			
 
-			cumulatedleft += (int)(btStop.Width * 0.8);
+            cumulatedleft += (int)(btStop.Width * 0.8);
 
             PositionButton(btEraser, Root.EraserEnabled, ref cumulatedleft);
 
-			// Added by mwtoolz- Shape tools Button Attributes; Adding Shape tool buttons after Eraser
+			// Added by mwtoolz- Shape tools; Adding Shape tool buttons after Eraser
 			// Placement of this code decides the position of button in toolbar.
 			// ===
 
@@ -188,31 +179,22 @@ namespace gInkPlus
             // Comment by mwtoolz; Toolbar visibility and positioning
             // == ENDS HERE = 
 
-
+			// Comment by mwtoolz; Calculate toolbar container width
             gpButtons.Width = btStop.Right + (int)(btStop.Width * 0.5);
 			
-
+			// Comment by mwtoolz; Position and size the full-screen form
 			this.Left = SystemInformation.VirtualScreen.Left;
 			this.Top = SystemInformation.VirtualScreen.Top;
-			//int targetbottom = 0;
-			//foreach (Screen screen in Screen.AllScreens)
-			//{
-			//	if (screen.WorkingArea.Bottom > targetbottom)
-			//		targetbottom = screen.WorkingArea.Bottom;
-			//}
-			//int virwidth = SystemInformation.VirtualScreen.Width;
-			//this.Width = virwidth;
-			//this.Height = targetbottom - this.Top;
 			this.Width = SystemInformation.VirtualScreen.Width;
 			this.Height = SystemInformation.VirtualScreen.Height - 2;
 			this.DoubleBuffered = true;
-
 			gpButtonsWidth = gpButtons.Width;
 			gpButtonsHeight = gpButtons.Height;
 
 			// TODO by mwtoolz- check this? 
 			if (true || Root.AllowDraggingToolbar)
 			{
+				// Comment by mwtoolz; Retrieves previously stored toolbar position
 				gpButtonsLeft = Root.gpButtonsLeft;
 				gpButtonsTop = Root.gpButtonsTop;
 				if
@@ -225,7 +207,8 @@ namespace gInkPlus
 					(gpButtonsLeft == 0 && gpButtonsTop == 0)
 				)
 				{
-					gpButtonsLeft = Screen.PrimaryScreen.WorkingArea.Right - gpButtons.Width + PrimaryLeft;
+                    // Comment by mwtoolz; Set the default toolbar position
+                    gpButtonsLeft = Screen.PrimaryScreen.WorkingArea.Right - gpButtons.Width + PrimaryLeft;
 					gpButtonsTop = Screen.PrimaryScreen.WorkingArea.Bottom - gpButtons.Height - 15 + PrimaryTop;
 				}
 			}
@@ -235,15 +218,15 @@ namespace gInkPlus
 				gpButtonsTop = Screen.PrimaryScreen.WorkingArea.Bottom - gpButtons.Height - 15 + PrimaryTop;
 			}
 
-			gpButtons.Left = gpButtonsLeft + gpButtons.Width;
+            // Comment by mwtoolz; Sets Penwidth Panel position
+            gpButtons.Left = gpButtonsLeft + gpButtons.Width;
 			gpButtons.Top = gpButtonsTop;
 			gpPenWidth.Left = gpButtonsLeft + btPenWidth.Left - gpPenWidth.Width / 2 + btPenWidth.Width / 2;
 			gpPenWidth.Top = gpButtonsTop - gpPenWidth.Height - 10;
-
 			pboxPenWidthIndicator.Top = 0;
-			pboxPenWidthIndicator.Left = (int)Math.Sqrt(Root.GlobalPenWidth * 30);			
-			
+			pboxPenWidthIndicator.Left = (int)Math.Sqrt(Root.GlobalPenWidth * 30);
 			gpPenWidth.Controls.Add(pboxPenWidthIndicator);
+
 
 			IC = new InkOverlay(this.Handle);
 			IC.CollectionMode = CollectionMode.InkOnly;
