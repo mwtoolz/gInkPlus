@@ -22,7 +22,7 @@ namespace gInkPlus.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,10 +36,10 @@ namespace gInkPlus.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("gInkPlus.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("gInkPlus.src.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace gInkPlus.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap _null {
+        internal static System.Drawing.Bitmap _null {
             get {
                 object obj = ResourceManager.GetObject("_null", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -73,7 +73,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon cursorred {
+        internal static System.Drawing.Icon cursorred {
             get {
                 object obj = ResourceManager.GetObject("cursorred", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -83,7 +83,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon cursorsnap {
+        internal static System.Drawing.Icon cursorsnap {
             get {
                 object obj = ResourceManager.GetObject("cursorsnap", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -93,7 +93,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap dock {
+        internal static System.Drawing.Bitmap dock {
             get {
                 object obj = ResourceManager.GetObject("dock", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -103,7 +103,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap dockback {
+        internal static System.Drawing.Bitmap dockback {
             get {
                 object obj = ResourceManager.GetObject("dockback", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -113,7 +113,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap eraser {
+        internal static System.Drawing.Bitmap eraser {
             get {
                 object obj = ResourceManager.GetObject("eraser", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -123,7 +123,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap eraser_act {
+        internal static System.Drawing.Bitmap eraser_act {
             get {
                 object obj = ResourceManager.GetObject("eraser_act", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -133,7 +133,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap exit {
+        internal static System.Drawing.Bitmap exit {
             get {
                 object obj = ResourceManager.GetObject("exit", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -143,7 +143,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap garbage {
+        internal static System.Drawing.Bitmap garbage {
             get {
                 object obj = ResourceManager.GetObject("garbage", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -153,7 +153,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap highlighter {
+        internal static System.Drawing.Bitmap highlighter {
             get {
                 object obj = ResourceManager.GetObject("highlighter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -163,7 +163,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap highlighter_act {
+        internal static System.Drawing.Bitmap highlighter_act {
             get {
                 object obj = ResourceManager.GetObject("highlighter_act", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -173,7 +173,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap i18n {
+        internal static System.Drawing.Bitmap i18n {
             get {
                 object obj = ResourceManager.GetObject("i18n", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -183,7 +183,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon icon_red {
+        internal static System.Drawing.Icon icon_red {
             get {
                 object obj = ResourceManager.GetObject("icon_red", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -193,7 +193,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        public static System.Drawing.Icon icon_white {
+        internal static System.Drawing.Icon icon_white {
             get {
                 object obj = ResourceManager.GetObject("icon_white", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
@@ -203,7 +203,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap pan {
+        internal static System.Drawing.Bitmap pan {
             get {
                 object obj = ResourceManager.GetObject("pan", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -213,7 +213,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap pan_act {
+        internal static System.Drawing.Bitmap pan_act {
             get {
                 object obj = ResourceManager.GetObject("pan_act", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -223,7 +223,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap paneloption {
+        internal static System.Drawing.Bitmap paneloption {
             get {
                 object obj = ResourceManager.GetObject("paneloption", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -233,7 +233,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap pencil {
+        internal static System.Drawing.Bitmap pencil {
             get {
                 object obj = ResourceManager.GetObject("pencil", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -243,7 +243,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap pencil_act {
+        internal static System.Drawing.Bitmap pencil_act {
             get {
                 object obj = ResourceManager.GetObject("pencil_act", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -253,7 +253,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap penwidth {
+        internal static System.Drawing.Bitmap penwidth {
             get {
                 object obj = ResourceManager.GetObject("penwidth", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -263,7 +263,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap penwidthpanel {
+        internal static System.Drawing.Bitmap penwidthpanel {
             get {
                 object obj = ResourceManager.GetObject("penwidthpanel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -273,7 +273,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap pointer {
+        internal static System.Drawing.Bitmap pointer {
             get {
                 object obj = ResourceManager.GetObject("pointer", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -283,7 +283,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap pointer_act {
+        internal static System.Drawing.Bitmap pointer_act {
             get {
                 object obj = ResourceManager.GetObject("pointer_act", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -293,7 +293,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap snap {
+        internal static System.Drawing.Bitmap snap {
             get {
                 object obj = ResourceManager.GetObject("snap", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -303,7 +303,27 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap tool_line {
+        internal static System.Drawing.Bitmap tool_dotted_line {
+            get {
+                object obj = ResourceManager.GetObject("tool_dotted_line", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_dotted_line_act {
+            get {
+                object obj = ResourceManager.GetObject("tool_dotted_line_act", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_line {
             get {
                 object obj = ResourceManager.GetObject("tool_line", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -313,7 +333,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap tool_line_act {
+        internal static System.Drawing.Bitmap tool_line_act {
             get {
                 object obj = ResourceManager.GetObject("tool_line_act", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -323,7 +343,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap tool_rect {
+        internal static System.Drawing.Bitmap tool_rect {
             get {
                 object obj = ResourceManager.GetObject("tool_rect", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -333,7 +353,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap tool_rect_act {
+        internal static System.Drawing.Bitmap tool_rect_act {
             get {
                 object obj = ResourceManager.GetObject("tool_rect_act", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -343,7 +363,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap tool_rect_filled {
+        internal static System.Drawing.Bitmap tool_rect_filled {
             get {
                 object obj = ResourceManager.GetObject("tool_rect_filled", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -353,7 +373,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap tool_rect_filled_act {
+        internal static System.Drawing.Bitmap tool_rect_filled_act {
             get {
                 object obj = ResourceManager.GetObject("tool_rect_filled_act", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -363,7 +383,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap undo {
+        internal static System.Drawing.Bitmap undo {
             get {
                 object obj = ResourceManager.GetObject("undo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -373,7 +393,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap visible {
+        internal static System.Drawing.Bitmap visible {
             get {
                 object obj = ResourceManager.GetObject("visible", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -383,7 +403,7 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap visible_not {
+        internal static System.Drawing.Bitmap visible_not {
             get {
                 object obj = ResourceManager.GetObject("visible_not", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));

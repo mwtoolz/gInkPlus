@@ -58,6 +58,7 @@ namespace gInkPlus
             public const int Line = -4;
             public const int Rectangle = -5;
             public const int FilledRect = -6;
+			public const int DottedLine = -7;
         }
 
 
@@ -76,9 +77,10 @@ namespace gInkPlus
 		public bool PanEnabled = true;
 		public bool InkVisibleEnabled = true;
 
-		// Added by mwtoolz for Shape Tools in Form Options Tab 1 (General)
+		// Added by mwtoolz- Shape Tools in Form Options Tab 1 (General)
 		// ===
 		public bool LineEnabled = true;
+		public bool DottedLineEnabled = true;
 		public bool RectEnabled = true;
 		public bool RectFilledEnabled = true;
 
@@ -146,13 +148,15 @@ namespace gInkPlus
 
         // Added by mwtoolz- Shape Tools Mode
         public bool LineMode = false;
+		public bool DottedLineMode = false;
 		public bool RectMode = false;
 		public bool RectFilledMode = false;
 
         // Shared unique identifier for filled shapes
         public static readonly Guid FilledShapeGuid = new Guid("7c9a4f21-8b3e-4d1a-9f5c-2e6b7a8f1c3d");
 
-		public bool IsShapeMode => LineMode || RectMode || RectFilledMode;
+		public bool IsShapeMode => LineMode || DottedLineMode || RectMode || RectFilledMode;
+
 
         // ===
 
@@ -405,8 +409,12 @@ namespace gInkPlus
 				return;
 
 			PointerMode = true;
-			FormCollection.ToThrough();
-			FormButtonHitter.Show();
+
+            // Comment by mwtoolz; Allows mouse input to pass through the window to whatever is underneath it.
+            FormCollection.ToThrough();
+
+            // Comment by mwtoolz; Shows the button-hitting window, presumably to retain toolbar interaction.
+            FormButtonHitter.Show();
 		}
 
 		public void UnPointer()

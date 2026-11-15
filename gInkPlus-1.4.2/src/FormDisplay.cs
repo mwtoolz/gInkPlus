@@ -30,6 +30,9 @@ namespace gInkPlus
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsDrawingLine { get; set; } = false;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsDrawingDottedLine { get;set; } = false;
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Point LineStartPoint { get; set; }
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Point CurrentMousePoint { get; set; }
@@ -49,8 +52,10 @@ namespace gInkPlus
         public bool IsDrawingRectFilled { get; set; } = false;
 
 
-        public bool IsDrawingGeometricShape => IsDrawingLine || IsDrawingRectangle || IsDrawingRectFilled;
-        // ===
+        public bool IsDrawingGeometricShape => IsDrawingLine || IsDrawingDottedLine || IsDrawingRectangle || IsDrawingRectFilled;
+        
+		
+		// ===
 
         //Bitmap ScreenBitmap;
         IntPtr hScreenBitmap;
@@ -896,8 +901,14 @@ namespace gInkPlus
 			oldBoxValid = false;
 		}
 
-        // Rect tool
-        public void ResetRectDrawingState()
+		public void ResetDottedLineDrawingState()
+		{
+			IsDrawingDottedLine = false;
+			oldBoxValid = false;
+		}
+
+		// Rect tool
+		public void ResetRectDrawingState()
         {
             IsDrawingRectangle = false;
             oldRectBoxValid = false;    

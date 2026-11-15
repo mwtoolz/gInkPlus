@@ -39,6 +39,9 @@
 	<ItemGroup>
 		<EmbeddedResource Update="src\Properties\Resources.resx">
 			<LogicalName>gInkPlus.Properties.Resources.resources</LogicalName>
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+			<CustomToolNamespace>gInkPlus.Properties</CustomToolNamespace>
 		</EmbeddedResource>
 	</ItemGroup>
 
@@ -85,6 +88,14 @@
 			<Link>THIRD-PARTY-NOTICES.txt</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="src\Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resources.resx</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 

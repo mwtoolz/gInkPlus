@@ -23,9 +23,10 @@ namespace gInkPlus
 		public Bitmap image_dock, image_dockback;
 		public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
 
-        // Added by mwtoolz- Shape tools; Line,Rect, Rect_filled tool
-        public Button btLine, btRect, btRectFilled;
-        public Bitmap image_line, image_line_act;	
+        // Added by mwtoolz- Shape tools; Line, Dotted Line, Rect, Rect_filled tool
+        public Button btLine, btDottedLine, btRect, btRectFilled;
+        public Bitmap image_line, image_line_act;
+		public Bitmap image_dottedline, image_dottedline_act;
 		public Bitmap image_rect, image_rect_act;  
         public Bitmap image_rect_filled, image_rect_filled_act;
 
@@ -77,10 +78,12 @@ namespace gInkPlus
             // Added by mwtoolz- Shape tool; Buttons declaration and setup
 			// ===
 			btLine = new Button();
+			btDottedLine = new Button();
             btRect = new Button();
             btRectFilled = new Button();
 
             SetupShapeButton(btLine, this.btLine_Click);
+			SetupShapeButton(btDottedLine, this.btDottedLine_Click);
             SetupShapeButton(btRect, this.btRect_Click);
             SetupShapeButton(btRectFilled, this.btRectFilled_Click);
 
@@ -152,6 +155,7 @@ namespace gInkPlus
 			// ===
 
 			PositionButton(btLine, Root.LineEnabled, ref cumulatedleft);
+			PositionButton(btDottedLine, Root.LineEnabled, ref cumulatedleft);
 			PositionButton(btRect, Root.RectEnabled, ref cumulatedleft);
 			PositionButton(btRectFilled, Root.RectFilledEnabled, ref cumulatedleft);         
 
@@ -295,7 +299,11 @@ namespace gInkPlus
             image_line = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_line, btLine);
 			btLine.Image = image_line;
 
-			image_rect_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_rect_act, btRect);
+			image_dottedline_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_dotted_line_act, btDottedLine);
+            image_dottedline = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_dotted_line, btDottedLine);
+            btDottedLine.Image = image_dottedline;
+
+            image_rect_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_rect_act, btRect);
             image_rect = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_rect, btRect);
 			btRect.Image = image_rect;
 
@@ -448,8 +456,40 @@ namespace gInkPlus
 
         private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
+            Point startPoint = new Point(e.X, e.Y);
 
-            // Added by mwtoolz, Gemini	
+            if (Root.LineMode)
+            {
+                Root.FormDisplay.IsDrawingLine = true;
+                Root.FormDisplay.LineStartPoint = startPoint;
+                Root.FormDisplay.oldBoxValid = false;
+            }
+            else if (Root.RectMode)
+            {
+                Root.FormDisplay.IsDrawingRectangle = true;
+                Root.FormDisplay.RectStartPoint = startPoint;
+                Root.FormDisplay.oldRectBoxValid = false;
+            }
+            else if (Root.RectFilledMode)
+            {
+                Root.FormDisplay.IsDrawingRectFilled = true;
+                Root.FormDisplay.RectStartPoint = startPoint;
+                Root.FormDisplay.oldRectBoxValid = false;
+            }
+            else
+            {
+                return;
+            }
+
+            PrepareShapeDrawing(startPoint);
+
+            e.Cancel = true;
+
+
+            // Added by mwtoolz- Shape tools
+            // Simplify code
+            /*
+
             if (Root.LineMode)
             {
                 Root.FormDisplay.IsDrawingLine = true;
@@ -500,7 +540,9 @@ namespace gInkPlus
                 return;
             }
 
+			*/
             // ======
+
 
             if (Root.gpPenWidthVisible)
 			{
@@ -525,15 +567,20 @@ namespace gInkPlus
 			LasteXY.X = e.X;
 			LasteXY.Y = e.Y;
 			IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref LasteXY);
+
 		}
 
-		public Point LasteXY;
+     
+
+
+
+        public Point LasteXY;
 
 
         private void IC_MouseMove(object sender, CancelMouseEventArgs e)
 		{
 
-			// Added by mwtoolz
+			// Added by mwtoolz- Shape tools
 			// New Code
 			// Line, Rect, RectFilled Mode Tracking
 			if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
@@ -745,7 +792,16 @@ namespace gInkPlus
 			}
 		}
 
-		public void ToTransparent()
+        // Added by mwtoolz- Simplify code
+        private void PrepareShapeDrawing(Point startPoint)
+        {
+            Root.FormDisplay.CurrentMousePoint = startPoint;
+            Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+            Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
+            Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+        }
+
+        public void ToTransparent()
 		{
 			UInt32 dwExStyle = GetWindowLong(this.Handle, -20);
 			SetWindowLong(this.Handle, -20, dwExStyle | 0x00080000);
@@ -759,12 +815,17 @@ namespace gInkPlus
 
 		public void ToThrough()
 		{
+			// Comment by mwtoolz; -20 = GWL_EXSTYLE (Windows Extended styles)
 			UInt32 dwExStyle = GetWindowLong(this.Handle, -20);
-			//SetWindowLong(this.Handle, -20, dwExStyle | 0x00080000);
-			//SetWindowPos(this.Handle, (IntPtr)0, 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0004 | 0x0010 | 0x0020);
-			//SetLayeredWindowAttributes(this.Handle, 0x00FFFFFF, 1, 0x2);
-			SetWindowLong(this.Handle, -20, dwExStyle | 0x00080000 | 0x00000020);
-			//SetWindowPos(this.Handle, (IntPtr)(1), 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0010 | 0x0020);
+
+            //SetWindowLong(this.Handle, -20, dwExStyle | 0x00080000);
+            //SetWindowPos(this.Handle, (IntPtr)0, 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0004 | 0x0010 | 0x0020);
+            //SetLayeredWindowAttributes(this.Handle, 0x00FFFFFF, 1, 0x2);
+            //SetWindowPos(this.Handle, (IntPtr)(1), 0, 0, 0, 0, 0x0002 | 0x0001 | 0x0010 | 0x0020);
+
+            // Comment by mwtoolz; 0x00080000 = WS_EX_LAYERED; Makes the window a layered window
+            SetWindowLong(this.Handle, -20, dwExStyle | 0x00080000 | 0x00000020);
+			
 		}
 
 		public void ToUnThrough()
@@ -813,12 +874,25 @@ namespace gInkPlus
 		public void SelectPen(int pen)
 		{
 
-            // Added by mwtoolz
+            // Added by mwtoolz- Shape tools
             // -4=line, -5=rectangle, -6=rect_filled
 
             // Reset all existing tool states and toolbar images
             ResetShapeToolsMode();
             ResetGeneralToolsMode();
+
+			// Dotted Line Tool
+			if (pen == Root.Tool.DottedLine)
+			{
+				btDottedLine.Image = image_dottedline_act;
+				Root.DottedLineMode = true;
+
+                // Set Cursor
+                SetCanvasCursor();
+
+                // Keep FULL input area so we still receive mouse events
+                SetFullInputArea();
+            }
 
             // ===== RECT_FILLED TOOL =====
             if (pen == Root.Tool.FilledRect)
@@ -987,12 +1061,18 @@ namespace gInkPlus
 				Root.UponSubPanelUpdate = true;
 		}
 
-        // Added by mwtoolz
+        // Added by mwtoolz- Shape tools
 		// == Line tool ==
         private void btLine_Click(object sender, EventArgs e)
         {
             SelectPen(Root.Tool.Line);   // -4 is the value we defined for Line mode
-        }        
+        }
+		// Dotted Line 
+		private void btDottedLine_Click(object sender, EventArgs e)
+        {
+            SelectPen(Root.Tool.DottedLine); 
+        }
+		
         // == Rectangle tool ==
         private void btRect_Click(object sender, EventArgs e)
         {
@@ -1003,6 +1083,7 @@ namespace gInkPlus
         {
             SelectPen(Root.Tool.FilledRect);   // -6 is the value we defined for Rect_Filled mode
         }
+
 
         //==
 
@@ -1688,7 +1769,7 @@ namespace gInkPlus
 				return;
 			}
 
-			SelectPen(-1);
+			SelectPen(Root.Tool.Eraser);
 		}
 
 
@@ -1700,7 +1781,7 @@ namespace gInkPlus
 				return;
 			}
 
-			SelectPen(-3);
+			SelectPen(Root.Tool.Pan);
 		}
 
 		short LastF4Status = 0;
@@ -1781,6 +1862,9 @@ namespace gInkPlus
             image_line?.Dispose();
             image_line_act?.Dispose();
 
+			image_dottedline?.Dispose();
+			image_dottedline_act?.Dispose();
+
             image_rect?.Dispose();
             image_rect_act?.Dispose();
 
@@ -1799,7 +1883,7 @@ namespace gInkPlus
 		// ===
 
 
-
+		// Added by mwtoolz- Shape tools
         // Reset all custom shape tools
         private void ResetShapeToolsMode()
         {
@@ -1807,6 +1891,12 @@ namespace gInkPlus
             Root.FormDisplay.ResetLineDrawingState();
             Root.LineMode = false;
             btLine.Image = image_line;
+
+			// Dotted Line
+			// TODO
+			Root.FormDisplay.ResetDottedLineDrawingState();
+			Root.DottedLineMode = false;
+			btDottedLine.Image = image_dottedline;
 
             // Rectangle
             Root.FormDisplay.ResetRectDrawingState();
