@@ -155,7 +155,7 @@ namespace gInkPlus
 			// ===
 
 			PositionButton(btLine, Root.LineEnabled, ref cumulatedleft);
-			PositionButton(btDottedLine, Root.LineEnabled, ref cumulatedleft);
+			PositionButton(btDottedLine, Root.DottedLineEnabled, ref cumulatedleft);
 			PositionButton(btRect, Root.RectEnabled, ref cumulatedleft);
 			PositionButton(btRectFilled, Root.RectFilledEnabled, ref cumulatedleft);         
 
@@ -456,6 +456,9 @@ namespace gInkPlus
 
         private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
+
+			// new code
+			/*
             Point startPoint = new Point(e.X, e.Y);
 
             if (Root.LineMode || Root.DottedLineMode)
@@ -486,12 +489,14 @@ namespace gInkPlus
 
             e.Cancel = true;
 
+			*/
+
 
             // Added by mwtoolz- Shape tools
             // Simplify code
-            /*
-
-            if (Root.LineMode)
+            
+			
+            if (Root.LineMode || Root.DottedLineMode)
             {
                 Root.FormDisplay.IsDrawingLine = true;
                 Root.FormDisplay.LineStartPoint = new Point(e.X, e.Y);
@@ -541,7 +546,7 @@ namespace gInkPlus
                 return;
             }
 
-			*/
+			
             // ======
 
 
@@ -936,7 +941,7 @@ namespace gInkPlus
             }
 
             // ===== RECT_FILLED TOOL =====
-            if (pen == Root.Tool.FilledRect)
+            else if (pen == Root.Tool.FilledRect)
 			{
                 // Activate RectFilled Mode
                 btRectFilled.Image = image_rect_filled_act;
