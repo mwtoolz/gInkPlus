@@ -87,17 +87,12 @@ namespace gInkPlus
             SetupShapeButton(btRect, this.btRect_Click);
             SetupShapeButton(btRectFilled, this.btRectFilled_Click);
 
-
-            // ===
-
             int buttonHeight = (int)(gpButtons.Height * 0.88);
-            int buttonTop = (int)(gpButtons.Height * 0.06);         
-
+            int buttonTop = (int)(gpButtons.Height * 0.06);
             Button[] buttons =
             {
 				btDock, btEraser, btPan, btPointer, btInkVisible, btSnap, btUndo, btClear, btStop,
-                btLine, btRect, btRectFilled
-
+                btLine, btDottedLine, btRect, btRectFilled
             };
 
             foreach (Button button in buttons)
@@ -109,7 +104,10 @@ namespace gInkPlus
                 button.Top = buttonTop;
             }
 
-			btPen = new Button[Root.MaxPenCount];
+
+            // =====
+
+            btPen = new Button[Root.MaxPenCount];
 
 			// Comment by mwtoolz; Toolbar Button's visibility and positioning
 			// == START HERE ==
