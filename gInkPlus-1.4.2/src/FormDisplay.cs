@@ -669,7 +669,21 @@ namespace gInkPlus
 							previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
 
                             // Select line style
-                            previewPen.DashStyle = Root.DottedLineMode? System.Drawing.Drawing2D.DashStyle.Dot: System.Drawing.Drawing2D.DashStyle.Solid;
+                            if (Root.DottedLineMode)
+                            {
+                                float penWidth = width;
+
+                                float dotLength = (float)Math.Max(penWidth * 2f, 2f);
+                                float gapLength = (float)Math.Max(penWidth * 3f, 3f);
+
+                                previewPen.DashPattern = new float[]
+                                {dotLength / penWidth,gapLength / penWidth};
+                            }
+                            else
+                            {
+                                previewPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+                            }
+                            
                             g.DrawLine(previewPen, LineStartPoint.X, LineStartPoint.Y, CurrentMousePoint.X, CurrentMousePoint.Y);
                             
                         }

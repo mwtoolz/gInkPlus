@@ -623,11 +623,8 @@ namespace gInkPlus
 
 		private void IC_MouseUp(object sender, CancelMouseEventArgs e)
 		{
-
             // Added by mwtoolz- Shape tools         
             // ===== LINE / DOTTED LINE TOOL - CREATE FINAL STROKE =====
-
-            // new code
             if ((Root.LineMode || Root.DottedLineMode) &&
                 Root.FormDisplay.IsDrawingLine)
             {
@@ -674,57 +671,7 @@ namespace gInkPlus
                 e.Cancel = true;
                 return;
             }
-            // ===== END LINE / DOTTED LINE TOOL =====
-
-
-
-            /* old code
-            if ((Root.LineMode || Root.DottedLineMode) && Root.FormDisplay.IsDrawingLine)
-            {
-                Root.FormDisplay.ResetLineDrawingState();
-
-                Point startInk = Root.FormDisplay.LineStartPoint;
-                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref startInk);
-
-                Point endInk = Root.FormDisplay.CurrentMousePoint;
-                IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
-
-                int strokesBefore = IC.Ink.Strokes.Count;
-
-                if (Root.DottedLineMode)
-                {
-                    // CreateDottedLine(startInk, endInk);
-
-                    int strokesAfter = IC.Ink.Strokes.Count;
-
-                    System.Diagnostics.Debug.WriteLine($"Dotted line created {strokesAfter - strokesBefore} strokes");
-
-                }
-
-                else
-                {
-                    Point[] points = { startInk, endInk };
-
-                    Stroke lineStroke = IC.Ink.CreateStroke(points);
-
-                    if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
-                        lineStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
-                    else
-                        lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
-                }
-
-                SaveUndoStrokes();
-
-                Root.FormDisplay.ClearCanvus();
-                Root.FormDisplay.DrawStrokes();
-                Root.FormDisplay.DrawButtons(true);
-                Root.FormDisplay.UpdateFormDisplay(true);
-
-                e.Cancel = true;
-                return;
-            }
-			*/
-            // ===== END LINE / DOTTED LINE TOOL =====
+            // ===== END LINE / DOTTED LINE TOOL =====	
 
             // ===== RECTANGLE & RECT FILLED TOOL - CREATE FINAL STROKE =====
             if ((Root.RectMode && Root.FormDisplay.IsDrawingRectangle) ||
@@ -829,28 +776,11 @@ namespace gInkPlus
 		{
 			if (e.Cursor.Inverted && Root.CurrentPen != -1)
 			{
-				EnterEraserMode(true);
-				/*
-				// temperary eraser icon light
-				if (btEraser.Image == image_eraser)
-				{
-					btEraser.Image = image_eraser_act;
-					Root.FormDisplay.DrawButtons(true);
-					Root.FormDisplay.UpdateFormDisplay();
-				}
-				*/
+				EnterEraserMode(true);			
 			}
 			else if (!e.Cursor.Inverted && Root.CurrentPen != -1)
 			{
 				EnterEraserMode(false);
-				/*
-				if (btEraser.Image == image_eraser_act)
-				{
-					btEraser.Image = image_eraser;
-					Root.FormDisplay.DrawButtons(true);
-					Root.FormDisplay.UpdateFormDisplay();
-				}
-				*/
 			}
 		}
 
@@ -864,7 +794,7 @@ namespace gInkPlus
         }
 
         // Added by mwtoolz- Shape tools; Create Dotted Line Stroke method
-		// new code
+		// ===
         private void CreateDottedLine(Point startPixel, Point endPixel)
         {
             // Get the current pen attributes
@@ -887,7 +817,7 @@ namespace gInkPlus
             float penWidth = Math.Max(attr.Width / 30f, 1f);
 
             double dotLength = Math.Max(penWidth, 2f);
-            double gapLength = Math.Max(penWidth * 1.5f, 3f);
+            double gapLength = Math.Max(penWidth * 3, 3f); // previous 1.5f
             double interval = dotLength + gapLength;
 
             // Create individual dotted segments
@@ -922,53 +852,7 @@ namespace gInkPlus
                 dottedStroke.DrawingAttributes = attr.Clone();
             }
         }
-
-
-        /* old code
-        private void CreateDottedLine(Point start, Point end)
-        {
-            double dx = end.X - start.X;
-            double dy = end.Y - start.Y;
-
-            double length = Math.Sqrt(dx * dx + dy * dy);
-
-            if (length < 1)
-                return;
-
-            // Adjust these to control the dot spacing
-            double dotLength = 2;
-            double gapLength = 6;
-            double interval = dotLength + gapLength;
-
-            // Get current pen attributes
-            Microsoft.Ink.DrawingAttributes attr;
-
-            if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
-                attr = Root.PenAttr[Root.CurrentPen].Clone();
-            else
-                attr = IC.DefaultDrawingAttributes.Clone();
-
-            for (double distance = 0; distance < length; distance += interval)
-            {
-                double endDistance = Math.Min(distance + dotLength, length);
-
-                Point p1 = new Point(
-                    start.X + (int)(dx * distance / length),
-                    start.Y + (int)(dy * distance / length));
-
-                Point p2 = new Point(
-                    start.X + (int)(dx * endDistance / length),
-                    start.Y + (int)(dy * endDistance / length));
-
-                Point[] points = { p1, p2 };
-
-                Stroke stroke = IC.Ink.CreateStroke(points);
-                stroke.DrawingAttributes = attr.Clone();
-            }
-        }
-		*/
-        //===
-
+		// ===
 
         public void ToTransparent()
 		{
