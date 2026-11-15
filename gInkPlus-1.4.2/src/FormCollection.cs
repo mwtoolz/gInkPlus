@@ -458,12 +458,13 @@ namespace gInkPlus
 		{
             Point startPoint = new Point(e.X, e.Y);
 
-            if (Root.LineMode)
+            if (Root.LineMode || Root.DottedLineMode)
             {
                 Root.FormDisplay.IsDrawingLine = true;
                 Root.FormDisplay.LineStartPoint = startPoint;
                 Root.FormDisplay.oldBoxValid = false;
-            }
+            }		
+
             else if (Root.RectMode)
             {
                 Root.FormDisplay.IsDrawingRectangle = true;
@@ -568,10 +569,7 @@ namespace gInkPlus
 			LasteXY.Y = e.Y;
 			IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref LasteXY);
 
-		}
-
-     
-
+		}   
 
 
         public Point LasteXY;
@@ -623,46 +621,45 @@ namespace gInkPlus
 		private void IC_MouseUp(object sender, CancelMouseEventArgs e)
 		{
 
-            // Added by mwtoolz, Gemini            
-			// ===== LINE TOOL - CREATE FINAL STROKE =====
-            if (Root.LineMode && Root.FormDisplay.IsDrawingLine)
+            // Added by mwtoolz- Shape tools         
+            // ===== LINE / DOTTED LINE TOOL - CREATE FINAL STROKE =====
+            if ((Root.LineMode || Root.DottedLineMode) && Root.FormDisplay.IsDrawingLine)
             {
                 Root.FormDisplay.ResetLineDrawingState();
 
-                // 1. Convert pixel points to ink space coordinates
-                Point startInk = new Point(Root.FormDisplay.LineStartPoint.X, Root.FormDisplay.LineStartPoint.Y);
+                Point startInk = Root.FormDisplay.LineStartPoint;
                 IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref startInk);
 
-                Point endInk = new Point(Root.FormDisplay.CurrentMousePoint.X, Root.FormDisplay.CurrentMousePoint.Y);
+                Point endInk = Root.FormDisplay.CurrentMousePoint;
                 IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
 
-                // 2. Create the permanent Microsoft.Ink stroke
-                Point[] points = new Point[]
-                {new Point(startInk.X, startInk.Y), new Point(endInk.X, endInk.Y)};
-                Stroke lineStroke = IC.Ink.CreateStroke(points);
-
-                // 3. Apply current pen attributes
-                if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                if (Root.DottedLineMode)
                 {
-                    lineStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
+                    CreateDottedLine(startInk, endInk);
                 }
                 else
                 {
-                    lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
-                }	
+                    Point[] points = { startInk, endInk };
 
-                // 4. Save to undo history and refresh the display cleanly
+                    Stroke lineStroke = IC.Ink.CreateStroke(points);
+
+                    if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                        lineStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
+                    else
+                        lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
+                }
+
                 SaveUndoStrokes();
 
                 Root.FormDisplay.ClearCanvus();
                 Root.FormDisplay.DrawStrokes();
                 Root.FormDisplay.DrawButtons(true);
                 Root.FormDisplay.UpdateFormDisplay(true);
-          
+
                 e.Cancel = true;
                 return;
             }
-            // ===== END LINE TOOL =====
+            // ===== END LINE / DOTTED LINE TOOL =====
 
             // ===== RECTANGLE & RECT FILLED TOOL - CREATE FINAL STROKE =====
             if ((Root.RectMode && Root.FormDisplay.IsDrawingRectangle) ||
@@ -800,6 +797,50 @@ namespace gInkPlus
             Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
             Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
         }
+
+        // Added by mwtoolz- Shape tools; Create Dotted Line Stroke method
+        private void CreateDottedLine(Point start, Point end)
+        {
+            double dx = end.X - start.X;
+            double dy = end.Y - start.Y;
+
+            double length = Math.Sqrt(dx * dx + dy * dy);
+
+            if (length < 1)
+                return;
+
+            // Adjust these to control the dot spacing
+            double dotLength = 2;
+            double gapLength = 6;
+            double interval = dotLength + gapLength;
+
+            // Get current pen attributes
+            Microsoft.Ink.DrawingAttributes attr;
+
+            if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                attr = Root.PenAttr[Root.CurrentPen].Clone();
+            else
+                attr = IC.DefaultDrawingAttributes.Clone();
+
+            for (double distance = 0; distance < length; distance += interval)
+            {
+                double endDistance = Math.Min(distance + dotLength, length);
+
+                Point p1 = new Point(
+                    start.X + (int)(dx * distance / length),
+                    start.Y + (int)(dy * distance / length));
+
+                Point p2 = new Point(
+                    start.X + (int)(dx * endDistance / length),
+                    start.Y + (int)(dy * endDistance / length));
+
+                Point[] points = { p1, p2 };
+
+                Stroke stroke = IC.Ink.CreateStroke(points);
+                stroke.DrawingAttributes = attr.Clone();
+            }
+        }
+
 
         public void ToTransparent()
 		{
@@ -1519,7 +1560,7 @@ namespace gInkPlus
                 if (pressed && !LastDottedLineStatus &&
                     Root.Hotkey_Dotted_Line.ModifierMatch(control, alt, shift, win))
                 {
-                    SelectPen(-7); // Confirm the mode value
+                    SelectPen(Root.Tool.DottedLine);
                 }
                 LastDottedLineStatus = pressed;
 
@@ -1892,9 +1933,7 @@ namespace gInkPlus
             Root.LineMode = false;
             btLine.Image = image_line;
 
-			// Dotted Line
-			// TODO
-			Root.FormDisplay.ResetDottedLineDrawingState();
+			// Dotted Line		
 			Root.DottedLineMode = false;
 			btDottedLine.Image = image_dottedline;
 

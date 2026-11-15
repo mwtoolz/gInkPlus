@@ -26,14 +26,15 @@ namespace gInkPlus
         // Add these public/internal tracking variables in FormDisplay.cs
         // Use properties instead of public fields to avoid marshal-by-ref warnings
 
-        // ==For Line tool
+        // ==For Line and Dotted Line tool
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsDrawingLine { get; set; } = false;
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool IsDrawingDottedLine { get;set; } = false;
+       
+        // public bool IsDrawingDottedLine { get;set; } = false;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Point LineStartPoint { get; set; }
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Point CurrentMousePoint { get; set; }
         private Rectangle oldLineBox;
@@ -52,7 +53,7 @@ namespace gInkPlus
         public bool IsDrawingRectFilled { get; set; } = false;
 
 
-        public bool IsDrawingGeometricShape => IsDrawingLine || IsDrawingDottedLine || IsDrawingRectangle || IsDrawingRectFilled;
+        public bool IsDrawingGeometricShape => IsDrawingLine || IsDrawingRectangle || IsDrawingRectFilled;
         
 		
 		// ===
@@ -87,16 +88,7 @@ namespace gInkPlus
 			InitializeComponent();
 
 			this.Left = SystemInformation.VirtualScreen.Left;
-			this.Top = SystemInformation.VirtualScreen.Top;
-			//int targetbottom = 0;
-			//foreach (Screen screen in Screen.AllScreens)
-			//{
-			//	if (screen.WorkingArea.Bottom > targetbottom)
-			//		targetbottom = screen.WorkingArea.Bottom;
-			//}
-			//int virwidth = SystemInformation.VirtualScreen.Width;
-			//this.Width = virwidth;
-			//this.Height = targetbottom - this.Top;
+			this.Top = SystemInformation.VirtualScreen.Top;	
 			this.Width = SystemInformation.VirtualScreen.Width;
 			this.Height = SystemInformation.VirtualScreen.Height - 2;
 
@@ -134,7 +126,6 @@ namespace gInkPlus
 			gpPenWidthImage = new Bitmap(200, gpheight);
 			TransparentBrush = new SolidBrush(Color.Transparent);
 			SemiTransparentBrush = new SolidBrush(Color.FromArgb(120, 255, 255, 255));
-
 
 			ToTopMostThrough();
 		}
@@ -269,7 +260,7 @@ namespace gInkPlus
 			}
 		}
 
-        // Added by mwtoolz for filled polygons
+        // Added by mwtoolz- Shape tools; For filled polygons
 		// ===
         public void DrawStrokes()
         {
@@ -610,12 +601,9 @@ namespace gInkPlus
 				//DrawButtons(false);
 				//UpdateFormDisplay();	
 
-				// Added by mwtoolz !Root.LineMode and !Root.RectMode
+				// Added by mwtoolz- Shape tools
 				// 1. DEFAULT STROKE RENDERING (Only runs when there ARE existing strokes and we are NOT drawing shapes)
-				if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.LineMode && !Root.RectMode && !Root.RectFilledMode)
-				// if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.LineMode)
-				// if (Root.FormCollection.IC.Ink.Strokes.Count > 0)
-
+				if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.IsShapeMode)	
 				{
 					Stroke stroke = Root.FormCollection.IC.Ink.Strokes[Root.FormCollection.IC.Ink.Strokes.Count - 1];
 					if (!stroke.Deleted)
@@ -631,10 +619,9 @@ namespace gInkPlus
 					UpdateFormDisplay(true);
 				}
 
-				// Added by mwtoolz for Line Tool by Gemini
-
-				// 2. LINE TOOL PREVIEW (Works even on a blank canvas)
-				else if (Root.LineMode && IsDrawingLine)
+				// Added by mwtoolz for Line Tool
+				// 2. LINE AND DOTTED LINE TOOL PREVIEW (Works even on a blank canvas)
+				else if ((Root.LineMode || Root.DottedLineMode) && IsDrawingLine)
 				{
 
 					// a. Erase the old line position using BitBlt
@@ -666,23 +653,13 @@ namespace gInkPlus
 						if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
 						{
 							Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];
-
-                            // New code
                             lineColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
-
-                            // Old code
-                            // lineColor = attr.Color;
                             width = Math.Max(attr.Width / 30f, 1f);
 						}
 						else
-						{
-
-                            // New code
+						{             
                             var attr = Root.FormCollection.IC.DefaultDrawingAttributes;
                             lineColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
-
-                            // old code
-                            // lineColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
                             width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 30f, 1f);
 						}
 
@@ -690,7 +667,10 @@ namespace gInkPlus
 						{
 							previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
 							previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-							g.DrawLine(previewPen, LineStartPoint.X, LineStartPoint.Y, CurrentMousePoint.X, CurrentMousePoint.Y);
+
+                            // Select line style
+                            previewPen.DashStyle = Root.DottedLineMode? System.Drawing.Drawing2D.DashStyle.Dot: System.Drawing.Drawing2D.DashStyle.Solid;
+                            g.DrawLine(previewPen, LineStartPoint.X, LineStartPoint.Y, CurrentMousePoint.X, CurrentMousePoint.Y);
                             
                         }
 
@@ -703,9 +683,7 @@ namespace gInkPlus
                 }
                 // ===End of Line Tool code==
 
-                // Added for Rectangle Mode by mwtoolz
-                // else if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && Root.RectMode && IsDrawingRectangle)
-
+                // Added by mwtoolz- Shape Tools; Rectangle and RectFilled Mode
                 // 3. RECTANGLE & RECT_FILLED TOOL PREVIEW (Works even on a blank canvas)
                 else if (Root.RectMode && IsDrawingRectangle || Root.RectFilledMode && IsDrawingRectFilled)
                 {
@@ -735,32 +713,20 @@ namespace gInkPlus
 
                     // c. Draw the new rectangle preview using GDI+
                     using (Graphics g = Graphics.FromHdc(canvusDc))
-                    {
-						// g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                    {					
 						g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-
                         Color rectColor;
-
-                        // New Code
+                       
                         if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
                         {
-                            Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];
-
-							// New code
+                            Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];						
 							rectColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
-
-                            // Old code
-                            // rectColor = attr.Color;
                         }
                         else
                         {
-
                             // New code
                             var attr = Root.FormCollection.IC.DefaultDrawingAttributes;
 							rectColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
-
-                            // Old code
-                            // rectColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
                         }
 
                         if (isFilled)
@@ -797,32 +763,7 @@ namespace gInkPlus
                         g.Flush();
 
                         // ===
-
-                        // old code
-                        /*
-                        float width;
-
-                        // Use the exact same pen attribute check as the Line tool
-                        if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
-                        {
-                            Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];
-                            rectColor = attr.Color;
-                            width = Math.Max(attr.Width / 30f, 1f);
-                        }
-                        else
-                        {
-                            rectColor = Root.FormCollection.IC.DefaultDrawingAttributes.Color;
-                            width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 30f, 1f);
-                        }
-
-                        using (Pen previewPen = new Pen(rectColor, width))
-                        {
-                            previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                            previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                            g.DrawRectangle(previewPen, rectX, rectY, rectWidth, rectHeight);
-                        }
-
-						*/
+						// 
                     }
 
                     UpdateFormDisplay(true);
@@ -892,20 +833,15 @@ namespace gInkPlus
 			}
 		}
 
-		// Added by mwtoolz, Gemini
+		// Added by mwtoolz- Shape tools
 		// Call this from IC_MouseUp when line drawing ends to reset the tracking state
-		// Line tool
+
+		// Line & Dotted Line tool
 		public void ResetLineDrawingState()
 		{
 			IsDrawingLine = false;
 			oldBoxValid = false;
-		}
-
-		public void ResetDottedLineDrawingState()
-		{
-			IsDrawingDottedLine = false;
-			oldBoxValid = false;
-		}
+		}	
 
 		// Rect tool
 		public void ResetRectDrawingState()
