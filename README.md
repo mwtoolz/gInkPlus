@@ -2,17 +2,19 @@
 
 A simple, lightweight on-screen annotation tool for Windows. gInkPlus is a screen annotation tool based on the original gInk.
 
-![gInkPlus Screenshot](screenshots/gInkPlus-1.2.1.jpg)
+![gInkPlus Screenshot](screenshots/gInkPlus-1.5.0-main.png)
+![gInkPlus Screenshot](screenshots/gInkPlus-1.5.0-options_pens.png)
+![gInkPlus Screenshot](screenshots/gInkPlus-1.5.0-options_hotkeys.png)
 
 ## Introduction
 
-gInk is an on-screen annotation software for Windows, designed to help with presentations, demonstrations and making quick notes directly on the screen.
+gInk is an on-screen annotation tool for Windows, designed for presentations, demonstrations, and quick note-taking directly over your display.
 
-Its features are greatly inspired by another screen annotation software, Epic Pen, while maintaining a simple and intuitive interface. The idea behind gInk is to keep the interface as unobtrusive as possible so that it does not distract the presenter or audience during presentations.
+Inspired by existing commercial annotation utilities, gInk prioritizes a clean, unobtrusive interface that keeps the focus on your content without distracting presenters or audiences.
 
-Unlike many other annotation tools, gInk allows users to select from a set of configurable pens rather than repeatedly adjusting individual settings such as colour, transparency and stroke width. Each pen is a combination of these attributes and can be customised to suit your needs.
+Rather than forcing you to constantly tweak color, transparency, and stroke width on the fly, gInk lets you switch instantly between customizable pen presets—each pre-configured with your preferred settings.
 
-gInkPlus builds on the original gInk with additional drawing tools while keeping the interface simple. These include a line tool, an outline rectangle tool and a filled rectangle tool.
+gInkPlus builds on the original gInk by adding essential shape and line tools—including solid lines, dotted lines, outlined rectangles, and filled rectangles—while preserving its lightweight, intuitive interface, with more tools planned for future updates.
 
 ## Download
 
@@ -22,10 +24,17 @@ https://github.com/geovens/gInk/releases/
 gInkPlus
 https://github.com/mwtoolz/gInkPlus/releases/
 
+
 ## How to use
 
-Start gInkPlus and an icon will appear in the system tray. Click the icon (or use a hotkey) to start drawing on screen.
-Click the exit button or press ESC to exit drawing.
+Start: Launch gInkPlus to add its icon to the system tray.
+
+Draw: Click the tray icon (or press your hotkey) to begin annotating your screen.
+
+Exit: Click the exit button or press Esc to return to normal desktop control.
+
+Configure: Right-click the tray icon and open Options to customize pens and hotkeys.
+
 
 ## Graphics Tablet Configuration
 
@@ -52,6 +61,7 @@ If pen pressure sensitivity is important to you, you may prefer to keep Windows 
 
 **Additional gInkPlus tools**
 - Line tool.
+- Dotted Line tool.
 - Outline rectangle tool.
 - Filled rectangle tool.
 

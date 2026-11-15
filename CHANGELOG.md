@@ -1,3 +1,14 @@
+v.1.5.0 (Nov 15, 2026)
+=================
+- Implemented the Dotted Line tool, including preview rendering and final stroke generation.
+- Fixed Dotted Line rendering issues where the final stroke appeared as a solid line.
+- Fixed Dotted Line toolbar button positioning and image display.
+- Refactored toolbar button setup using helper functions (`SetupShapeButton()` and `PositionButton()`).
+- Consolidated duplicate toolbar image creation code.
+- Improved toolbar button sizing, positioning and code readability.
+- Updated line tool icons and added image resources for planned drawing tools, including arrows, ovals and text.
+- Introduced global tool constants in `Root` to improve readability and maintainability.
+
 v1.4.2 (Nov 12, 2026)
 =================
 - Added configurable hotkeys for shape tools: Line, Dotted Line, Arrow Line, Rectangle, Filled Rectangle, Circle and Filled Circle.
