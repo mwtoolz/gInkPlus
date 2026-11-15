@@ -626,6 +626,59 @@ namespace gInkPlus
 
             // Added by mwtoolz- Shape tools         
             // ===== LINE / DOTTED LINE TOOL - CREATE FINAL STROKE =====
+
+            // new code
+            if ((Root.LineMode || Root.DottedLineMode) &&
+                Root.FormDisplay.IsDrawingLine)
+            {
+                // 1. Capture the endpoints before resetting drawing state
+                Point startPoint = Root.FormDisplay.LineStartPoint;
+                Point endPoint = Root.FormDisplay.CurrentMousePoint;
+
+                Root.FormDisplay.ResetLineDrawingState();
+
+                // 2. Create the permanent stroke(s)
+                if (Root.DottedLineMode)
+                {
+                    CreateDottedLine(startPoint, endPoint);
+                }
+                else
+                {
+                    Point p1 = startPoint;
+                    Point p2 = endPoint;
+
+                    IC.Renderer.PixelToInkSpace(
+                        Root.FormDisplay.gOneStrokeCanvus, ref p1);
+
+                    IC.Renderer.PixelToInkSpace(
+                        Root.FormDisplay.gOneStrokeCanvus, ref p2);
+
+                    Point[] points = { p1, p2 };
+
+                    Stroke lineStroke = IC.Ink.CreateStroke(points);
+
+                    if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                        lineStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
+                    else
+                        lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
+                }
+
+                // 3. Save undo history and refresh display
+                SaveUndoStrokes();
+
+                Root.FormDisplay.ClearCanvus();
+                Root.FormDisplay.DrawStrokes();
+                Root.FormDisplay.DrawButtons(true);
+                Root.FormDisplay.UpdateFormDisplay(true);
+
+                e.Cancel = true;
+                return;
+            }
+            // ===== END LINE / DOTTED LINE TOOL =====
+
+
+
+            /* old code
             if ((Root.LineMode || Root.DottedLineMode) && Root.FormDisplay.IsDrawingLine)
             {
                 Root.FormDisplay.ResetLineDrawingState();
@@ -636,10 +689,18 @@ namespace gInkPlus
                 Point endInk = Root.FormDisplay.CurrentMousePoint;
                 IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref endInk);
 
+                int strokesBefore = IC.Ink.Strokes.Count;
+
                 if (Root.DottedLineMode)
                 {
-                    CreateDottedLine(startInk, endInk);
+                    // CreateDottedLine(startInk, endInk);
+
+                    int strokesAfter = IC.Ink.Strokes.Count;
+
+                    System.Diagnostics.Debug.WriteLine($"Dotted line created {strokesAfter - strokesBefore} strokes");
+
                 }
+
                 else
                 {
                     Point[] points = { startInk, endInk };
@@ -662,6 +723,7 @@ namespace gInkPlus
                 e.Cancel = true;
                 return;
             }
+			*/
             // ===== END LINE / DOTTED LINE TOOL =====
 
             // ===== RECTANGLE & RECT FILLED TOOL - CREATE FINAL STROKE =====
@@ -802,6 +864,67 @@ namespace gInkPlus
         }
 
         // Added by mwtoolz- Shape tools; Create Dotted Line Stroke method
+		// new code
+        private void CreateDottedLine(Point startPixel, Point endPixel)
+        {
+            // Get the current pen attributes
+            Microsoft.Ink.DrawingAttributes attr;
+
+            if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                attr = Root.PenAttr[Root.CurrentPen].Clone();
+            else
+                attr = IC.DefaultDrawingAttributes.Clone();
+
+            // Calculate line length in screen pixels
+            double dx = endPixel.X - startPixel.X;
+            double dy = endPixel.Y - startPixel.Y;
+            double length = Math.Sqrt(dx * dx + dy * dy);
+
+            if (length < 1)
+                return;
+
+            // Calculate dot and gap spacing in screen pixels
+            float penWidth = Math.Max(attr.Width / 30f, 1f);
+
+            double dotLength = Math.Max(penWidth, 2f);
+            double gapLength = Math.Max(penWidth * 1.5f, 3f);
+            double interval = dotLength + gapLength;
+
+            // Create individual dotted segments
+            for (double distance = 0; distance < length; distance += interval)
+            {
+                double segmentEnd = Math.Min(distance + dotLength, length);
+
+                Point p1 = new Point(
+                    (int)Math.Round(startPixel.X + dx * distance / length),
+                    (int)Math.Round(startPixel.Y + dy * distance / length));
+
+                Point p2 = new Point(
+                    (int)Math.Round(startPixel.X + dx * segmentEnd / length),
+                    (int)Math.Round(startPixel.Y + dy * segmentEnd / length));
+
+                // Avoid zero-length segments caused by rounding
+                if (p1 == p2)
+                    continue;
+
+                // Convert each segment from pixels to Ink Space
+                IC.Renderer.PixelToInkSpace(
+                    Root.FormDisplay.gOneStrokeCanvus, ref p1);
+
+                IC.Renderer.PixelToInkSpace(
+                    Root.FormDisplay.gOneStrokeCanvus, ref p2);
+
+                Point[] points = { p1, p2 };
+
+                Stroke dottedStroke = IC.Ink.CreateStroke(points);
+
+                // Apply the same drawing attributes to every segment
+                dottedStroke.DrawingAttributes = attr.Clone();
+            }
+        }
+
+
+        /* old code
         private void CreateDottedLine(Point start, Point end)
         {
             double dx = end.X - start.X;
@@ -843,6 +966,8 @@ namespace gInkPlus
                 stroke.DrawingAttributes = attr.Clone();
             }
         }
+		*/
+        //===
 
 
         public void ToTransparent()
