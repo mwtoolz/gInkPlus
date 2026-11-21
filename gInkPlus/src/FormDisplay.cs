@@ -687,8 +687,8 @@ namespace gInkPlus
 					using (Graphics g = Graphics.FromHdc(canvusDc))
 					{
 						g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                        g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                        g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                        //g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                        //g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
 
                         Color lineColor;
 						float width;
