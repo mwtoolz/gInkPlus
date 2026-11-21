@@ -463,46 +463,9 @@ namespace gInkPlus
         private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
 
-			// new code
-			/*
-            Point startPoint = new Point(e.X, e.Y);
-
-            if (Root.LineMode || Root.DottedLineMode)
-            {
-                Root.FormDisplay.IsDrawingLine = true;
-                Root.FormDisplay.LineStartPoint = startPoint;
-                Root.FormDisplay.oldBoxValid = false;
-            }		
-
-            else if (Root.RectMode)
-            {
-                Root.FormDisplay.IsDrawingRectangle = true;
-                Root.FormDisplay.RectStartPoint = startPoint;
-                Root.FormDisplay.oldRectBoxValid = false;
-            }
-            else if (Root.RectFilledMode)
-            {
-                Root.FormDisplay.IsDrawingRectFilled = true;
-                Root.FormDisplay.RectStartPoint = startPoint;
-                Root.FormDisplay.oldRectBoxValid = false;
-            }
-            else
-            {
-                return;
-            }
-
-            PrepareShapeDrawing(startPoint);
-
-            e.Cancel = true;
-
-			*/
-
-
             // Added by mwtoolz- Shape tools
-            // Simplify code
-            
-			
-            if (Root.LineMode || Root.DottedLineMode)
+            // Line or Dotted Line  Mode
+            if (Root.LineMode || Root.DottedLineMode || Root.ArrowLineMode)
             {
                 Root.FormDisplay.IsDrawingLine = true;
                 Root.FormDisplay.LineStartPoint = new Point(e.X, e.Y);
@@ -942,8 +905,21 @@ namespace gInkPlus
             ResetShapeToolsMode();
             ResetGeneralToolsMode();
 
+			// Arrow Line Tool
+			if (pen == Root.Tool.ArrowLine)
+			{
+                btArrowLine.Image = image_arrowline_act;
+                Root.ArrowLineMode = true;
+
+                // Set Cursor
+                SetCanvasCursor();
+
+                // Keep FULL input area so we still receive mouse events
+                SetFullInputArea();
+            }
+
 			// Dotted Line Tool
-			if (pen == Root.Tool.DottedLine)
+			else if (pen == Root.Tool.DottedLine)
 			{
 				btDottedLine.Image = image_dottedline_act;
 				Root.DottedLineMode = true;
@@ -1133,7 +1109,11 @@ namespace gInkPlus
         {
             SelectPen(Root.Tool.DottedLine); 
         }
-		
+		// Arrow Line
+		private void btArrowLine_Click(object sender, EventArgs e)
+		{
+			SelectPen(Root.Tool.ArrowLine);
+		}
         // == Rectangle tool ==
         private void btRect_Click(object sender, EventArgs e)
         {
@@ -1589,7 +1569,7 @@ namespace gInkPlus
                 if (pressed && !LastArrowLineStatus &&
                     Root.Hotkey_Arrow_Line.ModifierMatch(control, alt, shift, win))
                 {
-                    SelectPen(-8); // Confirm the mode value
+                    SelectPen(Root.Tool.ArrowLine);
                 }
                 LastArrowLineStatus = pressed;
 
@@ -1948,14 +1928,14 @@ namespace gInkPlus
         // Reset all custom shape tools
         private void ResetShapeToolsMode()
         {
-            // Line
+            // Line, Dotted Line, Arrow Line
             Root.FormDisplay.ResetLineDrawingState();
             Root.LineMode = false;
             btLine.Image = image_line;
-
-			// Dotted Line		
 			Root.DottedLineMode = false;
 			btDottedLine.Image = image_dottedline;
+			Root.ArrowLineMode = false;
+			btArrowLine.Image = image_arrowline;
 
             // Rectangle
             Root.FormDisplay.ResetRectDrawingState();
