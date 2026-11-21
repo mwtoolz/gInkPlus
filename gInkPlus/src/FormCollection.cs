@@ -483,7 +483,7 @@ namespace gInkPlus
                 return;
 			}
 
-			// Rectangle Mode
+			// Rectangle, RectFilled Modes
 			if (Root.RectMode)
 			{
 				Root.FormDisplay.IsDrawingRectangle = true;
@@ -1905,6 +1905,9 @@ namespace gInkPlus
 
 			image_dottedline?.Dispose();
 			image_dottedline_act?.Dispose();
+
+			image_arrowline?.Dispose();
+			image_arrowline_act?.Dispose();
 
             image_rect?.Dispose();
             image_rect_act?.Dispose();

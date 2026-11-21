@@ -29,8 +29,6 @@ namespace gInkPlus
         // ==For Line and Dotted Line tool
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsDrawingLine { get; set; } = false;
-       
-        // public bool IsDrawingDottedLine { get;set; } = false;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Point LineStartPoint { get; set; }
@@ -632,7 +630,7 @@ namespace gInkPlus
 					}
 
 					// b. Calculate new bounding box with padding
-					int padding = 15;
+					int padding = 25;
 					int minX = Math.Min(LineStartPoint.X, CurrentMousePoint.X) - padding;
 					int minY = Math.Min(LineStartPoint.Y, CurrentMousePoint.Y) - padding;
 					int maxX = Math.Max(LineStartPoint.X, CurrentMousePoint.X) + padding;
