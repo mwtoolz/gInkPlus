@@ -621,7 +621,7 @@ namespace gInkPlus
 
 				// Added by mwtoolz for Line Tool
 				// 2. LINE AND DOTTED LINE TOOL PREVIEW (Works even on a blank canvas)
-				else if ((Root.LineMode || Root.DottedLineMode) && IsDrawingLine)
+				else if ((Root.LineMode || Root.DottedLineMode || Root.ArrowLineMode) && IsDrawingLine)
 				{
 
 					// a. Erase the old line position using BitBlt
@@ -677,15 +677,23 @@ namespace gInkPlus
                                 float gapLength = (float)Math.Max(penWidth * 3f, 3f);
 
                                 previewPen.DashPattern = new float[]
-                                {dotLength / penWidth,gapLength / penWidth};
+                                {dotLength / penWidth, gapLength / penWidth};
                             }
                             else
                             {
                                 previewPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
                             }
-                            
-                            g.DrawLine(previewPen, LineStartPoint.X, LineStartPoint.Y, CurrentMousePoint.X, CurrentMousePoint.Y);
-                            
+
+							if (Root.ArrowLineMode)
+                            {
+                                DrawArrow(g, LineStartPoint, CurrentMousePoint, previewPen);
+                            }
+                            else
+                            {
+                                g.DrawLine(previewPen,
+                                    LineStartPoint.X, LineStartPoint.Y,
+                                    CurrentMousePoint.X, CurrentMousePoint.Y);
+                            }
                         }
 
                         // New code
@@ -847,11 +855,54 @@ namespace gInkPlus
 			}
 		}
 
-		// Added by mwtoolz- Shape tools
-		// Call this from IC_MouseUp when line drawing ends to reset the tracking state
+        // Added by mwtoolz- Shape tools
+        // Draw Arrow Function
+        private void DrawArrow(Graphics g, Point start, Point end, Pen pen)
+        {
+            float thickness = pen.Width;
 
-		// Line & Dotted Line tool
-		public void ResetLineDrawingState()
+            // Arrowhead dimensions
+            float arrowLength = Math.Max(10f, thickness * 4f);
+            float arrowWidth = Math.Max(8f, thickness * 3f);
+
+            double angle = Math.Atan2(
+                end.Y - start.Y,
+                end.X - start.X);
+
+            // Calculate arrowhead base centre
+            PointF basePoint = new PointF(
+                end.X - arrowLength * (float)Math.Cos(angle),
+                end.Y - arrowLength * (float)Math.Sin(angle));
+
+            // Calculate perpendicular direction
+            float perpendicularX = (float)-Math.Sin(angle);
+            float perpendicularY = (float)Math.Cos(angle);
+
+            // Calculate arrowhead corners
+            PointF p1 = new PointF(
+                basePoint.X + perpendicularX * arrowWidth / 2f,
+                basePoint.Y + perpendicularY * arrowWidth / 2f);
+
+            PointF p2 = new PointF(
+                basePoint.X - perpendicularX * arrowWidth / 2f,
+                basePoint.Y - perpendicularY * arrowWidth / 2f);
+
+            PointF[] arrowPoints = { end, p1, p2 };
+
+            // Draw line shaft
+            g.DrawLine(pen, start, basePoint);
+
+            // Draw filled arrowhead
+            using (SolidBrush brush = new SolidBrush(pen.Color))
+            {
+                g.FillPolygon(brush, arrowPoints);
+            }
+        }
+
+
+        // Call this from IC_MouseUp when line drawing ends to reset the tracking state
+        // Line & Dotted Line tool
+        public void ResetLineDrawingState()
 		{
 			IsDrawingLine = false;
 			oldBoxValid = false;
