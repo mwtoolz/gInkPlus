@@ -24,9 +24,10 @@ namespace gInkPlus
 		public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
 
         // Added by mwtoolz- Shape tools; Line, Dotted Line, Rect, Rect_filled tool
-        public Button btLine, btDottedLine, btRect, btRectFilled;
+        public Button btLine, btDottedLine, btArrowLine, btRect, btRectFilled;
         public Bitmap image_line, image_line_act;
 		public Bitmap image_dottedline, image_dottedline_act;
+		public Bitmap image_arrowline, image_arrowline_act;
 		public Bitmap image_rect, image_rect_act;  
         public Bitmap image_rect_filled, image_rect_filled_act;
 
@@ -79,11 +80,13 @@ namespace gInkPlus
 			// ===
 			btLine = new Button();
 			btDottedLine = new Button();
+			btArrowLine = new Button();
             btRect = new Button();
             btRectFilled = new Button();
 
             SetupShapeButton(btLine, this.btLine_Click);
 			SetupShapeButton(btDottedLine, this.btDottedLine_Click);
+			SetupShapeButton(btArrowLine, this.btArrowLine_Click);
             SetupShapeButton(btRect, this.btRect_Click);
             SetupShapeButton(btRectFilled, this.btRectFilled_Click);
 
@@ -92,7 +95,7 @@ namespace gInkPlus
             Button[] buttons =
             {
 				btDock, btEraser, btPan, btPointer, btInkVisible, btSnap, btUndo, btClear, btStop,
-                btLine, btDottedLine, btRect, btRectFilled
+                btLine, btDottedLine, btArrowLine, btRect, btRectFilled
             };
 
             foreach (Button button in buttons)
@@ -154,6 +157,7 @@ namespace gInkPlus
 
 			PositionButton(btLine, Root.LineEnabled, ref cumulatedleft);
 			PositionButton(btDottedLine, Root.DottedLineEnabled, ref cumulatedleft);
+			PositionButton(btArrowLine, Root.ArrowLineEnabled, ref cumulatedleft);
 			PositionButton(btRect, Root.RectEnabled, ref cumulatedleft);
 			PositionButton(btRectFilled, Root.RectFilledEnabled, ref cumulatedleft);         
 
@@ -300,6 +304,10 @@ namespace gInkPlus
 			image_dottedline_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_dotted_line_act, btDottedLine);
             image_dottedline = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_dotted_line, btDottedLine);
             btDottedLine.Image = image_dottedline;
+
+			image_arrowline_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_arrow_line_act, btArrowLine);
+			image_arrowline = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_arrow_line, btArrowLine);
+			btArrowLine.Image = image_arrowline;
 
             image_rect_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_rect_act, btRect);
             image_rect = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_rect, btRect);

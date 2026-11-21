@@ -303,6 +303,26 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap tool_arrow_line {
+            get {
+                object obj = ResourceManager.GetObject("tool_arrow_line", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_arrow_line_act {
+            get {
+                object obj = ResourceManager.GetObject("tool_arrow_line_act", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap tool_dotted_line {
             get {
                 object obj = ResourceManager.GetObject("tool_dotted_line", resourceCulture);

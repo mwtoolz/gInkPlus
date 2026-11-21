@@ -59,6 +59,8 @@ namespace gInkPlus
             public const int Rectangle = -5;
             public const int FilledRect = -6;
 			public const int DottedLine = -7;
+			public const int ArrowLine = -8;
+
         }
 
 
@@ -81,6 +83,7 @@ namespace gInkPlus
 		// ===
 		public bool LineEnabled = true;
 		public bool DottedLineEnabled = true;
+		public bool ArrowLineEnabled = true;
 		public bool RectEnabled = true;
 		public bool RectFilledEnabled = true;
 
@@ -149,6 +152,7 @@ namespace gInkPlus
         // Added by mwtoolz- Shape Tools Mode
         public bool LineMode = false;
 		public bool DottedLineMode = false;
+		public bool ArrowLineMode = false;
 		public bool RectMode = false;
 		public bool RectFilledMode = false;
 
