@@ -464,7 +464,7 @@ namespace gInkPlus
 		{
 
             // Added by mwtoolz- Shape tools
-            // Line or Dotted Line  Mode
+            // Line, Dotted Line, ArrowLine Mode
             if (Root.LineMode || Root.DottedLineMode || Root.ArrowLineMode)
             {
                 Root.FormDisplay.IsDrawingLine = true;
@@ -484,9 +484,11 @@ namespace gInkPlus
 			}
 
 			// Rectangle, RectFilled Modes
-			if (Root.RectMode)
+			if (Root.RectMode || Root.RectFilledMode)
 			{
-				Root.FormDisplay.IsDrawingRectangle = true;
+				Root.FormDisplay.IsDrawingRectangle = Root.RectMode;
+				Root.FormDisplay.IsDrawingRectFilled = Root.RectFilledMode;
+
 				Root.FormDisplay.RectStartPoint = new Point(e.X, e.Y);
 				Root.FormDisplay.CurrentMousePoint = Root.FormDisplay.RectStartPoint;
 				Root.FormDisplay.oldRectBoxValid = false;
@@ -498,22 +500,6 @@ namespace gInkPlus
 				e.Cancel = true;
 				return;
 			}
-
-            // RectFilled Mode
-            if (Root.RectFilledMode)
-            {
-                Root.FormDisplay.IsDrawingRectFilled = true; // Or a unified flag like IsDrawingRectangle = true with a shape type
-                Root.FormDisplay.RectStartPoint = new Point(e.X, e.Y);
-                Root.FormDisplay.CurrentMousePoint = Root.FormDisplay.RectStartPoint;
-                Root.FormDisplay.oldRectBoxValid = false;
-
-                Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
-                Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
-                Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
-
-                e.Cancel = true;
-                return;
-            }
 
 			
             // ======
@@ -595,8 +581,8 @@ namespace gInkPlus
 		private void IC_MouseUp(object sender, CancelMouseEventArgs e)
 		{
             // Added by mwtoolz- Shape tools         
-            // ===== LINE / DOTTED LINE TOOL - CREATE FINAL STROKE =====
-            if ((Root.LineMode || Root.DottedLineMode) &&
+            // ===== LINE / DOTTED LINE / ARROW LINE TOOL - CREATE FINAL STROKE =====
+            if ((Root.LineMode || Root.DottedLineMode || Root.ArrowLineMode) &&
                 Root.FormDisplay.IsDrawingLine)
             {
                 // 1. Capture the endpoints before resetting drawing state
@@ -610,26 +596,30 @@ namespace gInkPlus
                 {
                     CreateDottedLine(startPoint, endPoint);
                 }
-                else
-                {
-                    Point p1 = startPoint;
-                    Point p2 = endPoint;
-
-                    IC.Renderer.PixelToInkSpace(
-                        Root.FormDisplay.gOneStrokeCanvus, ref p1);
-
-                    IC.Renderer.PixelToInkSpace(
-                        Root.FormDisplay.gOneStrokeCanvus, ref p2);
-
-                    Point[] points = { p1, p2 };
-
-                    Stroke lineStroke = IC.Ink.CreateStroke(points);
-
-                    if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
-                        lineStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
-                    else
-                        lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
+                else if (Root.ArrowLineMode)
+				{
+                    CreateArrowLine(startPoint, endPoint);
                 }
+				else
+				{
+					Point p1 = startPoint;
+					Point p2 = endPoint;
+
+					IC.Renderer.PixelToInkSpace(
+						Root.FormDisplay.gOneStrokeCanvus, ref p1);
+
+					IC.Renderer.PixelToInkSpace(
+						Root.FormDisplay.gOneStrokeCanvus, ref p2);
+
+					Point[] points = { p1, p2 };
+
+					Stroke lineStroke = IC.Ink.CreateStroke(points);
+
+					if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+						lineStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
+					else
+						lineStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
+				}
 
                 // 3. Save undo history and refresh display
                 SaveUndoStrokes();
@@ -764,8 +754,10 @@ namespace gInkPlus
             Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
         }
 
-        // Added by mwtoolz- Shape tools; Create Dotted Line Stroke method
+        // Added by mwtoolz- Shape tools
+
 		// ===
+		// Dotted Line
         private void CreateDottedLine(Point startPixel, Point endPixel)
         {
             // Get the current pen attributes
@@ -823,7 +815,32 @@ namespace gInkPlus
                 dottedStroke.DrawingAttributes = attr.Clone();
             }
         }
-		// ===
+
+        // ArrowLine
+        private void CreateArrowLine(Point start, Point end)
+        {
+            Point p1 = start;
+            Point p2 = end;
+
+            IC.Renderer.PixelToInkSpace(
+                Root.FormDisplay.gOneStrokeCanvus, ref p1);
+
+            IC.Renderer.PixelToInkSpace(
+                Root.FormDisplay.gOneStrokeCanvus, ref p2);
+
+            Point[] points = { p1, p2 };
+
+            Stroke arrowStroke = IC.Ink.CreateStroke(points);
+
+            if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                arrowStroke.DrawingAttributes = Root.PenAttr[Root.CurrentPen].Clone();
+            else
+                arrowStroke.DrawingAttributes = IC.DefaultDrawingAttributes.Clone();
+
+            arrowStroke.ExtendedProperties.Add(Root.ArrowLineGuid, true);
+        }
+
+        // ===
 
         public void ToTransparent()
 		{

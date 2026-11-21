@@ -158,8 +158,9 @@ namespace gInkPlus
 
         // Shared unique identifier for filled shapes
         public static readonly Guid FilledShapeGuid = new Guid("7c9a4f21-8b3e-4d1a-9f5c-2e6b7a8f1c3d");
+        public static readonly Guid ArrowLineGuid = new Guid("E752B952-F0A7-429A-B23E-4A9FD5BFC212");
 
-		public bool IsShapeMode => LineMode || DottedLineMode || ArrowLineMode || RectMode || RectFilledMode;
+        public bool IsShapeMode => LineMode || DottedLineMode || ArrowLineMode || RectMode || RectFilledMode;
 
 
         // ===

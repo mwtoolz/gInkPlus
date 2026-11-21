@@ -271,9 +271,8 @@ namespace gInkPlus
         {
             if (!Root.InkVisible) return;
 
-			// g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-			// AntiAlias produces white outlines on the filled polygons
-			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            // g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
 
             // Loop through every stroke in the ink collection
             foreach (Stroke stroke in Root.FormCollection.IC.Ink.Strokes)
@@ -281,6 +280,9 @@ namespace gInkPlus
                 // Check if this stroke was marked as a filled shape
                 if (stroke.ExtendedProperties.DoesPropertyExist(Root.FilledShapeGuid))
                 {
+                    // AntiAlias produces white outlines on the filled polygons
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+
                     // 1. Get the 5 points making up the rectangle/polygon
                     Point[] inkPoints = stroke.GetPoints();
                     Point[] screenPoints = (Point[])inkPoints.Clone();
@@ -302,9 +304,51 @@ namespace gInkPlus
                         g.FillPolygon(brush, screenPoints);
                     }
                 }
+
+                // Arrow line
+                else if (stroke.ExtendedProperties.DoesPropertyExist(Root.ArrowLineGuid))
+                {
+                    Point[] inkPoints = stroke.GetPoints();
+
+                    if (inkPoints.Length >= 2)
+                    {
+                        Point[] screenPoints = (Point[])inkPoints.Clone();
+
+                        Root.FormCollection.IC.Renderer.InkSpaceToPixel(
+                            g, ref screenPoints);
+
+                        Color lineColor = Color.FromArgb(
+                            255 - stroke.DrawingAttributes.Transparency,
+                            stroke.DrawingAttributes.Color.R,
+                            stroke.DrawingAttributes.Color.G,
+                            stroke.DrawingAttributes.Color.B);
+
+                        float width = Math.Max(
+                            stroke.DrawingAttributes.Width / 30f, 1f);
+
+                        var oldSmoothingMode = g.SmoothingMode;
+
+                        try
+                        {
+                            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                            using (Pen pen = new Pen(lineColor, width))
+                            {
+                                pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                                pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+
+                                DrawArrow(g, screenPoints[0], screenPoints[1], pen);
+                            }
+                        }
+                        finally
+                        {
+                            g.SmoothingMode = oldSmoothingMode;
+                        }
+                    }
+                }
                 else
                 {
-                    // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer
+                    // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer                
                     Root.FormCollection.IC.Renderer.Draw(g, stroke);
                 }
             }
@@ -643,8 +687,10 @@ namespace gInkPlus
 					using (Graphics g = Graphics.FromHdc(canvusDc))
 					{
 						g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                        g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
 
-						Color lineColor;
+                        Color lineColor;
 						float width;
 
 						// Use the exact same pen attribute check as IC_MouseUp
