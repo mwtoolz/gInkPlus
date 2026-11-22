@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -333,7 +334,11 @@ namespace gInkPlus
             image_oval = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_oval, btOval);
 			btOval.Image = image_oval;
 
-			image_text_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_text_act, btText);
+            image_oval_filled_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_oval_filled_act, btOvalFilled);
+            image_oval_filled = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_oval_filled, btOvalFilled);
+            btOvalFilled.Image = image_oval_filled;
+
+            image_text_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_text_act, btText);
 			image_text = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_text, btText);
 			btText.Image = image_text;
 
@@ -908,24 +913,49 @@ namespace gInkPlus
 		{
 
             // Added by mwtoolz- Shape tools
-            // -4=line, -5=rectangle, -6=rect_filled
-
             // Reset all existing tool states and toolbar images
             ResetShapeToolsMode();
             ResetGeneralToolsMode();
 
-			// Arrow Line Tool
-			if (pen == Root.Tool.ArrowLine)
+			// Text tool
+			if (pen == Root.Tool.Text)
 			{
-                btArrowLine.Image = image_arrowline_act;
-                Root.ArrowLineMode = true;
-
-                // Set Cursor
+				btText.Image = image_text_act;
+				Root.TextMode = true;
                 SetCanvasCursor();
-
-                // Keep FULL input area so we still receive mouse events
                 SetFullInputArea();
             }
+
+            // Oval Filled Tool
+            else if (pen == Root.Tool.FilledOval)
+            {
+                btOvalFilled.Image = image_oval_filled_act;
+                Root.OvalFilledMode = true;
+                SetCanvasCursor();
+                SetFullInputArea();
+            }
+
+            // Oval Tool
+            else if (pen == Root.Tool.Oval)
+			{
+				btOval.Image = image_oval_act;
+				Root.OvalMode = true;
+                SetCanvasCursor();
+                SetFullInputArea();
+            }
+
+			// Arrow Line Tool
+			else if (pen == Root.Tool.ArrowLine)
+			{
+				btArrowLine.Image = image_arrowline_act;
+				Root.ArrowLineMode = true;
+
+				// Set Cursor
+				SetCanvasCursor();
+
+				// Keep FULL input area so we still receive mouse events
+				SetFullInputArea();
+			}
 
 			// Dotted Line Tool
 			else if (pen == Root.Tool.DottedLine)
@@ -933,77 +963,75 @@ namespace gInkPlus
 				btDottedLine.Image = image_dottedline_act;
 				Root.DottedLineMode = true;
 
-                // Set Cursor
-                SetCanvasCursor();
+				// Set Cursor
+				SetCanvasCursor();
 
-                // Keep FULL input area so we still receive mouse events
-                SetFullInputArea();
-            }
+				// Keep FULL input area so we still receive mouse events
+				SetFullInputArea();
+			}
 
-            // ===== RECT_FILLED TOOL =====
-            else if (pen == Root.Tool.FilledRect)
+			// Rect Filled tool
+			else if (pen == Root.Tool.FilledRect)
 			{
-                // Activate RectFilled Mode
-                btRectFilled.Image = image_rect_filled_act;
-                Root.RectFilledMode = true;
+				// Activate RectFilled Mode
+				btRectFilled.Image = image_rect_filled_act;
+				Root.RectFilledMode = true;
 
 				// Set Cursor
 				SetCanvasCursor();
 
-                // Keep FULL input area so we still receive mouse events
-                SetFullInputArea();
+				// Keep FULL input area so we still receive mouse events
+				SetFullInputArea();
 
-            }
-            // ===== END OF RECT_FILLED TOOL =====        
+			}
 
-            // ===== RECTANGLE TOOL =====
-            else if (pen == Root.Tool.Rectangle)
-            { 
-                // Activate Rectangle mode
-                btRect.Image = image_rect_act;
-                Root.RectMode = true;
+			// Rectangle tool
+			else if (pen == Root.Tool.Rectangle)
+			{
+				// Activate Rectangle mode
+				btRect.Image = image_rect_act;
+				Root.RectMode = true;
 
 				// Set Cursor
 				SetCanvasCursor();
 
-                // Keep FULL input area so we still receive mouse events
-                SetFullInputArea();
+				// Keep FULL input area so we still receive mouse events
+				SetFullInputArea();
 
-            }
-            // ===== END OF RECTANGLE TOOL =====
+			}
 
-            // ===== LINE TOOL =====
-            else if (pen == Root.Tool.Line)   
-            {   
+			// Line tool
+			else if (pen == Root.Tool.Line)
+			{
 				// Activate Line tool
-                btLine.Image = image_line_act;
-                Root.LineMode = true;
+				btLine.Image = image_line_act;
+				Root.LineMode = true;
 
-                // Set Cursor
-                SetCanvasCursor();
+				// Set Cursor
+				SetCanvasCursor();
 
-                // Keep FULL input area so we still receive mouse events
-                SetFullInputArea();
-            }
+				// Keep FULL input area so we still receive mouse events
+				SetFullInputArea();
+			}
 
-            // ==== END OF LINE TOOL ====
-            
-            // -3=pan, -2=pointer, -1=eraser, 0+=pens	
-            else if (pen == Root.Tool.Pan)
-			{         
-                // Activate Pan tool
-                btPan.Image = image_pan_act;
-                Root.PanMode = true;
+			// ==== END OF LINE TOOL ====
 
-                SetInkInputRectangle(new Rectangle(0, 0, 1, 1));
+			// -3=pan, -2=pointer, -1=eraser, 0+=pens	
+			else if (pen == Root.Tool.Pan)
+			{
+				// Activate Pan tool
+				btPan.Image = image_pan_act;
+				Root.PanMode = true;
 
-            }
+				SetInkInputRectangle(new Rectangle(0, 0, 1, 1));
+
+			}
 			else if (pen == Root.Tool.Pointer)
 			{
 				// Activate Pointer tool
 				btPointer.Image = image_pointer_act;
-                Root.Pointer();
-            }
+				Root.Pointer();
+			}
 			else if (pen == Root.Tool.Eraser)
 			{
 				if (this.Cursor != System.Windows.Forms.Cursors.Default)
@@ -1011,30 +1039,30 @@ namespace gInkPlus
 
 				// Activate Eraser tool
 				btEraser.Image = image_eraser_act;
-                EnterEraserMode(true);
+				EnterEraserMode(true);
 
-                // Modified by mwtoolz- set cursor
-                // Set Cursor
-                SetCanvasCursor();
-                SetFullInputArea();
+				// Modified by mwtoolz- set cursor
+				// Set Cursor
+				SetCanvasCursor();
+				SetFullInputArea();
 
-            }
+			}
 			else if (pen >= 0)
 			{
 				if (this.Cursor != System.Windows.Forms.Cursors.Default) this.Cursor = System.Windows.Forms.Cursors.Default;
 
 				IC.DefaultDrawingAttributes = Root.PenAttr[pen].Clone();
-				if (Root.PenWidthEnabled) IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;				
+				if (Root.PenWidthEnabled) IC.DefaultDrawingAttributes.Width = Root.GlobalPenWidth;
 
 				// Activate Selected Pen tool
 				btPen[pen].Image = image_pen_act[pen];
 
-                // Modified by mwtoolz- cursor
-                // Set Cursor
-                SetCanvasCursor();
-                SetFullInputArea();
+				// Modified by mwtoolz- cursor
+				// Set Cursor
+				SetCanvasCursor();
+				SetFullInputArea();
 
-            }
+			}
 
 			Root.CurrentPen = pen;
 
@@ -1994,6 +2022,11 @@ namespace gInkPlus
 			Root.FormDisplay.ResetOvalFilledDrawingState();
 			Root.OvalFilledMode = false;
 			btOvalFilled.Image = image_oval_filled;
+
+            // Text
+            Root.FormDisplay.ResetTextInputState();
+            Root.TextMode = false;
+            btText.Image = image_text;
 
         }
 
