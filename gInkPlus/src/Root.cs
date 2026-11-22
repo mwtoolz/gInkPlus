@@ -136,7 +136,7 @@ namespace gInkPlus
         public Hotkey Hotkey_Filled_Rectangle = new Hotkey();
         public Hotkey Hotkey_Oval = new Hotkey();
         public Hotkey Hotkey_Filled_Oval = new Hotkey();
-
+		public Hotkey Hotkey_Text = new Hotkey();
 
 
         // ====
@@ -690,9 +690,12 @@ namespace gInkPlus
                             Hotkey_Filled_Oval.Parse(sPara);
                             break;
 
+						case "HOTKEY_TEXT":
+							Hotkey_Text.Parse(sPara);
+							break;
+
 
 						//===
-
 
 
                         case "WHITE_TRAY_ICON":
@@ -923,6 +926,9 @@ namespace gInkPlus
                             sPara = Hotkey_Filled_Oval.ToString();
                             break;
 
+						case "HOTKEY_TEXT":
+							sPara = Hotkey_Text.ToString();
+							break;
 
 
 						// ===

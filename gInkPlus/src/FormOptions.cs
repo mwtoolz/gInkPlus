@@ -187,6 +187,7 @@ namespace gInkPlus
             shapeHotkeyBoxes[4].Hotkey = Root.Hotkey_Filled_Rectangle;
             shapeHotkeyBoxes[5].Hotkey = Root.Hotkey_Oval;
             shapeHotkeyBoxes[6].Hotkey = Root.Hotkey_Filled_Oval;
+			shapeHotkeyBoxes[7].Hotkey = Root.Hotkey_Text;
 
             FormOptions_LocalReload();
 		}
@@ -214,7 +215,7 @@ namespace gInkPlus
             shapeHotkeyLabels[4].Text = Root.Local.ButtonNameFilledRectangle;
             shapeHotkeyLabels[5].Text = Root.Local.ButtonNameOval;
             shapeHotkeyLabels[6].Text = Root.Local.ButtonNameFilledOval;
-
+            shapeHotkeyLabels[7].Text = Root.Local.ButtonNameText;
 
 
             //===
@@ -477,8 +478,8 @@ namespace gInkPlus
         // Added by mwtoolz- Hotkeys tab 3, Tools Table - 2 Columns
         private void CreateShapeHotkeyTable()
         {
-
-            shapeHotkeyLabels = new Label[7];
+			// Size of Hotkeys
+            shapeHotkeyLabels = new Label[8];
 
             // Table
             tlpShapeHotkeys = new TableLayoutPanel();

@@ -33,7 +33,7 @@ namespace gInkPlus
         public string ButtonNameFilledRectangle = "Filled Rectangle";
         public string ButtonNameOval= "Oval";
         public string ButtonNameFilledOval = "Filled Oval";
-
+		public string ButtonNameText = "Text";
 
 
         //===

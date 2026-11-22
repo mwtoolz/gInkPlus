@@ -1255,6 +1255,7 @@ namespace gInkPlus
         bool LastFilledRectangleStatus = false;
         bool LastOvalStatus = false;
         bool LastFilledOvalStatus = false;
+		bool LastTextStatus = false;
 
 
 		//===
@@ -1593,22 +1594,7 @@ namespace gInkPlus
                     SelectPen(Root.Tool.Line);
 				}
 				LastLineStatus = pressed;
-                // Rectangle
-                pressed = (GetKeyState(Root.Hotkey_Rectangle.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastRectangleStatus &&
-                    Root.Hotkey_Rectangle.ModifierMatch(control, alt, shift, win))
-                {
-                    SelectPen(Root.Tool.Rectangle);
-                }
-                LastRectangleStatus = pressed;
-                // Filled Rectangle
-                pressed = (GetKeyState(Root.Hotkey_Filled_Rectangle.Key) & 0x8000) == 0x8000;
-                if (pressed && !LastFilledRectangleStatus &&
-                    Root.Hotkey_Filled_Rectangle.ModifierMatch(control, alt, shift, win))
-                {
-                    SelectPen(Root.Tool.FilledRect);
-                }
-                LastFilledRectangleStatus = pressed;
+
                 // Dotted Line
                 pressed = (GetKeyState(Root.Hotkey_Dotted_Line.Key) & 0x8000) == 0x8000;
                 if (pressed && !LastDottedLineStatus &&
@@ -1627,7 +1613,50 @@ namespace gInkPlus
                 }
                 LastArrowLineStatus = pressed;
 
+                // Rectangle
+                pressed = (GetKeyState(Root.Hotkey_Rectangle.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastRectangleStatus &&
+                    Root.Hotkey_Rectangle.ModifierMatch(control, alt, shift, win))
+                {
+                    SelectPen(Root.Tool.Rectangle);
+                }
+                LastRectangleStatus = pressed;
 
+                // Filled Rectangle
+                pressed = (GetKeyState(Root.Hotkey_Filled_Rectangle.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastFilledRectangleStatus &&
+                    Root.Hotkey_Filled_Rectangle.ModifierMatch(control, alt, shift, win))
+                {
+                    SelectPen(Root.Tool.FilledRect);
+                }
+                LastFilledRectangleStatus = pressed;
+         
+                // Oval
+                pressed = (GetKeyState(Root.Hotkey_Oval.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastOvalStatus &&
+                    Root.Hotkey_Oval.ModifierMatch(control, alt, shift, win))
+                {
+                    SelectPen(Root.Tool.Oval);
+                }
+                LastOvalStatus = pressed;
+
+                // Filled Oval
+                pressed = (GetKeyState(Root.Hotkey_Filled_Oval.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastFilledOvalStatus &&
+                    Root.Hotkey_Filled_Oval.ModifierMatch(control, alt, shift, win))
+                {
+                    SelectPen(Root.Tool.FilledOval);
+                }
+                LastFilledOvalStatus = pressed;
+
+                // Text
+                pressed = (GetKeyState(Root.Hotkey_Text.Key) & 0x8000) == 0x8000;
+                if (pressed && !LastTextStatus &&
+                    Root.Hotkey_Oval.ModifierMatch(control, alt, shift, win))
+                {
+                    SelectPen(Root.Tool.Text);
+                }
+                LastTextStatus = pressed;
 
 
                 //===
