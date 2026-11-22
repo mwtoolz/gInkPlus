@@ -443,6 +443,7 @@ namespace gInkPlus
 				Root.UndoStrokes[Root.UndoP].AddStrokesAtRectangle(IC.Ink.Strokes, IC.Ink.Strokes.GetBoundingBox());
 		}
 
+		// Refers to Stylus Pen & Mouse button down
 		private void IC_CursorDown(object sender, InkCollectorCursorDownEventArgs e)
 		{
             // Added by mwtoolz     
@@ -453,13 +454,14 @@ namespace gInkPlus
 
 			// Added by mwtoolz
 			// Skip native ink buffer preparation during geometric shape drawing
-			if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape) return;
+			if (Root.IsShapeMode) return;
 
 			Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
 			Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
 			Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 		}
 
+		// Refers only to Mouse button down
         private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
 

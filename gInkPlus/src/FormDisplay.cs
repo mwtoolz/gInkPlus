@@ -1,12 +1,9 @@
 using Microsoft.Ink;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
 
 namespace gInkPlus
 {
@@ -268,7 +265,7 @@ namespace gInkPlus
 
         public void DrawStrokes(Graphics g)
         {
-            if (!Root.InkVisible) return;
+            if (!Root.InkVisible) return; 
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             // Removes white outlines on the filled polygons
