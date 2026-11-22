@@ -747,15 +747,6 @@ namespace gInkPlus
 			}
 		}
 
-        // Added by mwtoolz- Simplify code
-        private void PrepareShapeDrawing(Point startPoint)
-        {
-            Root.FormDisplay.CurrentMousePoint = startPoint;
-            Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
-            Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
-            Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
-        }
-
         // Added by mwtoolz- Shape tools
 
 		// ===
@@ -1434,9 +1425,13 @@ namespace gInkPlus
 			}
 			else if (ButtonsEntering < 0)
 			{
-				Root.UponAllDrawingUpdate = true;
+				
+                // Debug.WriteLine($"Toolbar closing: ButtonsEntering={ButtonsEntering}, gpButtons.Left={gpButtons.Left}");
+                // This sets condition in timer_tick and DrawStrokes() gets called repeatedly when toolbar is closed.                
+                Root.UponAllDrawingUpdate = true;
 				Root.UponButtonsUpdate = 0;
-			}
+				
+            }
 			if (gpButtons.Left == aimedleft)
 			{
 				ButtonsEntering = 0;

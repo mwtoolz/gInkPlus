@@ -1,6 +1,7 @@
 using Microsoft.Ink;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -265,12 +266,13 @@ namespace gInkPlus
 
         public void DrawStrokes(Graphics g)
         {
+            Debug.WriteLine("DrawStrokes() CALLED");
             if (!Root.InkVisible) return; 
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             // Removes white outlines on the filled polygons
             g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
-            System.Diagnostics.Debug.WriteLine("Arrow Line Draw Stroke with AntiAlias and SourceOver");
+            // System.Diagnostics.Debug.WriteLine("Arrow Line Draw Stroke with AntiAlias and SourceOver");
 
             // Loop through every stroke in the ink collection
             foreach (Stroke stroke in Root.FormCollection.IC.Ink.Strokes)
@@ -578,7 +580,9 @@ namespace gInkPlus
 			if (Root.UponAllDrawingUpdate)
 			{
 				ClearCanvus();
-				DrawStrokes();
+                // Debug.WriteLine("DrawStrokes() CALLED FROM TIMER1_TICK Root.UponAllDrawingUpdate = true");
+                // DrawStrokes() gets called repeatedly when toolbar is closed.
+                DrawStrokes();
 				DrawButtons(true);
 				if (Root.Snapping > 0)
 					DrawSnapping(Root.SnappingRect);
