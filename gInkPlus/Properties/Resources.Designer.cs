@@ -363,6 +363,46 @@ namespace gInkPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap tool_oval {
+            get {
+                object obj = ResourceManager.GetObject("tool_oval", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_oval_act {
+            get {
+                object obj = ResourceManager.GetObject("tool_oval_act", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_oval_filled {
+            get {
+                object obj = ResourceManager.GetObject("tool_oval_filled", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_oval_filled_act {
+            get {
+                object obj = ResourceManager.GetObject("tool_oval_filled_act", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap tool_rect {
             get {
                 object obj = ResourceManager.GetObject("tool_rect", resourceCulture);
@@ -396,6 +436,26 @@ namespace gInkPlus.Properties {
         internal static System.Drawing.Bitmap tool_rect_filled_act {
             get {
                 object obj = ResourceManager.GetObject("tool_rect_filled_act", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_text {
+            get {
+                object obj = ResourceManager.GetObject("tool_text", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap tool_text_act {
+            get {
+                object obj = ResourceManager.GetObject("tool_text_act", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
