@@ -62,6 +62,7 @@ If pen pressure sensitivity is important to you, you may prefer to keep Windows 
 **Additional gInkPlus tools**
 - Line tool.
 - Dotted Line tool.
+- Arrow Line tool.
 - Outline rectangle tool.
 - Filled rectangle tool.
 
