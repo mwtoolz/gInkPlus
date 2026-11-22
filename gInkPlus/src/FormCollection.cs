@@ -23,13 +23,16 @@ namespace gInkPlus
 		public Bitmap image_dock, image_dockback;
 		public Bitmap image_pencil, image_highlighter, image_pencil_act, image_highlighter_act;
 
-        // Added by mwtoolz- Shape tools; Line, Dotted Line, Rect, Rect_filled tool
-        public Button btLine, btDottedLine, btArrowLine, btRect, btRectFilled;
+        // Added by mwtoolz- Shape tools; Line, Dotted Line, Rect, RectFilled, Oval, OvalFilled, text tool
+        public Button btLine, btDottedLine, btArrowLine, btRect, btRectFilled, btOval, btOvalFilled, btText;
         public Bitmap image_line, image_line_act;
 		public Bitmap image_dottedline, image_dottedline_act;
 		public Bitmap image_arrowline, image_arrowline_act;
 		public Bitmap image_rect, image_rect_act;  
         public Bitmap image_rect_filled, image_rect_filled_act;
+		public Bitmap image_oval, image_oval_act;
+		public Bitmap image_oval_filled, image_oval_filled_act;
+		public Bitmap image_text, image_text_act;
 
 
 		// ===
@@ -83,19 +86,26 @@ namespace gInkPlus
 			btArrowLine = new Button();
             btRect = new Button();
             btRectFilled = new Button();
+			btOval = new Button();
+			btOvalFilled = new Button();
+			btText = new Button();
 
             SetupShapeButton(btLine, this.btLine_Click);
 			SetupShapeButton(btDottedLine, this.btDottedLine_Click);
 			SetupShapeButton(btArrowLine, this.btArrowLine_Click);
             SetupShapeButton(btRect, this.btRect_Click);
             SetupShapeButton(btRectFilled, this.btRectFilled_Click);
+            SetupShapeButton(btOval, this.btOval_Click);
+            SetupShapeButton(btOvalFilled, this.btOvalFilled_Click);
+            SetupShapeButton(btText, this.btText_Click);
+
 
             int buttonHeight = (int)(gpButtons.Height * 0.88);
             int buttonTop = (int)(gpButtons.Height * 0.06);
             Button[] buttons =
             {
 				btDock, btEraser, btPan, btPointer, btInkVisible, btSnap, btUndo, btClear, btStop,
-                btLine, btDottedLine, btArrowLine, btRect, btRectFilled
+                btLine, btDottedLine, btArrowLine, btRect, btRectFilled, btOval, btOvalFilled, btText
             };
 
             foreach (Button button in buttons)
@@ -159,8 +169,10 @@ namespace gInkPlus
 			PositionButton(btDottedLine, Root.DottedLineEnabled, ref cumulatedleft);
 			PositionButton(btArrowLine, Root.ArrowLineEnabled, ref cumulatedleft);
 			PositionButton(btRect, Root.RectEnabled, ref cumulatedleft);
-			PositionButton(btRectFilled, Root.RectFilledEnabled, ref cumulatedleft);         
-
+			PositionButton(btRectFilled, Root.RectFilledEnabled, ref cumulatedleft);   
+			PositionButton(btOval, Root.OvalEnabled, ref cumulatedleft);
+			PositionButton(btOvalFilled, Root.OvalFilledEnabled, ref cumulatedleft);
+			PositionButton(btText, Root.TextEnabled, ref cumulatedleft);
 
             // ===	
 
@@ -317,11 +329,19 @@ namespace gInkPlus
             image_rect_filled = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_rect_filled, btRectFilled);
             btRectFilled.Image = image_rect_filled;
 
+			image_oval_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_oval_act, btOval);
+            image_oval = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_oval, btOval);
+			btOval.Image = image_oval;
+
+			image_text_act = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_text_act, btText);
+			image_text = CreateToolbarImage(global::gInkPlus.Properties.Resources.tool_text, btText);
+			btText.Image = image_text;
 
 
-			// ===
 
-			image_pen = new Bitmap[Root.MaxPenCount];
+            // ===
+
+            image_pen = new Bitmap[Root.MaxPenCount];
 			image_pen_act = new Bitmap[Root.MaxPenCount];
 
 			for (int b = 0; b < Root.MaxPenCount; b++)
@@ -1091,7 +1111,7 @@ namespace gInkPlus
 		// == Line tool ==
         private void btLine_Click(object sender, EventArgs e)
         {
-            SelectPen(Root.Tool.Line);   // -4 is the value we defined for Line mode
+            SelectPen(Root.Tool.Line); 
         }
 		// Dotted Line 
 		private void btDottedLine_Click(object sender, EventArgs e)
@@ -1106,13 +1126,28 @@ namespace gInkPlus
         // == Rectangle tool ==
         private void btRect_Click(object sender, EventArgs e)
         {
-            SelectPen(Root.Tool.Rectangle);   // -5 is the value we defined for Rectangle mode
+            SelectPen(Root.Tool.Rectangle);  
         }
         // == Rect_Filled tool
         private void btRectFilled_Click(object sender, EventArgs e)
         {
-            SelectPen(Root.Tool.FilledRect);   // -6 is the value we defined for Rect_Filled mode
+            SelectPen(Root.Tool.FilledRect);   
         }
+        // == Oval tool ==
+        private void btOval_Click(object sender, EventArgs e)
+        {
+            SelectPen(Root.Tool.Oval);   
+        }
+        // == Oval Filled tool ==
+        private void btOvalFilled_Click(object sender, EventArgs e)
+        {
+            SelectPen(Root.Tool.FilledOval);
+        }
+		// == Text tool ==
+		private void btText_Click(object sender, EventArgs e)
+		{
+			SelectPen(Root.Tool.Text);
+		}
 
 
         //==
@@ -1906,7 +1941,16 @@ namespace gInkPlus
             image_rect_act?.Dispose();
 
             image_rect_filled?.Dispose();
-            image_rect_filled_act?.Dispose();        
+            image_rect_filled_act?.Dispose();
+
+			image_oval?.Dispose();
+			image_oval_act?.Dispose();
+
+            image_oval_filled?.Dispose();
+            image_oval_filled_act?.Dispose();
+
+			image_text?.Dispose();
+			image_text_act?.Dispose();
 
             // Dispose custom cursor
             cursorred?.Dispose();
@@ -1942,6 +1986,17 @@ namespace gInkPlus
             Root.FormDisplay.ResetRectFilledDrawingState();
             Root.RectFilledMode = false;
             btRectFilled.Image = image_rect_filled;
+
+			// Oval
+			Root.FormDisplay.ResetOvalDrawingState();
+			Root.OvalMode = false;
+			btOval.Image = image_oval;
+
+			// Filled Oval
+			Root.FormDisplay.ResetOvalFilledDrawingState();
+			Root.OvalFilledMode = false;
+			btOvalFilled.Image = image_oval_filled;
+
         }
 
         // Reset general toolbar buttons and modes
