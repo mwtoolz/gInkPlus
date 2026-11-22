@@ -17,11 +17,11 @@
 		<AssemblyName>gInkPlus</AssemblyName>
 		<ApplicationIcon>src\icon_red.ico</ApplicationIcon>
 		
-		<Version>1.5.0</Version>
-		<AssemblyVersion>1.5.0.0</AssemblyVersion>
-		<AssemblyInformationalVersion>1.5.0</AssemblyInformationalVersion>
+		<Version>1.6.0</Version>
+		<AssemblyVersion>1.6.0.0</AssemblyVersion>
+		<AssemblyInformationalVersion>1.6.0</AssemblyInformationalVersion>
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-		<FileVersion>1.5.0.0</FileVersion>
+		<FileVersion>1.6.0.0</FileVersion>
 		
 		<Product>gInkPlus</Product>
 		<Company>mwtoolz</Company>

@@ -266,7 +266,7 @@ namespace gInkPlus
 
         public void DrawStrokes(Graphics g)
         {
-            Debug.WriteLine("DrawStrokes() CALLED");
+            // Debug.WriteLine("DrawStrokes() CALLED");
             if (!Root.InkVisible) return; 
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -297,7 +297,7 @@ namespace gInkPlus
                     {
                         g.FillPolygon(brush, screenPoints);
                     }
-                }
+                }				
 
                 // Arrow line
                 else if (stroke.ExtendedProperties.DoesPropertyExist(Root.ArrowLineGuid))
@@ -330,6 +330,63 @@ namespace gInkPlus
                             DrawArrow(g, screenPoints[0], screenPoints[1], pen);
                         }
 
+                    }
+                }
+
+                // Dotted line
+                else if (stroke.ExtendedProperties.DoesPropertyExist(Root.DottedLineGuid))
+                {
+                    Point[] inkPoints = stroke.GetPoints();
+
+                    if (inkPoints.Length >= 2)
+                    {
+                        Point[] screenPoints = (Point[])inkPoints.Clone();
+
+                        Root.FormCollection.IC.Renderer.InkSpaceToPixel(g, ref screenPoints);
+
+                        Point start = screenPoints[0];
+                        Point end = screenPoints[1];
+
+                        // Calculate line length in screen pixels
+                        double dx = end.X - start.X;
+                        double dy = end.Y - start.Y;
+                        double length = Math.Sqrt(dx * dx + dy * dy);
+
+                        if (length >= 1)
+                        {
+                            Color lineColor = Color.FromArgb(
+                                255 - stroke.DrawingAttributes.Transparency,
+                                stroke.DrawingAttributes.Color.R,
+                                stroke.DrawingAttributes.Color.G,
+                                stroke.DrawingAttributes.Color.B);
+
+                            float width = Math.Max(stroke.DrawingAttributes.Width / 30f, 1f);
+
+                            // Calculate dot and gap spacing
+                            double dotLength = Math.Max(width, 2f);
+                            double gapLength = Math.Max(width * 3, 3f);
+                            double interval = dotLength + gapLength;
+
+                            using (Pen pen = new Pen(lineColor, width))
+                            {
+                                pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                                pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+
+                                // Draw individual dots along the line
+                                for (double distance = 0; distance < length; distance += interval)
+                                {
+                                    double segmentEnd = Math.Min(distance + dotLength, length);
+
+                                    float x1 = (float)(start.X + dx * distance / length);
+                                    float y1 = (float)(start.Y + dy * distance / length);
+
+                                    float x2 = (float)(start.X + dx * segmentEnd / length);
+                                    float y2 = (float)(start.Y + dy * segmentEnd / length);
+
+                                    g.DrawLine(pen, x1, y1, x2, y2);
+                                }
+                            }
+                        }
                     }
                 }
                 else

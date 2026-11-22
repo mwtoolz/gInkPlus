@@ -748,9 +748,8 @@ namespace gInkPlus
 		}
 
         // Added by mwtoolz- Shape tools
-
-		// ===
-		// Dotted Line
+        // ===
+        // Dotted Line
         private void CreateDottedLine(Point startPixel, Point endPixel)
         {
             // Get the current pen attributes
@@ -761,52 +760,31 @@ namespace gInkPlus
             else
                 attr = IC.DefaultDrawingAttributes.Clone();
 
-            // Calculate line length in screen pixels
-            double dx = endPixel.X - startPixel.X;
-            double dy = endPixel.Y - startPixel.Y;
-            double length = Math.Sqrt(dx * dx + dy * dy);
-
-            if (length < 1)
+            // Avoid zero-length lines
+            if (startPixel == endPixel)
                 return;
 
-            // Calculate dot and gap spacing in screen pixels
-            float penWidth = Math.Max(attr.Width / 30f, 1f);
+            // Convert endpoints from pixels to Ink Space
+            Point p1 = startPixel;
+            Point p2 = endPixel;
 
-            double dotLength = Math.Max(penWidth, 2f);
-            double gapLength = Math.Max(penWidth * 3, 3f); // previous 1.5f
-            double interval = dotLength + gapLength;
+            IC.Renderer.PixelToInkSpace(
+                Root.FormDisplay.gOneStrokeCanvus, ref p1);
 
-            // Create individual dotted segments
-            for (double distance = 0; distance < length; distance += interval)
-            {
-                double segmentEnd = Math.Min(distance + dotLength, length);
+            IC.Renderer.PixelToInkSpace(
+                Root.FormDisplay.gOneStrokeCanvus, ref p2);
 
-                Point p1 = new Point(
-                    (int)Math.Round(startPixel.X + dx * distance / length),
-                    (int)Math.Round(startPixel.Y + dy * distance / length));
+            // Create one Ink stroke representing the entire dotted line
+            Point[] points = { p1, p2 };
 
-                Point p2 = new Point(
-                    (int)Math.Round(startPixel.X + dx * segmentEnd / length),
-                    (int)Math.Round(startPixel.Y + dy * segmentEnd / length));
+            Stroke dottedStroke = IC.Ink.CreateStroke(points);
 
-                // Avoid zero-length segments caused by rounding
-                if (p1 == p2)
-                    continue;
+            // Apply drawing attributes
+            dottedStroke.DrawingAttributes = attr.Clone();
 
-                // Convert each segment from pixels to Ink Space
-                IC.Renderer.PixelToInkSpace(
-                    Root.FormDisplay.gOneStrokeCanvus, ref p1);
-
-                IC.Renderer.PixelToInkSpace(
-                    Root.FormDisplay.gOneStrokeCanvus, ref p2);
-
-                Point[] points = { p1, p2 };
-
-                Stroke dottedStroke = IC.Ink.CreateStroke(points);
-
-                // Apply the same drawing attributes to every segment
-                dottedStroke.DrawingAttributes = attr.Clone();
-            }
+            // Identify this stroke as a dotted line
+            dottedStroke.ExtendedProperties.Add(
+                Root.DottedLineGuid, true);
         }
 
         // ArrowLine
@@ -832,6 +810,7 @@ namespace gInkPlus
 
             arrowStroke.ExtendedProperties.Add(Root.ArrowLineGuid, true);
         }
+
 
         // ===
 
