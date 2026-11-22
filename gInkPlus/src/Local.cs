@@ -31,8 +31,8 @@ namespace gInkPlus
         public string ButtonNameArrowLine = "Arrow Line";
         public string ButtonNameRectangle = "Rectangle";
         public string ButtonNameFilledRectangle = "Filled Rectangle";
-        public string ButtonNameCircle = "Circle";
-        public string ButtonNameFilledCircle = "Filled Circle";
+        public string ButtonNameOval= "Oval";
+        public string ButtonNameFilledOval = "Filled Oval";
 
 
 

@@ -60,6 +60,9 @@ namespace gInkPlus
             public const int FilledRect = -6;
 			public const int DottedLine = -7;
 			public const int ArrowLine = -8;
+			public const int Oval = -9;
+			public const int FilledOval = -10;
+			public const int Text = -11;
 
         }
 
@@ -86,10 +89,15 @@ namespace gInkPlus
 		public bool ArrowLineEnabled = true;
 		public bool RectEnabled = true;
 		public bool RectFilledEnabled = true;
+		public bool OvalEnabled = true;
+		public bool OvalFilledEnabled = true;
+		public bool TextEnabled = true;
+
 
 
 
 		// ===
+
 		public DrawingAttributes[] PenAttr = new DrawingAttributes[MaxPenCount];
 		public bool AutoScroll;
 		public bool WhiteTrayIcon;
@@ -126,8 +134,8 @@ namespace gInkPlus
         public Hotkey Hotkey_Arrow_Line = new Hotkey();
         public Hotkey Hotkey_Rectangle = new Hotkey();
         public Hotkey Hotkey_Filled_Rectangle = new Hotkey();
-        public Hotkey Hotkey_Circle = new Hotkey();
-        public Hotkey Hotkey_Filled_Circle = new Hotkey();
+        public Hotkey Hotkey_Oval = new Hotkey();
+        public Hotkey Hotkey_Filled_Oval = new Hotkey();
 
 
 
@@ -669,12 +677,12 @@ namespace gInkPlus
                             Hotkey_Filled_Rectangle.Parse(sPara);
                             break;
 
-                        case "HOTKEY_CIRCLE":
-                            Hotkey_Circle.Parse(sPara);
+                        case "HOTKEY_OVAL":
+                            Hotkey_Oval.Parse(sPara);
                             break;
 
-                        case "HOTKEY_FILLED_CIRCLE":
-                            Hotkey_Filled_Circle.Parse(sPara);
+                        case "HOTKEY_FILLED_OVAL":
+                            Hotkey_Filled_Oval.Parse(sPara);
                             break;
 
 
@@ -902,12 +910,12 @@ namespace gInkPlus
                             sPara = Hotkey_Filled_Rectangle.ToString();
                             break;
 
-                        case "HOTKEY_CIRCLE":
-                            sPara = Hotkey_Circle.ToString();
+                        case "HOTKEY_OVAL":
+                            sPara = Hotkey_Oval.ToString();
                             break;
 
-                        case "HOTKEY_FILLED_CIRCLE":
-                            sPara = Hotkey_Filled_Circle.ToString();
+                        case "HOTKEY_FILLED_OVAL":
+                            sPara = Hotkey_Filled_Oval.ToString();
                             break;
 
 

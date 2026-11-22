@@ -18,7 +18,7 @@ v.1.5.0 (Nov 15, 2026)
 
 v1.4.2 (Nov 12, 2026)
 =================
-- Added configurable hotkeys for shape tools: Line, Dotted Line, Arrow Line, Rectangle, Filled Rectangle, Circle and Filled Circle.
+- Added configurable hotkeys for shape tools: Line, Dotted Line, Arrow Line, Rectangle, Filled Rectangle, Oval and Filled Oval.
 - Fixed issues affecting pen width.
 - Fixed cursor-related bugs.
 

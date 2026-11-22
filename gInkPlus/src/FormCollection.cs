@@ -1192,8 +1192,8 @@ namespace gInkPlus
         bool LastArrowLineStatus = false;
         bool LastRectangleStatus = false;
         bool LastFilledRectangleStatus = false;
-        bool LastCircleStatus = false;
-        bool LastFilledCircleStatus = false;
+        bool LastOvalStatus = false;
+        bool LastFilledOvalStatus = false;
 
 
 		//===

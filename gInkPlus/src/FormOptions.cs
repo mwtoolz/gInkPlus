@@ -185,8 +185,8 @@ namespace gInkPlus
             shapeHotkeyBoxes[2].Hotkey = Root.Hotkey_Arrow_Line;
             shapeHotkeyBoxes[3].Hotkey = Root.Hotkey_Rectangle;
             shapeHotkeyBoxes[4].Hotkey = Root.Hotkey_Filled_Rectangle;
-            shapeHotkeyBoxes[5].Hotkey = Root.Hotkey_Circle;
-            shapeHotkeyBoxes[6].Hotkey = Root.Hotkey_Filled_Circle;
+            shapeHotkeyBoxes[5].Hotkey = Root.Hotkey_Oval;
+            shapeHotkeyBoxes[6].Hotkey = Root.Hotkey_Filled_Oval;
 
             FormOptions_LocalReload();
 		}
@@ -212,8 +212,8 @@ namespace gInkPlus
             shapeHotkeyLabels[2].Text = Root.Local.ButtonNameArrowLine;
             shapeHotkeyLabels[3].Text = Root.Local.ButtonNameRectangle;
             shapeHotkeyLabels[4].Text = Root.Local.ButtonNameFilledRectangle;
-            shapeHotkeyLabels[5].Text = Root.Local.ButtonNameCircle;
-            shapeHotkeyLabels[6].Text = Root.Local.ButtonNameFilledCircle;
+            shapeHotkeyLabels[5].Text = Root.Local.ButtonNameOval;
+            shapeHotkeyLabels[6].Text = Root.Local.ButtonNameFilledOval;
 
 
 
