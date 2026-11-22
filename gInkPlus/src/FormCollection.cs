@@ -1152,8 +1152,6 @@ namespace gInkPlus
 
         //==
 
-
-
         public void btSnap_Click(object sender, EventArgs e)
 		{
 			if (ToolbarMoved)

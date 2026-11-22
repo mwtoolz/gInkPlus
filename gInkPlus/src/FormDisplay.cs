@@ -24,7 +24,7 @@ namespace gInkPlus
         // Add these public/internal tracking variables in FormDisplay.cs
         // Use properties instead of public fields to avoid marshal-by-ref warnings
 
-        // ==For Line and Dotted Line tool
+        // == For Line and Dotted Line tool
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsDrawingLine { get; set; } = false;
 
@@ -48,8 +48,24 @@ namespace gInkPlus
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsDrawingRectFilled { get; set; } = false;
 
+        // == For Oval tool
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsDrawingOval { get; set; } = false;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public Point OvalStartPoint { get; set; }
+        private Rectangle oldOvalBox;
+        public bool oldOvalBoxValid = false;
+        // == For OvalFilled tool
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsDrawingOvalFilled { get; set; } = false;
 
-        public bool IsDrawingGeometricShape => IsDrawingLine || IsDrawingRectangle || IsDrawingRectFilled;
+        // == For Text tool
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public bool IsInputText { get; set; } = false;
+
+
+        public bool IsDrawingGeometricShape => IsDrawingLine || IsDrawingRectangle || IsDrawingRectFilled
+			|| IsDrawingOval || IsDrawingOvalFilled || IsInputText;
         
 		
 		// ===
@@ -1005,12 +1021,32 @@ namespace gInkPlus
         }
 
         // Rect_Filled tool
-
         public void ResetRectFilledDrawingState()
         {
 			IsDrawingRectFilled = false;
             oldRectBoxValid = false;
         }
+
+		// Oval tool
+		public void ResetOvalDrawingState()
+		{
+			IsDrawingOval = false;
+			// oldOvalBoxValid = false;
+		}
+
+        // Oval Filled tool
+        public void ResetOvalFilledDrawingState()
+        {
+            IsDrawingOvalFilled = false;
+            // oldOvalBoxValid = false;
+        }
+
+		// Text tool
+		public void ResetTextInputState()
+		{
+			IsInputText = false;
+			// oldTextBoxValid = false;
+		}
 
         // === 
 
