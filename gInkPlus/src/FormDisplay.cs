@@ -264,15 +264,16 @@ namespace gInkPlus
         {
             if (!Root.InkVisible) return;
             DrawStrokes(gCanvus);
-
         }
 
         public void DrawStrokes(Graphics g)
         {
             if (!Root.InkVisible) return;
 
-            // g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            // Removes white outlines on the filled polygons
+            g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+            System.Diagnostics.Debug.WriteLine("Arrow Line Draw Stroke with AntiAlias and SourceOver");
 
             // Loop through every stroke in the ink collection
             foreach (Stroke stroke in Root.FormCollection.IC.Ink.Strokes)
@@ -280,9 +281,6 @@ namespace gInkPlus
                 // Check if this stroke was marked as a filled shape
                 if (stroke.ExtendedProperties.DoesPropertyExist(Root.FilledShapeGuid))
                 {
-                    // AntiAlias produces white outlines on the filled polygons
-                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-
                     // 1. Get the 5 points making up the rectangle/polygon
                     Point[] inkPoints = stroke.GetPoints();
                     Point[] screenPoints = (Point[])inkPoints.Clone();
@@ -294,9 +292,6 @@ namespace gInkPlus
                     // New code
                     Color fillColor = Color.FromArgb(255 - stroke.DrawingAttributes.Transparency, stroke.DrawingAttributes.Color.R,
 						stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B);
-
-                    // Old code
-                    // Color fillColor = stroke.DrawingAttributes.Color;
 
                     // 4. Fill the shape using GDI+
                     using (SolidBrush brush = new SolidBrush(fillColor))
@@ -328,22 +323,14 @@ namespace gInkPlus
 
                         var oldSmoothingMode = g.SmoothingMode;
 
-                        try
+                        using (Pen pen = new Pen(lineColor, width))
                         {
-                            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                            pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                            pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
 
-                            using (Pen pen = new Pen(lineColor, width))
-                            {
-                                pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                                pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                            DrawArrow(g, screenPoints[0], screenPoints[1], pen);
+                        }
 
-                                DrawArrow(g, screenPoints[0], screenPoints[1], pen);
-                            }
-                        }
-                        finally
-                        {
-                            g.SmoothingMode = oldSmoothingMode;
-                        }
                     }
                 }
                 else
