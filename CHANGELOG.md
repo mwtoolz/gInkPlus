@@ -1,7 +1,8 @@
 v.1.6.0 (Nov 22, 2026)
 =================
 - Added a new Arrow Line drawing tool.
-- Improved the rendering quality of filled polygons using anti-aliasing and `CompositingMode.SourceOver`.
+- Improved the rendering quality of filled polygons using anti-aliasing and 'CompositingMode.SourceOver'.
+- Improved the Dotted Line tool by storing each dotted line as a single Ink stroke, allowing the entire line to be erased or undone as one object.
 - Fixed redundant ink buffer preparation during geometric shape drawing to avoid unnecessary processing.
 
 v.1.5.0 (Nov 15, 2026)
