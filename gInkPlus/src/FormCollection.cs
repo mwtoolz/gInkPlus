@@ -471,7 +471,6 @@ namespace gInkPlus
 		// Refers to Stylus Pen & Mouse button down
 		private void IC_CursorDown(object sender, InkCollectorCursorDownEventArgs e)
 		{
-            // Added by mwtoolz     
             if (!Root.InkVisible && Root.Snapping <= 0)
 			{
 				Root.SetInkVisible(true);
@@ -510,17 +509,23 @@ namespace gInkPlus
                 return;
 			}
 
-			// Rectangle, RectFilled Modes
-			if (Root.RectMode || Root.RectFilledMode)
+			// Rectangle, RectFilled, Oval, OvalFilled Modes
+			if (Root.RectMode || Root.RectFilledMode ||
+				Root.OvalMode || Root.OvalFilledMode)
 			{
 				Root.FormDisplay.IsDrawingRectangle = Root.RectMode;
 				Root.FormDisplay.IsDrawingRectFilled = Root.RectFilledMode;
 
-				Root.FormDisplay.RectStartPoint = new Point(e.X, e.Y);
-				Root.FormDisplay.CurrentMousePoint = Root.FormDisplay.RectStartPoint;
-				Root.FormDisplay.oldRectBoxValid = false;
+                Root.FormDisplay.IsDrawingOval = Root.OvalMode;
+                Root.FormDisplay.IsDrawingOvalFilled = Root.OvalFilledMode;
 
-				Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+                Root.FormDisplay.RectStartPoint = new Point(e.X, e.Y);
+				Root.FormDisplay.CurrentMousePoint = Root.FormDisplay.RectStartPoint;
+
+				Root.FormDisplay.oldRectBoxValid = false;
+                Root.FormDisplay.oldOvalBoxValid = false;
+
+                Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
 				Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
 				Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 
@@ -730,6 +735,99 @@ namespace gInkPlus
                 return;
             }
             // ===== END RECTANGLE & RECT FILLED TOOL =====
+
+
+            // ===== OVAL & OVAL FILLED TOOL - CREATE FINAL STROKE =====
+            if ((Root.OvalMode && Root.FormDisplay.IsDrawingOval) ||
+                (Root.OvalFilledMode && Root.FormDisplay.IsDrawingOvalFilled))
+            {
+                // Determine whether this oval is filled
+                bool isFilled = Root.OvalFilledMode;
+
+                if (!isFilled)
+                {
+                    Root.FormDisplay.ResetOvalDrawingState();
+                }
+                else
+                {
+                    Root.FormDisplay.ResetOvalFilledDrawingState();
+                }
+
+                // 1. Calculate oval bounds in pixels
+                int ovalX = Math.Min(Root.FormDisplay.RectStartPoint.X,
+                                     Root.FormDisplay.CurrentMousePoint.X);
+
+                int ovalY = Math.Min(Root.FormDisplay.RectStartPoint.Y,
+                                     Root.FormDisplay.CurrentMousePoint.Y);
+
+                int ovalWidth = Math.Abs(Root.FormDisplay.CurrentMousePoint.X -
+                                         Root.FormDisplay.RectStartPoint.X);
+
+                int ovalHeight = Math.Abs(Root.FormDisplay.CurrentMousePoint.Y -
+                                          Root.FormDisplay.RectStartPoint.Y);
+
+                // 2. Generate points along the ellipse circumference
+                int segments = 100;
+                Point[] points = new Point[segments + 1];
+
+                double centerX = ovalX + ovalWidth / 2.0;
+                double centerY = ovalY + ovalHeight / 2.0;
+
+                double radiusX = ovalWidth / 2.0;
+                double radiusY = ovalHeight / 2.0;
+
+                for (int i = 0; i <= segments; i++)
+                {
+                    double angle = 2.0 * Math.PI * i / segments;
+
+                    points[i] = new Point(
+                        (int)Math.Round(centerX + radiusX * Math.Cos(angle)),
+                        (int)Math.Round(centerY + radiusY * Math.Sin(angle))
+                    );
+                }
+
+                // 3. Convert pixel coordinates to Ink space
+                for (int i = 0; i < points.Length; i++)
+                {
+                    IC.Renderer.PixelToInkSpace(
+                        Root.FormDisplay.gOneStrokeCanvus,
+                        ref points[i]);
+                }
+
+                // 4. Create permanent Microsoft Ink stroke
+                Stroke ovalStroke = IC.Ink.CreateStroke(points);
+
+                // 5. Apply fill property ONLY for OvalFilled mode
+                if (isFilled)
+                {
+                    ovalStroke.ExtendedProperties.Add(Root.FilledShapeGuid, true);
+                }
+
+                // 6. Apply current pen attributes
+                if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                {
+                    ovalStroke.DrawingAttributes =
+                        Root.PenAttr[Root.CurrentPen].Clone();
+                }
+                else
+                {
+                    ovalStroke.DrawingAttributes =
+                        IC.DefaultDrawingAttributes.Clone();
+                }
+
+                // 7. Save undo history and refresh display
+                SaveUndoStrokes();
+
+                Root.FormDisplay.ClearCanvus();
+                Root.FormDisplay.DrawStrokes();
+                Root.FormDisplay.DrawButtons(true);
+                Root.FormDisplay.UpdateFormDisplay(true);
+
+                e.Cancel = true;
+                return;
+            }
+            // ===== END OVAL & OVAL FILLED TOOL =====
+
 
 
             Root.FingerInAction = false;

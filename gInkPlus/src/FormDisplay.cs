@@ -336,8 +336,6 @@ namespace gInkPlus
                         float width = Math.Max(
                             stroke.DrawingAttributes.Width / 30f, 1f);
 
-                        var oldSmoothingMode = g.SmoothingMode;
-
                         using (Pen pen = new Pen(lineColor, width))
                         {
                             pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
@@ -550,7 +548,7 @@ namespace gInkPlus
 
 			int dj;
 			int maxidpixels = 0;
-			float maxidchdrio = 0;
+			// float maxidchdrio = 0;
 			int maxdj = 0;
 
 
@@ -559,8 +557,9 @@ namespace gInkPlus
 			int iend = Width / 2 + Width / 4;
 			for (dj = -Height * 3 / 8 + 1; dj < Height * 3 / 8 - 1; dj++)
 			{
-				int chdpixels = 0, idpixels = 0;
-				for (int j = Height / 2 - Height / 8; j < Height / 2 + Height / 8; j += 10)
+				// int chdpixels = 0, idpixels = 0;
+                int idpixels = 0;
+                for (int j = Height / 2 - Height / 8; j < Height / 2 + Height / 8; j += 10)
 				{
 					L(istart - 10, j);
 					N1(istart - 10, j);
@@ -840,8 +839,10 @@ namespace gInkPlus
 
                     // c. Draw the new rectangle preview using GDI+
                     using (Graphics g = Graphics.FromHdc(canvusDc))
-                    {					
-						g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+                    {
+						g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+
                         Color rectColor;
                        
                         if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
@@ -898,13 +899,128 @@ namespace gInkPlus
                 }
                 // ===End of Rect Tool code
 
-				// == ADD MORE PREVIEWS HERE and END with UpdateFormDisplay(true); ==
+                // == ADD MORE PREVIEWS HERE and END with UpdateFormDisplay(true); ==
+
+                // 4. OVAL & OVAL_FILLED TOOL PREVIEW (Works even on a blank canvas)
+                else if ((Root.OvalMode && IsDrawingOval) ||
+                         (Root.OvalFilledMode && IsDrawingOvalFilled))
+                {
+                    bool isFilled = Root.OvalFilledMode;
+
+                    // a. Erase the old oval position using BitBlt
+                    if (oldOvalBoxValid)
+                    {
+                        BitBlt(canvusDc, oldOvalBox.X, oldOvalBox.Y,
+                               oldOvalBox.Width, oldOvalBox.Height,
+                               onestrokeDc, oldOvalBox.X, oldOvalBox.Y,
+                               (uint)CopyPixelOperation.SourceCopy);
+                    }
+
+                    // b. Calculate new bounding box with padding
+                    int padding = 15;
+
+                    int ovalX = Math.Min(RectStartPoint.X, CurrentMousePoint.X);
+                    int ovalY = Math.Min(RectStartPoint.Y, CurrentMousePoint.Y);
+
+                    int ovalWidth = Math.Abs(CurrentMousePoint.X - RectStartPoint.X);
+                    int ovalHeight = Math.Abs(CurrentMousePoint.Y - RectStartPoint.Y);
+
+                    int minX = ovalX - padding;
+                    int minY = ovalY - padding;
+
+                    int widthWithPadding = ovalWidth + (padding * 2);
+                    int heightWithPadding = ovalHeight + (padding * 2);
+
+                    oldOvalBox = new Rectangle(
+                        minX, minY, widthWithPadding, heightWithPadding);
+
+                    oldOvalBoxValid = true;
+
+                    // c. Draw the new oval preview using GDI+
+                    using (Graphics g = Graphics.FromHdc(canvusDc))
+                    {
+                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+
+                        Color ovalColor;
+
+                        if (Root.CurrentPen >= 0 &&
+                            Root.CurrentPen < Root.PenAttr.Length)
+                        {
+                            Microsoft.Ink.DrawingAttributes attr =
+                                Root.PenAttr[Root.CurrentPen];
+
+                            ovalColor = Color.FromArgb(
+                                255 - attr.Transparency,
+                                attr.Color.R,
+                                attr.Color.G,
+                                attr.Color.B);
+                        }
+                        else
+                        {
+                            var attr = Root.FormCollection.IC.DefaultDrawingAttributes;
+
+                            ovalColor = Color.FromArgb(
+                                255 - attr.Transparency,
+                                attr.Color.R,
+                                attr.Color.G,
+                                attr.Color.B);
+                        }
+
+                        if (isFilled)
+                        {
+                            // Draw filled oval preview
+                            using (SolidBrush previewBrush = new SolidBrush(ovalColor))
+                            {
+                                g.FillEllipse(
+                                    previewBrush,
+                                    ovalX, ovalY,
+                                    ovalWidth, ovalHeight);
+                            }
+                        }
+                        else
+                        {
+                            // Draw oval outline preview
+                            float width;
+
+                            if (Root.CurrentPen >= 0 &&
+                                Root.CurrentPen < Root.PenAttr.Length)
+                            {
+                                width = Math.Max(
+                                    Root.PenAttr[Root.CurrentPen].Width / 30f, 1f);
+                            }
+                            else
+                            {
+                                width = Math.Max(
+                                    Root.FormCollection.IC.DefaultDrawingAttributes.Width / 30f,
+                                    1f);
+                            }
+
+                            using (Pen previewPen = new Pen(ovalColor, width))
+                            {
+                                previewPen.StartCap =
+                                    System.Drawing.Drawing2D.LineCap.Round;
+
+                                previewPen.EndCap =
+                                    System.Drawing.Drawing2D.LineCap.Round;
+
+                                g.DrawEllipse(
+                                    previewPen,
+                                    ovalX, ovalY,
+                                    ovalWidth, ovalHeight);
+                            }
+                        }
+
+                        // Ensure drawing operations are completed
+                        g.Flush();
+                    }
+
+                    UpdateFormDisplay(true);
+                }
+                // === End of Oval Tool code
 
 
-
-
-
-				// == END OF PREVIEW OF NEW TOOLS
+                // == END OF PREVIEW OF NEW TOOLS
             }
 
 
@@ -1031,14 +1147,14 @@ namespace gInkPlus
 		public void ResetOvalDrawingState()
 		{
 			IsDrawingOval = false;
-			// oldOvalBoxValid = false;
+			oldOvalBoxValid = false;
 		}
 
         // Oval Filled tool
         public void ResetOvalFilledDrawingState()
         {
             IsDrawingOvalFilled = false;
-            // oldOvalBoxValid = false;
+            oldOvalBoxValid = false;
         }
 
 		// Text tool
