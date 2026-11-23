@@ -440,16 +440,20 @@ namespace gInkPlus
 
         private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
-
+            System.Diagnostics.Debug.WriteLine($"IC_Stroke fired.");
             // Added by mwtoolz        
             // Discard the unwanted native freehand stroke in ShapeMode
             if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
 			{
-                // System.Diagnostics.Debug.WriteLine($"Discarding native stroke: {e.Stroke.GetPoints().Length} points");
-                IC.Ink.DeleteStroke(e.Stroke);
+				// debug
+                System.Diagnostics.Debug.WriteLine("Before DeleteStroke");
+				IC.Ink.DeleteStroke(e.Stroke);
+                System.Diagnostics.Debug.WriteLine("After DeleteStroke");
                 return;
             }
+
 			SaveUndoStrokes();
+
 		}
 
 		private void SaveUndoStrokes()
@@ -613,6 +617,12 @@ namespace gInkPlus
 
 		private void IC_MouseUp(object sender, CancelMouseEventArgs e)
 		{
+
+            //debug
+            System.Diagnostics.Debug.WriteLine($"onMouseUp: Shape={Root.IsShapeMode}, " +
+				$"Drawing={Root.FormDisplay.IsDrawingGeometricShape}, " +
+				$"Count={IC.Ink.Strokes.Count}");
+
             // Added by mwtoolz- Shape tools         
             // ===== LINE / DOTTED LINE / ARROW LINE TOOL - CREATE FINAL STROKE =====
             if ((Root.LineMode || Root.DottedLineMode || Root.ArrowLineMode) &&
@@ -744,7 +754,7 @@ namespace gInkPlus
             {
                 // Determine whether this oval is filled
                 bool isFilled = Root.OvalFilledMode;
-
+				
                 if (!isFilled)
                 {
                     Root.FormDisplay.ResetOvalDrawingState();
@@ -753,7 +763,7 @@ namespace gInkPlus
                 {
                     Root.FormDisplay.ResetOvalFilledDrawingState();
                 }
-
+				
                 // 1. Calculate oval bounds in pixels
                 int ovalX = Math.Min(Root.FormDisplay.RectStartPoint.X,
                                      Root.FormDisplay.CurrentMousePoint.X);
@@ -766,6 +776,14 @@ namespace gInkPlus
 
                 int ovalHeight = Math.Abs(Root.FormDisplay.CurrentMousePoint.Y -
                                           Root.FormDisplay.RectStartPoint.Y);
+
+                // Ignore clicks without sufficient movement to create an oval
+                if (ovalWidth == 0 || ovalHeight == 0)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+
 
                 // 2. Generate points along the ellipse circumference
                 int segments = 100;
@@ -824,6 +842,17 @@ namespace gInkPlus
                 Root.FormDisplay.DrawButtons(true);
                 Root.FormDisplay.UpdateFormDisplay(true);
 
+				// debug
+				/*
+                if (!isFilled)
+                {
+                    Root.FormDisplay.ResetOvalDrawingState();
+                }
+                else
+                {
+                    Root.FormDisplay.ResetOvalFilledDrawingState();
+                }
+				*/
                 e.Cancel = true;
                 return;
             }

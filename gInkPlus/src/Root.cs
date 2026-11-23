@@ -373,7 +373,9 @@ namespace gInkPlus
 			else
 				FormCollection.btInkVisible.Image = FormCollection.image_visible_not;
 
-			FormDisplay.ClearCanvus();
+			// Debug
+            Debug.WriteLine("DrawStrokes() CALLED FROM SetInkVisible");
+            FormDisplay.ClearCanvus();
 			FormDisplay.DrawStrokes();
 			FormDisplay.DrawButtons(true);
 			FormDisplay.UpdateFormDisplay(true);

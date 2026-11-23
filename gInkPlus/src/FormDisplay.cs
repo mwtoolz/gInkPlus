@@ -282,7 +282,10 @@ namespace gInkPlus
 
         public void DrawStrokes(Graphics g)
         {
-            // Debug.WriteLine("DrawStrokes() CALLED");
+			// Debug
+			System.Diagnostics.Debug.WriteLine($"DrawStrokes called. ShapeMode={Root.IsShapeMode}, " +
+				$"DrawingShape={Root.FormDisplay.IsDrawingGeometricShape}");
+
             if (!Root.InkVisible) return;
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -298,9 +301,6 @@ namespace gInkPlus
                 if (stroke.ExtendedProperties.DoesPropertyExist(Root.FilledShapeGuid))
                 {
 
-                    //debug
-                    // Debug.WriteLine("Rendering filled shape");
-
                     // 1. Get the 5 points making up the rectangle/polygon
                     Point[] inkPoints = stroke.GetPoints();
                     Point[] screenPoints = (Point[])inkPoints.Clone();
@@ -309,7 +309,6 @@ namespace gInkPlus
                     Root.FormCollection.IC.Renderer.InkSpaceToPixel(g, ref screenPoints);
 
                     // 3. Get the color from the stroke's pen attributes
-                    // New code
                     Color fillColor = Color.FromArgb(255 - stroke.DrawingAttributes.Transparency, stroke.DrawingAttributes.Color.R,
 						stroke.DrawingAttributes.Color.G, stroke.DrawingAttributes.Color.B);
 
@@ -410,14 +409,19 @@ namespace gInkPlus
                 }
                 else
                 {
-                    
+                    // debug
                     // Removes unwanted dot stroke when drawing in shape mode
+                    // if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape && stroke.GetPoints().Length == 1)
+                    System.Diagnostics.Debug.WriteLine("DrawStrokes- running; code following this to run if getpoints == 1");
                     if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape && stroke.GetPoints().Length == 1)
-                    {
+                        {
+                        System.Diagnostics.Debug.WriteLine($"ShapeMode to continue and skip rendering normal stroke");
                         continue;
                     }
-                    // Debug.WriteLine("Rendering normal Ink stroke");
+                    
                     // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer
+					// debug
+                    System.Diagnostics.Debug.WriteLine("About to render normal Ink stroke");
                     Root.FormCollection.IC.Renderer.Draw(g, stroke);
                 }
             }
@@ -719,7 +723,7 @@ namespace gInkPlus
 				// 1. DEFAULT STROKE RENDERING (Only runs when there ARE existing strokes and we are NOT drawing shapes)
 				if (Root.FormCollection.IC.Ink.Strokes.Count > 0 && !Root.IsShapeMode)	
 				{
-					Stroke stroke = Root.FormCollection.IC.Ink.Strokes[Root.FormCollection.IC.Ink.Strokes.Count - 1];
+                    Stroke stroke = Root.FormCollection.IC.Ink.Strokes[Root.FormCollection.IC.Ink.Strokes.Count - 1];
 					if (!stroke.Deleted)
 					{
 						Rectangle box = stroke.GetBoundingBox();
