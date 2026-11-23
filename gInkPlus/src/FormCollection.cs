@@ -442,9 +442,10 @@ namespace gInkPlus
 		{
 
             // Added by mwtoolz        
-            // Line & Rect mode: discard the unwanted native freehand stroke.
+            // Discard the unwanted native freehand stroke in ShapeMode
             if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
-			{ 
+			{
+                // System.Diagnostics.Debug.WriteLine($"Discarding native stroke: {e.Stroke.GetPoints().Length} points");
                 IC.Ink.DeleteStroke(e.Stroke);
                 return;
             }
@@ -474,7 +475,7 @@ namespace gInkPlus
             if (!Root.InkVisible && Root.Snapping <= 0)
 			{
 				Root.SetInkVisible(true);
-			}
+            }
 
 			// Added by mwtoolz
 			// Skip native ink buffer preparation during geometric shape drawing
@@ -485,10 +486,10 @@ namespace gInkPlus
 			Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 		}
 
-		// Refers only to Mouse button down
+        // Refers only to Mouse button down
+        
         private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
-
             // Added by mwtoolz- Shape tools
             // Line, Dotted Line, ArrowLine Mode
             if (Root.LineMode || Root.DottedLineMode || Root.ArrowLineMode)
@@ -526,8 +527,8 @@ namespace gInkPlus
                 Root.FormDisplay.oldOvalBoxValid = false;
 
                 Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
-				Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
-				Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
+                Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
+                Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 
 				e.Cancel = true;
 				return;

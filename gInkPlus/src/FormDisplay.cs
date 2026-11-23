@@ -283,7 +283,7 @@ namespace gInkPlus
         public void DrawStrokes(Graphics g)
         {
             // Debug.WriteLine("DrawStrokes() CALLED");
-            if (!Root.InkVisible) return; 
+            if (!Root.InkVisible) return;
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             // Removes white outlines on the filled polygons
@@ -293,9 +293,14 @@ namespace gInkPlus
             // Loop through every stroke in the ink collection
             foreach (Stroke stroke in Root.FormCollection.IC.Ink.Strokes)
             {
+
                 // Check if this stroke was marked as a filled shape
                 if (stroke.ExtendedProperties.DoesPropertyExist(Root.FilledShapeGuid))
                 {
+
+                    //debug
+                    // Debug.WriteLine("Rendering filled shape");
+
                     // 1. Get the 5 points making up the rectangle/polygon
                     Point[] inkPoints = stroke.GetPoints();
                     Point[] screenPoints = (Point[])inkPoints.Clone();
@@ -405,7 +410,14 @@ namespace gInkPlus
                 }
                 else
                 {
-                    // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer                
+                    
+                    // Removes unwanted dot stroke when drawing in shape mode
+                    if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape && stroke.GetPoints().Length == 1)
+                    {
+                        continue;
+                    }
+                    // Debug.WriteLine("Rendering normal Ink stroke");
+                    // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer
                     Root.FormCollection.IC.Renderer.Draw(g, stroke);
                 }
             }
@@ -747,8 +759,7 @@ namespace gInkPlus
 					using (Graphics g = Graphics.FromHdc(canvusDc))
 					{
 						g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                        //g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                        //g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                        g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
                         Color lineColor;
 						float width;
@@ -837,61 +848,66 @@ namespace gInkPlus
                     oldRectBox = new Rectangle(minX, minY, widthWithPadding, heightWithPadding);
                     oldRectBoxValid = true;
 
-                    // c. Draw the new rectangle preview using GDI+
-                    using (Graphics g = Graphics.FromHdc(canvusDc))
-                    {
-						g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                        g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+					// c. Draw the new rectangle preview using GDI+
+					
+					// Skip preview if mouse has not moved sufficiently					
+					if (rectWidth > 1 && rectHeight > 1)
+					{
+                        using (Graphics g = Graphics.FromHdc(canvusDc))
+                        {
+                            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                            g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
 
-                        Color rectColor;
-                       
-                        if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
-                        {
-                            Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];						
-							rectColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
-                        }
-                        else
-                        {
-                            // New code
-                            var attr = Root.FormCollection.IC.DefaultDrawingAttributes;
-							rectColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
-                        }
+                            Color rectColor;
 
-                        if (isFilled)
-                        {
-                            // Draw filled rectangle preview
-                            using (SolidBrush previewBrush = new SolidBrush(rectColor))
-                            {
-                                g.FillRectangle(previewBrush, rectX, rectY, rectWidth, rectHeight);
-                            }
-                        }
-                        else
-                        {
-                            // Draw outline rectangle preview (using your original width logic)
-                            float width;
                             if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
                             {
-                                width = Math.Max(Root.PenAttr[Root.CurrentPen].Width / 30f, 1f);
+                                Microsoft.Ink.DrawingAttributes attr = Root.PenAttr[Root.CurrentPen];
+                                rectColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
                             }
                             else
                             {
-                                width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 30f, 1f);
+                                // New code
+                                var attr = Root.FormCollection.IC.DefaultDrawingAttributes;
+                                rectColor = Color.FromArgb(255 - attr.Transparency, attr.Color.R, attr.Color.G, attr.Color.B);
                             }
 
-                            using (Pen previewPen = new Pen(rectColor, width))
+                            if (isFilled)
                             {
-                                previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
-                                previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
-                                g.DrawRectangle(previewPen, rectX, rectY, rectWidth, rectHeight);
+                                // Draw filled rectangle preview
+                                using (SolidBrush previewBrush = new SolidBrush(rectColor))
+                                {
+                                    g.FillRectangle(previewBrush, rectX, rectY, rectWidth, rectHeight);
+                                }
                             }
+                            else
+                            {
+                                // Draw outline rectangle preview (using your original width logic)
+                                float width;
+                                if (Root.CurrentPen >= 0 && Root.CurrentPen < Root.PenAttr.Length)
+                                {
+                                    width = Math.Max(Root.PenAttr[Root.CurrentPen].Width / 30f, 1f);
+                                }
+                                else
+                                {
+                                    width = Math.Max(Root.FormCollection.IC.DefaultDrawingAttributes.Width / 30f, 1f);
+                                }
+
+                                using (Pen previewPen = new Pen(rectColor, width))
+                                {
+                                    previewPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                                    previewPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                                    g.DrawRectangle(previewPen, rectX, rectY, rectWidth, rectHeight);
+                                }
+                            }
+
+                            // New code
+                            // Ensure drawing operations are completed
+                            g.Flush();
+
+                            // ===
+                            // 
                         }
-
-                        // New code
-                        // Ensure drawing operations are completed
-                        g.Flush();
-
-                        // ===
-						// 
                     }
 
                     UpdateFormDisplay(true);
