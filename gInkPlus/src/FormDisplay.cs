@@ -15,7 +15,7 @@ namespace gInkPlus
 		IntPtr canvusDc;
 		IntPtr OneStrokeCanvus;
 		IntPtr onestrokeDc;
-		IntPtr BlankCanvus;
+		// IntPtr BlankCanvus;
 		IntPtr blankcanvusDc;
 		Graphics gCanvus;
 		public Graphics gOneStrokeCanvus;
@@ -652,7 +652,7 @@ namespace gInkPlus
 
 		int stackmove = 0;
 		int Tick = 0;
-		DateTime TickStartTime;
+		// DateTime TickStartTime;
 
         private void timer1_Tick(object sender, EventArgs e)
 		{

@@ -489,7 +489,7 @@ namespace gInkPlus
 
 			// Added by mwtoolz
 			// Skip native ink buffer preparation during geometric shape drawing
-			if (Root.IsShapeMode) return;
+			if (Root.IsShapeMode || Root.TextMode) return;
 
 			Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
 			Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
@@ -501,7 +501,25 @@ namespace gInkPlus
         private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
 
-            
+            // Added by mwtoolz- Text tool
+            // Text tool
+            if (Root.TextMode)
+            {
+                e.Cancel = true;
+
+                // Convert the mouse position to screen coordinates
+                Point screenLocation = PointToScreen(new Point(e.X, e.Y));
+
+                // Create the input form if it does not exist
+                if (Root.TextInputForm == null || Root.TextInputForm.IsDisposed)
+                {
+                    Root.TextInputForm = new FormTextInput();
+                }
+
+                Root.TextInputForm.BeginTextInput(screenLocation);
+                return;
+            }
+
             // Added by mwtoolz- Shape tools
             // Line, Dotted Line, ArrowLine Mode
             if (Root.LineMode || Root.DottedLineMode || Root.ArrowLineMode)

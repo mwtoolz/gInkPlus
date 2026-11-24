@@ -94,11 +94,14 @@ namespace gInkPlus
 		public bool TextEnabled = true;
 
 
+        // ===
+        // Added by mwtoolz- Text tool
+        public static List<TextObject> TextObjects = new List<TextObject>();
+        public static FormTextInput TextInputForm;
 
+        // ===
 
-		// ===
-
-		public DrawingAttributes[] PenAttr = new DrawingAttributes[MaxPenCount];
+        public DrawingAttributes[] PenAttr = new DrawingAttributes[MaxPenCount];
 		public bool AutoScroll;
 		public bool WhiteTrayIcon;
 		public string SnapshotBasePath;
@@ -326,8 +329,8 @@ namespace gInkPlus
 			FormDisplay.DrawButtons(true);
 			FormDisplay.UpdateFormDisplay(true);
 
-			// Clear text inputs
-			TextOjects.Clear();
+			// Added by mwtoolz- text tool; Clear text inputs
+			// TextOjects.Clear();
 
 		}
 
