@@ -494,6 +494,8 @@ namespace gInkPlus
         
         private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
+
+            
             // Added by mwtoolz- Shape tools
             // Line, Dotted Line, ArrowLine Mode
             if (Root.LineMode || Root.DottedLineMode || Root.ArrowLineMode)
@@ -506,6 +508,7 @@ namespace gInkPlus
                 // CRITICAL: Prepare the background buffer (onestrokeDc / gOneStrokeCanvus) 
                 // so BitBlt has a clean snapshot to restore from during the ticker loop.
                 Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
+                System.Diagnostics.Debug.WriteLine($"MouseDown- Line, Dotted Line, ArrowLine, DrawStrokes going to run next");
                 Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
                 Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 

@@ -411,13 +411,16 @@ namespace gInkPlus
                 {
                     // debug
                     // Removes unwanted dot stroke when drawing in shape mode
+					// CANNOT BE USED AS stroke.GetPoints().Length may get an exception
                     // if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape && stroke.GetPoints().Length == 1)
-                    System.Diagnostics.Debug.WriteLine("DrawStrokes- running; code following this to run if getpoints == 1");
+                    // System.Diagnostics.Debug.WriteLine("DrawStrokes- running; code (commented out) following this to run if getpoints == 1");
+					/*
                     if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape && stroke.GetPoints().Length == 1)
                         {
                         System.Diagnostics.Debug.WriteLine($"ShapeMode to continue and skip rendering normal stroke");
                         continue;
                     }
+					*/
                     
                     // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer
 					// debug
