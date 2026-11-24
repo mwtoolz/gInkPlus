@@ -325,6 +325,10 @@ namespace gInkPlus
 			FormDisplay.ClearCanvus();
 			FormDisplay.DrawButtons(true);
 			FormDisplay.UpdateFormDisplay(true);
+
+			// Clear text inputs
+			TextOjects.Clear();
+
 		}
 
 		public void ShowBalloonSnapshot()

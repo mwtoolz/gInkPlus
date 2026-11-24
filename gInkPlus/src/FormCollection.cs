@@ -458,6 +458,7 @@ namespace gInkPlus
 
 		private void SaveUndoStrokes()
 		{
+			// Undo pointer and depth management
 			Root.RedoDepth = 0;
 			if (Root.UndoDepth < Root.UndoStrokes.GetLength(0) - 1)
 				Root.UndoDepth++;
@@ -466,11 +467,16 @@ namespace gInkPlus
 			if (Root.UndoP >= Root.UndoStrokes.GetLength(0))
 				Root.UndoP = 0;
 
+			// Existing Microsoft Ink snapshot
 			if (Root.UndoStrokes[Root.UndoP] == null)
 				Root.UndoStrokes[Root.UndoP] = new Ink();
 			Root.UndoStrokes[Root.UndoP].DeleteStrokes();
 			if (IC.Ink.Strokes.Count > 0)
 				Root.UndoStrokes[Root.UndoP].AddStrokesAtRectangle(IC.Ink.Strokes, IC.Ink.Strokes.GetBoundingBox());
+
+			// Additional text tool snapshot
+		
+		
 		}
 
 		// Refers to Stylus Pen & Mouse button down
