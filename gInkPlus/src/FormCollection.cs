@@ -514,6 +514,15 @@ namespace gInkPlus
                 if (Root.TextInputForm == null || Root.TextInputForm.IsDisposed)
                 {
                     Root.TextInputForm = new FormTextInput();
+
+                    Root.TextInputForm.VisibleChanged += (s, args) =>
+                    {
+                        if (!Root.TextInputForm.Visible && Root.PointerMode)
+                        {
+                            Root.UnPointer();
+                        }
+                    };
+
                 }
 
 				// To allow input of text
@@ -1657,14 +1666,56 @@ namespace gInkPlus
 			const int VK_RWIN = 0x5C;
 			bool pressed;
 
-			if (!Root.PointerMode)
-			{
-				// ESC key : Exit
-				short retVal;
+            // Modified by mwtoolz; For text tool
+            // new code
+            short retVal = GetKeyState(27);
+            System.Diagnostics.Debug.WriteLine($"Monitoring for ESC key... PointerMode={Root.PointerMode} and IsInputtingText={Root.IsInputtingText}");
+
+            if (Root.SuppressEscapeUntilReleased)
+            {
+                LastESCStatus = retVal;
+
+                if ((retVal & 0x8000) == 0)
+                    Root.SuppressEscapeUntilReleased = false;
+            }
+            else if (!Root.PointerMode && !Root.IsInputtingText)
+            {
+                // Your existing ESC handling code
+                // ESC key : Exit                
+                if ((retVal & 0x8000) == 0x8000 && (LastESCStatus & 0x8000) == 0x0000)
+                {
+                    System.Diagnostics.Debug.WriteLine($"ESC key pressed... PointerMode={Root.PointerMode} and IsInputtingText={Root.IsInputtingText}");
+                    if (Root.Snapping > 0)
+                    {
+                        ExitSnapping();
+                    }
+                    else if (Root.gpPenWidthVisible)
+                    {
+                        Root.gpPenWidthVisible = false;
+                        Root.UponSubPanelUpdate = true;
+                    }
+                    else if (Root.Snapping == 0)
+                        RetreatAndExit();
+                }
+                LastESCStatus = retVal;
+            }
+
+
+
+            // if (!Root.PointerMode)
+            // old code
+            /*
+            System.Diagnostics.Debug.WriteLine($"tiSlide Ticker: PointerMode={Root.PointerMode} and IsInputtingText={Root.IsInputtingText}");
+            if (!Root.PointerMode && !Root.IsInputtingText)
+            {
+                System.Diagnostics.Debug.WriteLine($"Monitoring for ESC key... PointerMode={Root.PointerMode} and IsInputtingText={Root.IsInputtingText}");
+                // ESC key : Exit
+                short retVal;
 				retVal = GetKeyState(27);
 				if ((retVal & 0x8000) == 0x8000 && (LastESCStatus & 0x8000) == 0x0000)
-				{
-					if (Root.Snapping > 0)
+                {
+                    System.Diagnostics.Debug.WriteLine($"ESC key pressed... PointerMode={Root.PointerMode} and IsInputtingText={Root.IsInputtingText}");
+                    if (Root.Snapping > 0)
 					{
 						ExitSnapping();
 					}
@@ -1679,8 +1730,10 @@ namespace gInkPlus
 				LastESCStatus = retVal;
 			}
 
+			*/
 
-			if (!Root.FingerInAction && (!Root.PointerMode || Root.AllowHotkeyInPointerMode) && Root.Snapping <= 0)
+
+            if (!Root.FingerInAction && (!Root.PointerMode || Root.AllowHotkeyInPointerMode) && Root.Snapping <= 0)
 			{
 				bool control = ((short)(GetKeyState(VK_LCONTROL) | GetKeyState(VK_RCONTROL)) & 0x8000) == 0x8000;
 				bool alt = ((short)(GetKeyState(VK_LMENU) | GetKeyState(VK_RMENU)) & 0x8000) == 0x8000;

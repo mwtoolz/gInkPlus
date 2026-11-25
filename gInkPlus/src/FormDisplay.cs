@@ -58,14 +58,8 @@ namespace gInkPlus
         // == For OvalFilled tool
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsDrawingOvalFilled { get; set; } = false;
-
-        // == For Text tool
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public bool IsInputText { get; set; } = false;
-
-
         public bool IsDrawingGeometricShape => IsDrawingLine || IsDrawingRectangle || IsDrawingRectFilled
-			|| IsDrawingOval || IsDrawingOvalFilled || IsInputText;
+			|| IsDrawingOval || IsDrawingOvalFilled;
         
 		
 		// ===
@@ -1183,7 +1177,7 @@ namespace gInkPlus
 		// Text tool
 		public void ResetTextInputState()
 		{
-			IsInputText = false;
+			// IsInputText = false;
 			// oldTextBoxValid = false;
 		}
 

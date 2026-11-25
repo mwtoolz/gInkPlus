@@ -168,7 +168,11 @@ namespace gInkPlus
 		public bool RectFilledMode = false;
 		public bool OvalMode = false;
 		public bool OvalFilledMode = false;
+
+		// Added by mwtoolz- Text tool
 		public bool TextMode = false;
+        public static bool IsInputtingText = false;
+        public static bool SuppressEscapeUntilReleased = false;
 
 
         // Shared unique identifier for filled shapes
