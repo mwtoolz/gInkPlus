@@ -516,6 +516,8 @@ namespace gInkPlus
                     Root.TextInputForm = new FormTextInput();
                 }
 
+				// To allow input of text
+                Root.Pointer();
                 Root.TextInputForm.BeginTextInput(screenLocation);
                 return;
             }
