@@ -276,10 +276,6 @@ namespace gInkPlus
 
         public void DrawStrokes(Graphics g)
         {
-			// Debug
-			System.Diagnostics.Debug.WriteLine($"DrawStrokes called. ShapeMode={Root.IsShapeMode}, " +
-				$"DrawingShape={Root.FormDisplay.IsDrawingGeometricShape}");
-
             if (!Root.InkVisible) return;
 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;

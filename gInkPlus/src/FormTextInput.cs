@@ -78,9 +78,6 @@ namespace gInkPlus
 
         private void FormTextInput_KeyDown(object sender, KeyEventArgs e)
         {
-
-            System.Diagnostics.Debug.WriteLine("ESC received by FormTextInput_KeyDown");
-
             if (e.KeyCode == Keys.Enter && !e.Shift)
             {
                 e.Handled = true;
@@ -96,7 +93,6 @@ namespace gInkPlus
                 Root.SuppressEscapeUntilReleased = true;
                 CancelText();
             }
-            
         }
 
         private void FormTextInput_Deactivate(object sender, EventArgs e)

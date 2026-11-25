@@ -440,17 +440,13 @@ namespace gInkPlus
 
         private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
-            System.Diagnostics.Debug.WriteLine($"IC_Stroke fired.");
-            // Added by mwtoolz        
-            // Discard the unwanted native freehand stroke in ShapeMode
-            if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
+			// Added by mwtoolz        
+			// Discard the unwanted native freehand stroke in ShapeMode
+			if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
 			{
-				// debug
-                System.Diagnostics.Debug.WriteLine("Before DeleteStroke");
 				IC.Ink.DeleteStroke(e.Stroke);
-                System.Diagnostics.Debug.WriteLine("After DeleteStroke");
-                return;
-            }
+				return;
+			}
 
 			SaveUndoStrokes();
 
@@ -543,7 +539,6 @@ namespace gInkPlus
                 // CRITICAL: Prepare the background buffer (onestrokeDc / gOneStrokeCanvus) 
                 // so BitBlt has a clean snapshot to restore from during the ticker loop.
                 Root.FormDisplay.ClearCanvus(Root.FormDisplay.gOneStrokeCanvus);
-                System.Diagnostics.Debug.WriteLine($"MouseDown- Line, Dotted Line, ArrowLine, DrawStrokes going to run next");
                 Root.FormDisplay.DrawStrokes(Root.FormDisplay.gOneStrokeCanvus);
                 Root.FormDisplay.DrawButtons(Root.FormDisplay.gOneStrokeCanvus, false);
 
@@ -655,12 +650,6 @@ namespace gInkPlus
 
 		private void IC_MouseUp(object sender, CancelMouseEventArgs e)
 		{
-
-            //debug
-            System.Diagnostics.Debug.WriteLine($"onMouseUp: Shape={Root.IsShapeMode}, " +
-				$"Drawing={Root.FormDisplay.IsDrawingGeometricShape}, " +
-				$"Count={IC.Ink.Strokes.Count}");
-
             // Added by mwtoolz- Shape tools         
             // ===== LINE / DOTTED LINE / ARROW LINE TOOL - CREATE FINAL STROKE =====
             if ((Root.LineMode || Root.DottedLineMode || Root.ArrowLineMode) &&
@@ -1644,8 +1633,6 @@ namespace gInkPlus
 				ButtonsEntering = 0;
 			}
 
-
-
 			if (!Root.PointerMode && !this.TopMost)
 				ToTopMost();
 
@@ -1669,7 +1656,6 @@ namespace gInkPlus
             // Modified by mwtoolz; For text tool
             // new code
             short retVal = GetKeyState(27);
-            System.Diagnostics.Debug.WriteLine($"Monitoring for ESC key... PointerMode={Root.PointerMode} and IsInputtingText={Root.IsInputtingText}");
 
             if (Root.SuppressEscapeUntilReleased)
             {
@@ -1684,7 +1670,6 @@ namespace gInkPlus
                 // ESC key : Exit                
                 if ((retVal & 0x8000) == 0x8000 && (LastESCStatus & 0x8000) == 0x0000)
                 {
-                    System.Diagnostics.Debug.WriteLine($"ESC key pressed... PointerMode={Root.PointerMode} and IsInputtingText={Root.IsInputtingText}");
                     if (Root.Snapping > 0)
                     {
                         ExitSnapping();
@@ -1699,8 +1684,6 @@ namespace gInkPlus
                 }
                 LastESCStatus = retVal;
             }
-
-
 
             // if (!Root.PointerMode)
             // old code
@@ -2315,8 +2298,7 @@ namespace gInkPlus
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(
-                    "SetInkInputRectangle failed: " + ex.Message);
+                Debug.WriteLine("SetInkInputRectangle failed: " + ex.Message);
             }			         
         }
 
