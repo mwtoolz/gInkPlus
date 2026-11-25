@@ -89,7 +89,6 @@ namespace gInkPlus
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
-
                 Root.SuppressEscapeUntilReleased = true;
                 CancelText();
             }

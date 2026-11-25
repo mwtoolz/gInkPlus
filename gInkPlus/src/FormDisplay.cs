@@ -414,7 +414,7 @@ namespace gInkPlus
                     
                     // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer
 					// debug
-                    System.Diagnostics.Debug.WriteLine("About to render normal Ink stroke");
+                    // System.Diagnostics.Debug.WriteLine("About to render normal Ink stroke");
                     Root.FormCollection.IC.Renderer.Draw(g, stroke);
                 }
             }

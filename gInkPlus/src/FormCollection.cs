@@ -440,9 +440,16 @@ namespace gInkPlus
 
         private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
-			// Added by mwtoolz        
-			// Discard the unwanted native freehand stroke in ShapeMode
-			if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
+            // System.Diagnostics.Debug.WriteLine($"IC_Stroke fired. TextMode={Root.TextMode}");
+            // Added by mwtoolz
+            //     // Discard unwanted native stroke in TextMode
+            if (Root.TextMode)
+            {
+                IC.Ink.DeleteStroke(e.Stroke);
+                return;
+            }
+            // Discard the unwanted native freehand stroke in ShapeMode
+            if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
 			{
 				IC.Ink.DeleteStroke(e.Stroke);
 				return;
