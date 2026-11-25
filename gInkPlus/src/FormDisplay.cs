@@ -418,6 +418,38 @@ namespace gInkPlus
                     Root.FormCollection.IC.Renderer.Draw(g, stroke);
                 }
             }
+
+            // Draw text objects
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+
+            foreach (TextObject textObject in Root.TextObjects)
+            {
+                if (string.IsNullOrEmpty(textObject.Text))
+                    continue;
+
+                // Convert screen coordinates to FormDisplay client coordinates
+                Point location = PointToClient(textObject.Location);
+
+                // Apply text transparency
+                int alpha = Math.Max(0, Math.Min(255, 255 - textObject.Transparency));
+
+                Color textColor = Color.FromArgb(
+                    alpha,
+                    textObject.Color.R,
+                    textObject.Color.G,
+                    textObject.Color.B);
+
+                using (SolidBrush brush = new SolidBrush(textColor))
+                {
+                    g.DrawString(
+                        textObject.Text,
+                        textObject.Font,
+                        brush,
+                        location);
+                }
+            }
+
+
         }
 
         // Old code

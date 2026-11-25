@@ -538,6 +538,12 @@ namespace gInkPlus
                             Transparency = 0
                         });
 
+                        // Redraw the canvas, including the newly committed text
+                        Root.FormDisplay.ClearCanvus();
+                        Root.FormDisplay.DrawStrokes();
+                        Root.FormDisplay.DrawButtons(false);
+                        Root.FormDisplay.UpdateFormDisplay(true);
+
                         System.Diagnostics.Debug.WriteLine($"Text committed: {text}, Total objects: {Root.TextObjects.Count}");
 
                     };
