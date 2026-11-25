@@ -1,4 +1,4 @@
-﻿//using System.Windows.Input;
+﻿using System.Windows.Input;
 using Microsoft.Ink;
 using System;
 using System.Collections.Generic;
@@ -524,6 +524,22 @@ namespace gInkPlus
                         {
                             Root.UnPointer();
                         }
+                    };
+
+					// Save committed text
+                    Root.TextInputForm.TextCommitted += (text, location) =>
+                    {
+                        Root.TextObjects.Add(new TextObject
+                        {
+                            Text = text,
+                            Location = location,
+                            Font = new System.Drawing.Font("Segoe UI", 12f),
+                            Color = Color.Black,
+                            Transparency = 0
+                        });
+
+                        System.Diagnostics.Debug.WriteLine($"Text committed: {text}, Total objects: {Root.TextObjects.Count}");
+
                     };
 
                 }
