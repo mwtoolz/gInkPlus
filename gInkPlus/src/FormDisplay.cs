@@ -286,14 +286,28 @@ namespace gInkPlus
             foreach (Stroke stroke in Root.FormCollection.IC.Ink.Strokes)
             {
 
+                if (Root.IsShapeMode && !HasStrokeMovement(stroke))
+                {
+                    System.Diagnostics.Debug.WriteLine($"SKIPPED: ArrowMode={Root.ArrowLineMode}, ");
+                    System.Diagnostics.Debug.WriteLine($"DrawStrokes start- Packet Count = {stroke.PacketCount}, " +
+                         $"Skip rendering normal stroke for a dot. >> CONTINUE NEXT STROKE");
+                    continue;
+                }
+
+
+                // Old code
+                /*
                 // Check if stroke is a dot
                 // Removes dot at start of drawing shapes
                 if (Root.IsShapeMode && stroke.PacketCount == 1)
                 {
-					System.Diagnostics.Debug.WriteLine($"DrawStrokes start- Packet Count = {stroke.PacketCount}," +
+					System.Diagnostics.Debug.WriteLine($"SKIPPED: ArrowMode={Root.ArrowLineMode}, ");
+
+                   System.Diagnostics.Debug.WriteLine($"DrawStrokes start- Packet Count = {stroke.PacketCount}, " +
 						$"Skip rendering normal stroke for a dot. >> CONTINUE NEXT STROKE");
                     continue;
                 }
+				*/
 
                 // Check if this stroke was marked as a filled shape
                 if (stroke.ExtendedProperties.DoesPropertyExist(Root.FilledShapeGuid))
@@ -342,6 +356,11 @@ namespace gInkPlus
                         {
                             pen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
                             pen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+
+                            System.Diagnostics.Debug.WriteLine(
+								$"Arrow stroke: Packets={stroke.PacketCount}, " +
+								$"Points={inkPoints.Length}, " +
+								$"Start={screenPoints[0]}, End={screenPoints[1]}");
 
                             DrawArrow(g, screenPoints[0], screenPoints[1], pen);
                         }
@@ -459,6 +478,42 @@ namespace gInkPlus
 				Root.FormCollection.IC.Renderer.Draw(g, Root.FormCollection.IC.Ink.Strokes);
 		}
 		*/
+
+        // Added by mwtoolz; To prevent unwanted strokes for shape tools
+        private bool HasStrokeMovement(Stroke stroke)
+        {
+            try
+            {
+                Point[] points = stroke.GetPoints();
+
+                if (points == null || points.Length < 2)
+                    return false;
+
+                Point firstPoint = points[0];
+
+                foreach (Point point in points)
+                {
+                    if (point != firstPoint)
+                        return true;
+                }
+
+                return false;
+            }
+            catch (System.Runtime.InteropServices.COMException ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"HasStrokeMovement COMException: {ex.Message}");
+
+                return false;
+            }
+            catch (InvalidOperationException ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"HasStrokeMovement InvalidOperationException: {ex.Message}");
+
+                return false;
+            }
+        }
 
         public void MoveStrokes(int dy)
 		{
@@ -824,7 +879,17 @@ namespace gInkPlus
 
 							if (Root.ArrowLineMode)
                             {
+
                                 DrawArrow(g, LineStartPoint, CurrentMousePoint, previewPen);
+                                /*
+                                Debug.WriteLine($"ArrowLineMode in timer1_Tick- Checking whether mouse move before drawing Arrow Line!");
+								if (CurrentMousePoint != LineStartPoint)
+								{
+									// Debug
+									Debug.WriteLine($"ArrowLineMode in timer1_Tick- Drawing Arrow!");
+									DrawArrow(g, LineStartPoint, CurrentMousePoint, previewPen);
+								}
+								*/
                             }
                             else
                             {
@@ -1119,6 +1184,11 @@ namespace gInkPlus
         // Draw Arrow Function
         private void DrawArrow(Graphics g, Point start, Point end, Pen pen)
         {
+			// Debug
+            // Ignore zero-length arrows
+            //if (start == end)
+            //    return;
+
             float thickness = pen.Width;
 
             // Arrowhead dimensions

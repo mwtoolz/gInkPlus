@@ -452,6 +452,7 @@ namespace gInkPlus
             }
 
             // Discard the unwanted native freehand stroke in ShapeMode
+
             if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
 			{
                 Debug.WriteLine($"IC_Stroke- Deleting Stroke!");
@@ -2337,6 +2338,7 @@ namespace gInkPlus
             }			         
         }
 
+        
 
         [DllImport("user32.dll")]
 		static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
