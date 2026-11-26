@@ -281,11 +281,19 @@ namespace gInkPlus
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             // Removes white outlines on the filled polygons
             g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
-            // System.Diagnostics.Debug.WriteLine("Arrow Line Draw Stroke with AntiAlias and SourceOver");
 
             // Loop through every stroke in the ink collection
             foreach (Stroke stroke in Root.FormCollection.IC.Ink.Strokes)
             {
+
+                // Check if stroke is a dot
+                // Removes dot at start of drawing shapes
+                if (Root.IsShapeMode && stroke.PacketCount == 1)
+                {
+					System.Diagnostics.Debug.WriteLine($"DrawStrokes start- Packet Count = {stroke.PacketCount}," +
+						$"Skip rendering normal stroke for a dot. >> CONTINUE NEXT STROKE");
+                    continue;
+                }
 
                 // Check if this stroke was marked as a filled shape
                 if (stroke.ExtendedProperties.DoesPropertyExist(Root.FilledShapeGuid))
@@ -399,22 +407,8 @@ namespace gInkPlus
                 }
                 else
                 {
-                    // debug
-                    // Removes unwanted dot stroke when drawing in shape mode
-					// CANNOT BE USED AS stroke.GetPoints().Length may get an exception
-                    // if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape && stroke.GetPoints().Length == 1)
-                    // System.Diagnostics.Debug.WriteLine("DrawStrokes- running; code (commented out) following this to run if getpoints == 1");
-					/*
-                    if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape && stroke.GetPoints().Length == 1)
-                        {
-                        System.Diagnostics.Debug.WriteLine($"ShapeMode to continue and skip rendering normal stroke");
-                        continue;
-                    }
-					*/
-                    
                     // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer
-					// debug
-                    // System.Diagnostics.Debug.WriteLine("About to render normal Ink stroke");
+                    System.Diagnostics.Debug.WriteLine("Rendering normal Ink stroke");
                     Root.FormCollection.IC.Renderer.Draw(g, stroke);
                 }
             }

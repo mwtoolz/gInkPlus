@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using Microsoft.Ink;
+﻿using Microsoft.Ink;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +9,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
-
+using System.Windows.Input;
 
 namespace gInkPlus	
 {
@@ -440,7 +439,10 @@ namespace gInkPlus
 
         private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
-            // System.Diagnostics.Debug.WriteLine($"IC_Stroke fired. TextMode={Root.TextMode}");
+            Debug.WriteLine($"IC_Stroke: Count={IC.Ink.Strokes.Count}, " + $"IsShape={Root.FormDisplay.IsDrawingGeometricShape}");
+            // check whether it is just a dot
+			Debug.WriteLine($"IC_Stroke -> PacketCount: {e.Stroke.PacketCount}");
+
             // Added by mwtoolz
             //     // Discard unwanted native stroke in TextMode
             if (Root.TextMode)
@@ -448,11 +450,15 @@ namespace gInkPlus
                 IC.Ink.DeleteStroke(e.Stroke);
                 return;
             }
+
             // Discard the unwanted native freehand stroke in ShapeMode
             if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
 			{
-				IC.Ink.DeleteStroke(e.Stroke);
-				return;
+                Debug.WriteLine($"IC_Stroke- Deleting Stroke!");
+                IC.Ink.DeleteStroke(e.Stroke);
+                Debug.WriteLine($"IC_Stroke- After delete: Count={IC.Ink.Strokes.Count}");
+
+                return;
 			}
 
 			SaveUndoStrokes();
@@ -503,7 +509,6 @@ namespace gInkPlus
         
         private void IC_MouseDown(object sender, CancelMouseEventArgs e)
 		{
-
             // Added by mwtoolz- Text tool
             // Text tool
             if (Root.TextMode)
@@ -539,6 +544,7 @@ namespace gInkPlus
                         });
 
                         // Redraw the canvas, including the newly committed text
+
                         Root.FormDisplay.ClearCanvus();
                         Root.FormDisplay.DrawStrokes();
                         Root.FormDisplay.DrawButtons(false);
@@ -626,7 +632,8 @@ namespace gInkPlus
 
 			LasteXY.X = e.X;
 			LasteXY.Y = e.Y;
-			IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref LasteXY);
+        
+            IC.Renderer.PixelToInkSpace(Root.FormDisplay.gOneStrokeCanvus, ref LasteXY);
 
 		}   
 
@@ -636,11 +643,10 @@ namespace gInkPlus
 
         private void IC_MouseMove(object sender, CancelMouseEventArgs e)
 		{
-
-			// Added by mwtoolz- Shape tools
-			// New Code
-			// Line, Rect, RectFilled Mode Tracking
-			if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
+            // Added by mwtoolz- Shape tools
+            // New Code
+            // Line, Rect, RectFilled Mode Tracking
+            if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
 			{
                 Root.FormDisplay.CurrentMousePoint = new Point(e.X, e.Y);
                 e.Cancel = true;
@@ -679,7 +685,7 @@ namespace gInkPlus
 
 		private void IC_MouseUp(object sender, CancelMouseEventArgs e)
 		{
-            // Added by mwtoolz- Shape tools         
+            // Added by mwtoolz- Shape tools
             // ===== LINE / DOTTED LINE / ARROW LINE TOOL - CREATE FINAL STROKE =====
             if ((Root.LineMode || Root.DottedLineMode || Root.ArrowLineMode) &&
                 Root.FormDisplay.IsDrawingLine)
@@ -1122,7 +1128,7 @@ namespace gInkPlus
             // Oval Tool
             else if (pen == Root.Tool.Oval)
 			{
-				btOval.Image = image_oval_act;
+                btOval.Image = image_oval_act;
 				Root.OvalMode = true;
                 SetCanvasCursor();
                 SetFullInputArea();
