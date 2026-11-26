@@ -270,6 +270,7 @@ namespace gInkPlus
 		// ===
         public void DrawStrokes()
         {
+            Debug.WriteLine($"DrawStrokes: Ink.Strokes.Count = {Root.FormCollection.IC.Ink.Strokes.Count}");
             if (!Root.InkVisible) return;
             DrawStrokes(gCanvus);
         }
@@ -285,29 +286,21 @@ namespace gInkPlus
             // Loop through every stroke in the ink collection
             foreach (Stroke stroke in Root.FormCollection.IC.Ink.Strokes)
             {
+                // debug
+				Debug.WriteLine($"Rendering stroke: Packets={stroke.PacketCount}");
+
+                if (stroke.PacketCount < 2)
+                {
+                    Debug.WriteLine(
+                        $"Skipping invalid or insufficient stroke: Packets={stroke.PacketCount}");
+                    continue;
+                }
 
                 if (Root.IsShapeMode && !HasStrokeMovement(stroke))
                 {
-                    System.Diagnostics.Debug.WriteLine($"SKIPPED: ArrowMode={Root.ArrowLineMode}, ");
-                    System.Diagnostics.Debug.WriteLine($"DrawStrokes start- Packet Count = {stroke.PacketCount}, " +
-                         $"Skip rendering normal stroke for a dot. >> CONTINUE NEXT STROKE");
+                    Debug.WriteLine($"DrawStrokes: Skipping zero-movement stroke. Packets={stroke.PacketCount}");
                     continue;
                 }
-
-
-                // Old code
-                /*
-                // Check if stroke is a dot
-                // Removes dot at start of drawing shapes
-                if (Root.IsShapeMode && stroke.PacketCount == 1)
-                {
-					System.Diagnostics.Debug.WriteLine($"SKIPPED: ArrowMode={Root.ArrowLineMode}, ");
-
-                   System.Diagnostics.Debug.WriteLine($"DrawStrokes start- Packet Count = {stroke.PacketCount}, " +
-						$"Skip rendering normal stroke for a dot. >> CONTINUE NEXT STROKE");
-                    continue;
-                }
-				*/
 
                 // Check if this stroke was marked as a filled shape
                 if (stroke.ExtendedProperties.DoesPropertyExist(Root.FilledShapeGuid))
@@ -338,6 +331,10 @@ namespace gInkPlus
 
                     if (inkPoints.Length >= 2)
                     {
+						// do not render zero-length arrow lines
+                        if (inkPoints[0] == inkPoints[1])
+                            continue;
+
                         Point[] screenPoints = (Point[])inkPoints.Clone();
 
                         Root.FormCollection.IC.Renderer.InkSpaceToPixel(
@@ -427,6 +424,16 @@ namespace gInkPlus
                 else
                 {
                     // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer
+
+                    // Ignore zero-length normal strokes
+                    Point[] inkPoints = stroke.GetPoints();
+
+                    if (inkPoints.Length >= 2 &&
+                        inkPoints[0] == inkPoints[1])
+                    {
+                        continue;
+                    }
+
                     System.Diagnostics.Debug.WriteLine("Rendering normal Ink stroke");
                     Root.FormCollection.IC.Renderer.Draw(g, stroke);
                 }
@@ -480,8 +487,9 @@ namespace gInkPlus
 		*/
 
         // Added by mwtoolz; To prevent unwanted strokes for shape tools
-        private bool HasStrokeMovement(Stroke stroke)
+        public bool HasStrokeMovement(Stroke stroke)
         {
+            System.Diagnostics.Debug.WriteLine("Running HasStrokeMovement check");
             try
             {
                 Point[] points = stroke.GetPoints();
@@ -514,6 +522,7 @@ namespace gInkPlus
                 return false;
             }
         }
+
 
         public void MoveStrokes(int dy)
 		{

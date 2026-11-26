@@ -437,14 +437,19 @@ namespace gInkPlus
             return image;
         }
 
+
+
+        // old code
+        
         private void IC_Stroke(object sender, InkCollectorStrokeEventArgs e)
 		{
-            Debug.WriteLine($"IC_Stroke: Count={IC.Ink.Strokes.Count}, " + $"IsShape={Root.FormDisplay.IsDrawingGeometricShape}");
+            Debug.WriteLine($"IC_Stroke: Count={IC.Ink.Strokes.Count}, " + $"IsDrawingShape={Root.FormDisplay.IsDrawingGeometricShape}");
             // check whether it is just a dot
 			Debug.WriteLine($"IC_Stroke -> PacketCount: {e.Stroke.PacketCount}");
+            Debug.WriteLine($"IC_Stroke -> HasStrokeMovement: {Root.FormDisplay.HasStrokeMovement(e.Stroke)}");
 
             // Added by mwtoolz
-            //     // Discard unwanted native stroke in TextMode
+            // Discard unwanted native stroke in TextMode
             if (Root.TextMode)
             {
                 IC.Ink.DeleteStroke(e.Stroke);
@@ -452,7 +457,6 @@ namespace gInkPlus
             }
 
             // Discard the unwanted native freehand stroke in ShapeMode
-
             if (Root.IsShapeMode && Root.FormDisplay.IsDrawingGeometricShape)
 			{
                 Debug.WriteLine($"IC_Stroke- Deleting Stroke!");
@@ -462,11 +466,11 @@ namespace gInkPlus
                 return;
 			}
 
-			SaveUndoStrokes();
-
+            SaveUndoStrokes();
 		}
+		
 
-		private void SaveUndoStrokes()
+        private void SaveUndoStrokes()
 		{
 			// Undo pointer and depth management
 			Root.RedoDepth = 0;
