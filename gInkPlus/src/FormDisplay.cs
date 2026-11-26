@@ -296,7 +296,10 @@ namespace gInkPlus
                     continue;
                 }
 
-                if (Root.IsShapeMode && !HasStrokeMovement(stroke))
+                // new code
+                if (!HasStrokeMovement(stroke))
+                // old code
+                //if (Root.IsShapeMode && !HasStrokeMovement(stroke))
                 {
                     Debug.WriteLine($"DrawStrokes: Skipping zero-movement stroke. Packets={stroke.PacketCount}");
                     continue;
@@ -423,17 +426,7 @@ namespace gInkPlus
                 }
                 else
                 {
-                    // Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer
-
-                    // Ignore zero-length normal strokes
-                    Point[] inkPoints = stroke.GetPoints();
-
-                    if (inkPoints.Length >= 2 &&
-                        inkPoints[0] == inkPoints[1])
-                    {
-                        continue;
-                    }
-
+					// Draw normal freehand strokes or outlines using the standard Microsoft.Ink renderer
                     System.Diagnostics.Debug.WriteLine("Rendering normal Ink stroke");
                     Root.FormCollection.IC.Renderer.Draw(g, stroke);
                 }
