@@ -565,14 +565,26 @@ namespace gInkPlus
 					// Save committed text
                     Root.TextInputForm.TextCommitted += (text, location) =>
                     {
-                        Root.TextObjects.Add(new TextObject
+                        if (Root.EditingTextObject != null)
                         {
-                            Text = text,
-                            Location = location,
-                            Font = new System.Drawing.Font("Segoe UI", 12f),
-                            Color = Color.Black,
-                            Transparency = 0
-                        });
+                            // Update existing text object
+                            Root.EditingTextObject.Text = text;
+                            Root.EditingTextObject = null;
+                        }
+                        else
+                        {
+                            // Create a new text object
+                            Root.TextObjects.Add(new TextObject
+                            {
+                                Text = text,
+                                Location = location,
+                                Font = new System.Drawing.Font("Segoe UI", 12f),
+                                Color = Color.Black,
+                                Transparency = 0
+                            });
+                        }
+
+                        Root.EditingTextObject = null;
 
                         // Redraw the canvas, including the newly committed text
 
@@ -589,6 +601,8 @@ namespace gInkPlus
 
 				// To allow input of text
                 Root.Pointer();
+
+                Root.EditingTextObject = selectedText;
 
                 if (selectedText != null)
                 {

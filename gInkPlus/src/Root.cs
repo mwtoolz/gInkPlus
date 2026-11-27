@@ -98,6 +98,7 @@ namespace gInkPlus
         // Added by mwtoolz- Text tool
         public static List<TextObject> TextObjects = new List<TextObject>();
         public static FormTextInput TextInputForm;
+        public static TextObject EditingTextObject = null;
 
         // ===
 
