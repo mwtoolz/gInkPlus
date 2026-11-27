@@ -547,6 +547,8 @@ namespace gInkPlus
                 // Convert the mouse position to screen coordinates
                 Point screenLocation = PointToScreen(new Point(e.X, e.Y));
 
+                TextObject selectedText = Root.FormDisplay.GetTextObjectAt(screenLocation);
+
                 // Create the input form if it does not exist
                 if (Root.TextInputForm == null || Root.TextInputForm.IsDisposed)
                 {
@@ -587,7 +589,17 @@ namespace gInkPlus
 
 				// To allow input of text
                 Root.Pointer();
-                Root.TextInputForm.BeginTextInput(screenLocation);
+
+                if (selectedText != null)
+                {
+                    Root.TextInputForm.BeginTextInput(
+                        selectedText.Location,
+                        selectedText.Text);
+                }
+                else
+                {
+                    Root.TextInputForm.BeginTextInput(screenLocation);
+                }
                 return;
             }
 

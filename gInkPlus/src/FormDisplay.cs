@@ -516,6 +516,42 @@ namespace gInkPlus
             }
         }
 
+        // Added by mwtoolz- Text tool helper
+        public TextObject GetTextObjectAt(Point screenLocation)
+        {
+            // Convert screen coordinates to FormDisplay client coordinates
+            Point clickLocation = PointToClient(screenLocation);
+
+            using (Graphics measureGraphics = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                // Check in reverse order so the topmost text is selected first
+                for (int i = Root.TextObjects.Count - 1; i >= 0; i--)
+                {
+                    TextObject textObject = Root.TextObjects[i];
+
+                    if (string.IsNullOrEmpty(textObject.Text))
+                        continue;
+
+                    Point textLocation = PointToClient(textObject.Location);
+
+                    SizeF textSize = measureGraphics.MeasureString(
+                        textObject.Text,
+                        textObject.Font);
+
+                    // Add a little padding around the text
+                    RectangleF textBounds = new RectangleF(
+                        textLocation.X - 3,
+                        textLocation.Y - 3,
+                        textSize.Width + 6,
+                        textSize.Height + 6);
+
+                    if (textBounds.Contains(clickLocation))
+                        return textObject;
+                }
+            }
+
+            return null;
+        }
 
         public void MoveStrokes(int dy)
 		{
