@@ -33,9 +33,10 @@ namespace gInkPlus
 		public Bitmap image_oval, image_oval_act;
 		public Bitmap image_oval_filled, image_oval_filled_act;
 		public Bitmap image_text, image_text_act;
+        private bool SkipNextUndoSnapshot = false;
 
 
-		// ===
+        // ===
 
         public Bitmap image_pointer, image_pointer_act;
 		public Bitmap[] image_pen;
@@ -449,10 +450,21 @@ namespace gInkPlus
             Debug.WriteLine($"IC_Stroke -> HasStrokeMovement: {Root.FormDisplay.HasStrokeMovement(e.Stroke)}");
 
             // Added by mwtoolz
+            // Delete unwanted native strokes
+            if (!Root.FormDisplay.HasStrokeMovement(e.Stroke))
+            {
+                Debug.WriteLine("IC_Stroke - Deleting zero-movement stroke!");
+
+                IC.Ink.DeleteStroke(e.Stroke);
+                SkipNextUndoSnapshot = true;
+                return;
+            }
+
             // Discard unwanted native stroke in TextMode
             if (Root.TextMode)
             {
                 IC.Ink.DeleteStroke(e.Stroke);
+
                 return;
             }
 
@@ -466,14 +478,23 @@ namespace gInkPlus
                 return;
 			}
 
+            Debug.WriteLine($"SaveUndoStrokes called by: IC_Stroke");
             SaveUndoStrokes();
 		}
 		
 
         private void SaveUndoStrokes()
 		{
-			// Undo pointer and depth management
-			Root.RedoDepth = 0;
+
+            //debug
+            Debug.WriteLine("--------------------------------");
+            Debug.WriteLine("SaveUndoStrokes()");
+            Debug.WriteLine($"Ink stroke count: {IC.Ink.Strokes.Count}");
+            Debug.WriteLine($"Undo pointer: {Root.UndoP}");
+            Debug.WriteLine($"Undo depth: {Root.UndoDepth}");
+
+            // Undo pointer and depth management
+            Root.RedoDepth = 0;
 			if (Root.UndoDepth < Root.UndoStrokes.GetLength(0) - 1)
 				Root.UndoDepth++;
 
@@ -488,10 +509,13 @@ namespace gInkPlus
 			if (IC.Ink.Strokes.Count > 0)
 				Root.UndoStrokes[Root.UndoP].AddStrokesAtRectangle(IC.Ink.Strokes, IC.Ink.Strokes.GetBoundingBox());
 
-			// Additional text tool snapshot
-		
-		
-		}
+            //debug
+            Debug.WriteLine($"Saved snapshot stroke count: {Root.UndoStrokes[Root.UndoP].Strokes.Count}");
+
+            // Additional text tool snapshot
+
+
+        }
 
 		// Refers to Stylus Pen & Mouse button down
 		private void IC_CursorDown(object sender, InkCollectorCursorDownEventArgs e)
@@ -732,7 +756,19 @@ namespace gInkPlus
 				}
 
                 // 3. Save undo history and refresh display
-                SaveUndoStrokes();
+                
+                if (SkipNextUndoSnapshot)
+                {
+                    Debug.WriteLine($"SKIPPING SaveUndoStrokes in: IC_MouseUp- Line, Dotted, Arrow");
+                    SkipNextUndoSnapshot = false;
+                }
+                else
+                {
+                    Debug.WriteLine($"SaveUndoStrokes called by: IC_MouseUp- Line, Dotted, Arrow");
+                    SaveUndoStrokes();
+                }
+
+                // SaveUndoStrokes();
 
                 Root.FormDisplay.ClearCanvus();
                 Root.FormDisplay.DrawStrokes();
@@ -802,7 +838,18 @@ namespace gInkPlus
 
 
                 // 6. Save to undo history and refresh the display cleanly
-                SaveUndoStrokes();
+                
+                if (SkipNextUndoSnapshot)
+                {
+                    Debug.WriteLine($"SKIPPING SaveUndoStrokes in: IC_MouseUp- Rect, RectFilled");
+                    SkipNextUndoSnapshot = false;
+                }
+                else
+                {
+                    Debug.WriteLine($"SaveUndoStrokes called by: IC_MouseUp- Rect, RectFilled");
+                    SaveUndoStrokes();
+                }
+                // SaveUndoStrokes();
 
                 Root.FormDisplay.ClearCanvus();
                 Root.FormDisplay.DrawStrokes();
@@ -902,7 +949,19 @@ namespace gInkPlus
                 }
 
                 // 7. Save undo history and refresh display
-                SaveUndoStrokes();
+                
+                if (SkipNextUndoSnapshot)
+                {
+                    Debug.WriteLine($"SKIPPING SaveUndoStrokes in: IC_MouseUp- Oval, OvalFilled");
+                    // Reset boolean
+                    SkipNextUndoSnapshot = false;
+                }
+                else
+                {
+                    Debug.WriteLine($"SaveUndoStrokes called by: IC_MouseUp- Oval, OvalFilled");
+                    SaveUndoStrokes();
+                }
+                // SaveUndoStrokes();
 
                 Root.FormDisplay.ClearCanvus();
                 Root.FormDisplay.DrawStrokes();
@@ -947,7 +1006,8 @@ namespace gInkPlus
 			}
 			else if (Root.PanMode)
 			{
-				SaveUndoStrokes();
+                Debug.WriteLine($"SaveUndoStrokes called by: IC_MouseUp- PanMode");
+                SaveUndoStrokes();
 			}
 			else
 			{
@@ -1275,7 +1335,8 @@ namespace gInkPlus
 		{
 			ToThrough();
 			Root.ClearInk();
-			SaveUndoStrokes();
+            Debug.WriteLine($"SaveUndoStrokes called by: RetreatAndExit");
+            SaveUndoStrokes();
 			Root.SaveOptions("config.ini");
 			Root.gpPenWidthVisible = false;
 
@@ -2086,7 +2147,8 @@ namespace gInkPlus
 			}
 
 			Root.ClearInk();
-			SaveUndoStrokes();
+            Debug.WriteLine($"SaveUndoStrokes called by: btClear_Click");
+            SaveUndoStrokes();
 		}
 
 		private void btUndo_Click(object sender, EventArgs e)
