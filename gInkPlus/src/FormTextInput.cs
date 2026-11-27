@@ -73,6 +73,7 @@ namespace gInkPlus
             
             isClosing = true;
             Root.IsInputtingText = false;
+            Root.EditingTextObject = null;
             Hide();
         }
 
