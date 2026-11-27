@@ -10,7 +10,7 @@ namespace gInkPlus
 {
     public partial class FormTextInput : Form
     {
-
+        private Root root;
         private Point textLocation;
         private bool isEditing;
         public event Action<string, Point> TextCommitted;
@@ -18,12 +18,12 @@ namespace gInkPlus
 
 
 
-        public FormTextInput()
+        public FormTextInput(Root root)
         {
             InitializeComponent();
+            this.root = root;
             KeyDown += FormTextInput_KeyDown;
             Deactivate += FormTextInput_Deactivate;
-
 
         }
 
@@ -75,6 +75,13 @@ namespace gInkPlus
             Root.IsInputtingText = false;
             Root.EditingTextObject = null;
             Hide();
+
+            // Refresh display
+            root.FormDisplay.ClearCanvus();
+            root.FormDisplay.DrawStrokes();
+            root.FormDisplay.DrawButtons(false);
+            root.FormDisplay.UpdateFormDisplay(true);
+
         }
 
         private void FormTextInput_KeyDown(object sender, KeyEventArgs e)

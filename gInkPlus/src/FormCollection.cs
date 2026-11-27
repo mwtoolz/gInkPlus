@@ -552,7 +552,7 @@ namespace gInkPlus
                 // Create the input form if it does not exist
                 if (Root.TextInputForm == null || Root.TextInputForm.IsDisposed)
                 {
-                    Root.TextInputForm = new FormTextInput();
+                    Root.TextInputForm = new FormTextInput(Root);
 
                     Root.TextInputForm.VisibleChanged += (s, args) =>
                     {
