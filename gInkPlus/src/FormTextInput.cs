@@ -62,6 +62,16 @@ namespace gInkPlus
             {
                 TextCommitted?.Invoke(text, textLocation);
             }
+            else
+            {
+                // No text entered — refresh display anyway
+                root.FormDisplay.ClearCanvus();
+                root.FormDisplay.DrawStrokes();
+                root.FormDisplay.DrawButtons(false);
+                root.FormDisplay.UpdateFormDisplay(true);
+
+                Root.EditingTextObject = null;
+            }
 
             Root.IsInputtingText = false;
             Hide();
