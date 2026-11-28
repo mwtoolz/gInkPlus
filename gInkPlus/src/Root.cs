@@ -301,15 +301,39 @@ namespace gInkPlus
 
 			if (UndoStrokes == null)
 			{
-				// Added by mwtoolz- Undos
+				// Added by mwtoolz- Undos; UndoHistoryLimit
 				UndoStrokes = new Ink[UndoHistoryLimit];
 				UndoStrokes[0] = FormCollection.IC.Ink.Clone();
-				UndoDepth = 0;
+
+                UndoTexts = new List<TextObject>[UndoHistoryLimit];
+                UndoTexts[0] = CloneTextObjects(TextObjects);
+
+                UndoDepth = 0;
 				UndoP = 0;
 			}
-			
 		}
-		public void StopInk()
+
+        // Added by mwtoolz- Text Undo
+        private List<TextObject> CloneTextObjects(List<TextObject> source)
+        {
+            List<TextObject> copy = new List<TextObject>();
+
+            foreach (TextObject textObject in source)
+            {
+                copy.Add(new TextObject
+                {
+                    Text = textObject.Text,
+                    Location = textObject.Location,
+                    Font = textObject.Font,
+                    Color = textObject.Color,
+                    Transparency = textObject.Transparency
+                });
+            }
+
+            return copy;
+        }
+
+        public void StopInk()
 		{
             // Modified by mwtoolz
             // run in this order, reversed from StartInk
