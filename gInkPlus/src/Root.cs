@@ -187,13 +187,15 @@ namespace gInkPlus
 
         // ===
 
-
-
         public bool InkVisible = true;
 
-		public Ink[] UndoStrokes;
-		//public Ink UponUndoStrokes;
-		public int UndoP;
+        // Added by mwtoolz- Undo; TODO allow user to adjust no. of undos
+        public const int UndoHistoryLimit = 30;
+        public Ink[] UndoStrokes;
+        // Added by mwtoolz- text tool; For Text tool undos
+        public static List<TextObject>[] UndoTexts;
+
+        public int UndoP;
 		public int UndoDepth, RedoDepth;
 
 		public NotifyIcon trayIcon;
@@ -299,14 +301,13 @@ namespace gInkPlus
 
 			if (UndoStrokes == null)
 			{
-				// Added by mwtoolz from 8 to 30
-				UndoStrokes = new Ink[30];
+				// Added by mwtoolz- Undos
+				UndoStrokes = new Ink[UndoHistoryLimit];
 				UndoStrokes[0] = FormCollection.IC.Ink.Clone();
 				UndoDepth = 0;
 				UndoP = 0;
 			}
-
-			//UponUndoStrokes = FormCollection.IC.Ink.Clone();
+			
 		}
 		public void StopInk()
 		{
